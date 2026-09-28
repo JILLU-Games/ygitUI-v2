@@ -51,7 +51,7 @@ export const DualSidebarLayout: React.FC<DualSidebarLayoutProps> = ({
   children,
 }) => {
   return (
-    <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9] flex font-sans">
+    <div className="flex min-h-screen bg-[#0d1117] text-[#f0f6fc] font-sans antialiased selection:bg-[#1d6cf6] selection:text-white">
       {/* 1. PRIMARY SIDEBAR (Platform-Scoped) */}
       <PrimarySidebar
         activeRoute={activeRoute}

@@ -7,3 +7,4 @@ export * from './mockDeployments';
 export * from './mockTemplates';
 export * from './mockScanCheckpoints';
 export * from './mockEnvVars';
+export * from './mockSettings';

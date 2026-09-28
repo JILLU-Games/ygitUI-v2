@@ -113,3 +113,25 @@ Foundation & Mocks  Atomic Components   Sidebar Layout      Main Standalone     
     `Dashboard` ➡️ `New Project` ➡️ `Scan 14 Invariants` ➡️ `Workspace (6 Tabs)` ➡️ `Deploy`.
   - Zero visual or behavioral regression.
   - Complete code compilation without any warnings or type errors.
+
+---
+
+### 🔹 Phase 1.7: Platform Settings Engine & Advanced Configurations (Completed)
+* **Primary Objective**: Build a stateful, high-density Platform Settings page (`<SettingsView />`) adhering strictly to the YGIT Design System (`AGENTS.md`, `COLORS.md`, `BUTTON.md`, `CARDS.md`) without any hardcoded mock values.
+* **Deliverables**:
+  1. `src/types/settings.ts`: Typed data models for `PlatformSettings`, `SettingsTab`, `ApiTokenItem`.
+  2. `src/mocks/mockSettings.ts`: Baseline defaults for orchestration, runtime, security, webhooks, and telemetry.
+  3. `src/features/settings/SettingsView.tsx`: 5 high-density subtabs:
+     - General (Platform Brand Name, Custom Domain Gateway, Edge PoP Region, Default Branch, Build Concurrency, Auto-Deploy on Push).
+     - Build & Edge Engine (Package Manager Priority, AST Sensitivity Mode, Edge Cache Toggle, Cache TTL Slider, Static Asset Compression, Worker Lease Timeout).
+     - Security & API Keys (Zero-Trust Secret Scrubbing, Strict Branch Protection, Signed Commits, CI/CD API Token Generator Modal, Token Revocation).
+     - Webhooks & Alerts (Deploy Events Webhook, Discord/Slack Incoming Webhook, Alert Triggers, DevOps Recipient Email, Digest Frequency).
+     - Advanced Diagnostics (Terminal Log Verbosity, Enclave Telemetry Mode, Health Check Heartbeat, Purge Global Edge Cache, Factory Reset Defaults, and Live JSON Spec Inspector Modal with Copy & Download).
+  4. `src/components/navigation/PrimarySidebar.tsx`: Global navigation integration with active highlights, icon, and collapsed tooltip.
+  5. `src/App.tsx`: Header breadcrumb sync (`Platform / Settings / Global Configuration`), reactive state management, and toast notifications.
+* **Verification & Acceptance Criteria**:
+  - 100% interactive controls with live state management (inputs, selects, sliders, toggles, modals).
+  - Dirty state tracking (`Synchronized` vs `Unsaved Changes`), Save Changes feedback, and JSON export.
+  - TypeScript strict check (`npm run lint`) passes with 0 errors.
+  - Production build (`npm run build`) passes with 0 errors.
+

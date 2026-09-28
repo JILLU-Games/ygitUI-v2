@@ -5,6 +5,7 @@ import {
   Activity,
   Github,
   Sparkles,
+  Settings,
 } from 'lucide-react';
 import { ActiveRoute } from '../../types';
 import { YGitLogo } from '../brand/YGitLogo';
@@ -204,6 +205,29 @@ export const PrimarySidebar: React.FC<PrimarySidebarProps> = ({
                 {templatesCount}
               </span>
             )}
+          </button>
+
+          {/* Settings Link */}
+          <button
+            type="button"
+            onClick={() => setActiveRoute('settings')}
+            title={isCollapsed ? 'Platform Settings' : undefined}
+            className={`w-full flex items-center rounded text-xs transition-colors cursor-pointer ${
+              isCollapsed ? 'justify-center py-2 px-1' : 'justify-between px-2 py-1.5'
+            } ${
+              activeRoute === 'settings'
+                ? 'bg-[#21262d] text-[#f0f6fc] font-medium'
+                : 'text-[#8b949e] hover:bg-[#21262d] hover:text-[#f0f6fc] font-normal'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Settings
+                className={`w-3.5 h-3.5 shrink-0 ${
+                  activeRoute === 'settings' ? 'text-[#1d6cf6]' : 'text-[#7d8590]'
+                }`}
+              />
+              {!isCollapsed && <span>Settings</span>}
+            </div>
           </button>
         </div>
       </div>

@@ -12,3 +12,4 @@ export * from './accounts/AccountsView';
 export * from './templates/TemplatesView';
 export * from './scanner';
 export * from './workspace';
+export * from './settings/SettingsView';

@@ -75,7 +75,11 @@ import {
   Smartphone,
   Monitor,
   Compass,
-  CheckSquare
+  CheckSquare,
+  User,
+  LogOut,
+  ChevronDown,
+  UserCheck
 } from 'lucide-react';
 import {
   Project,
@@ -95,6 +99,7 @@ import {
   WorkspaceTab,
   ScanCheckpoint,
   ScanStepItem,
+  PlatformSettings,
 } from './types';
 
 import {
@@ -111,6 +116,7 @@ import {
   INITIAL_R2_BINDINGS,
   INITIAL_DEPLOY_HOOKS,
   INITIAL_WORKER_ROUTES,
+  INITIAL_PLATFORM_SETTINGS,
   getInitialDeployLogs,
 } from './mocks';
 
@@ -134,18 +140,24 @@ import {
   DeploymentsView,
   AccountsView,
   TemplatesView,
+  SettingsView,
   IntakePipeline,
   ScanConsole,
   WorkspaceView,
 } from './features';
 
+import { DualSidebarLayout } from './layouts';
+
 
 export default function App() {
-  // Navigation: 'dashboard' | 'projects' | 'deployments' | 'accounts' | 'templates' | 'project-blank' | 'project-scan' | 'project-workspace'
-  const [activeRoute, setActiveRoute] = useState<'dashboard' | 'projects' | 'deployments' | 'accounts' | 'templates' | 'project-blank' | 'project-scan' | 'project-workspace'>('dashboard');
+  // Navigation: 'dashboard' | 'projects' | 'deployments' | 'accounts' | 'templates' | 'settings' | 'project-blank' | 'project-scan' | 'project-workspace'
+  const [activeRoute, setActiveRoute] = useState<ActiveRoute>('dashboard');
   
   // Primary Sidebar Collapse State
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  // Global Platform Settings State (Zero hardcoded values)
+  const [platformSettings, setPlatformSettings] = useState<PlatformSettings>(INITIAL_PLATFORM_SETTINGS);
 
   // Deployments State & Filters
   const [deploymentsList, setDeploymentsList] = useState<GlobalDeployment[]>(INITIAL_DEPLOYMENTS);
@@ -454,6 +466,10 @@ export default function App() {
   const [providerFilter, setProviderFilter] = useState<'all' | 'cloudflare' | 'github'>('all');
   const [sortOrder, setSortOrder] = useState<'updated' | 'name'>('updated');
 
+  // Header Profile Dropdown State & Ref
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
   const logsEndRef = useRef<HTMLDivElement>(null);
 
   // Deployment timer tick effect
@@ -509,6 +525,33 @@ export default function App() {
     setTimeout(() => {
       setToastMessage(null);
     }, 2500);
+  };
+
+  // Profile Dropdown: Dismiss on click-outside or ESC key
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsProfileMenuOpen(false);
+      }
+    };
+    if (isProfileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isProfileMenuOpen]);
+
+  const handleLogout = () => {
+    setIsProfileMenuOpen(false);
+    showToast('Logged out of session. Session expired.');
   };
 
   const copyToClipboard = (text: string) => {
@@ -1220,49 +1263,31 @@ binding = "AI"
     });
 
   return (
-    <div className="flex min-h-screen bg-[#0d1117] text-[#f0f6fc] font-sans antialiased selection:bg-[#1d6cf6] selection:text-white">
+    <>
       {/* 
         ========================================================================
-        1. PRIMARY GLOBAL SIDEBAR (COLLAPSIBLE)
-        ========================================================================
-        Purpose: Platform-level primary navigation (Dashboard, Projects, Deployments,
-                 Accounts, Templates) with full collapse/expand capability for high
-                 screen real estate optimization.
-        Features:
-          1. Expanded Mode (w-[190px]): Brand lockup, full text labels, counter pills,
-             and top collapse toggle button (PanelLeftClose).
-          2. Collapsed Mode (w-[54px]): High-density icon bar with tooltips, centered
-             action triggers, compact project badge dot, and expand button (PanelLeftOpen).
-          3. Status Indicator: Realtime Worker online status badge.
+        DUAL-SIDEBAR VIEWPORT ORCHESTRATOR SHELL (Phase 1.3 Architecture)
+        Encapsulates PrimarySidebar (Global) + SecondarySidebar (Workspace)
+        and fluid main content canvas with 3-tier brightness stepping.
         ========================================================================
       */}
-      <PrimarySidebar
+      <DualSidebarLayout
         activeRoute={activeRoute}
         setActiveRoute={setActiveRoute}
-        isCollapsed={isSidebarCollapsed}
-        setIsCollapsed={setIsSidebarCollapsed}
+        isSidebarCollapsed={isSidebarCollapsed}
+        setIsSidebarCollapsed={setIsSidebarCollapsed}
         projectsCount={projects.length}
         deploymentsCount={deploymentsList.length}
         templatesCount={READY_TEMPLATES.length}
         isGithubConnected={isGithubConnected}
         isCloudflareConnected={isCloudflareConnected}
         isWorkerOnline={true}
-      />
-
-      {/* 2. SECONDARY PROJECT SIDEBAR (Design System: SecondarySidebar) */}
-      {activeRoute === 'project-workspace' && (
-        <SecondarySidebar
-          projectName={currentProject.name}
-          projectRepo={currentProject.repo}
-          activeTab={workspaceTab}
-          setActiveTab={setWorkspaceTab}
-          envVarsCount={envVars.length}
-          onReScan={startDeepScan}
-        />
-      )}
-
-      {/* 3. MAIN VIEWPORT */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#0d1117]">
+        currentProject={currentProject}
+        workspaceTab={workspaceTab}
+        setWorkspaceTab={setWorkspaceTab}
+        envVarsCount={envVars.length}
+        onReScan={startDeepScan}
+      >
         <header className="h-11 border-b border-[#21262d] flex items-center justify-between px-3.5 bg-[#161b22] sticky top-0 z-10">
           <div className="flex items-center gap-2">
             {activeRoute === 'deployments' ? (
@@ -1281,6 +1306,15 @@ binding = "AI"
                 <span className="text-[#f0f6fc] font-medium">Connected Accounts</span>
                 <span className="text-[9.5px] font-mono font-normal px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30">
                   {isGithubConnected && isCloudflareConnected ? '2 Linked' : isGithubConnected || isCloudflareConnected ? '1 Linked' : '0 Linked'}
+                </span>
+              </div>
+            ) : activeRoute === 'settings' ? (
+              <div className="flex items-center gap-1.5 text-xs font-normal">
+                <span className="text-[#8b949e]">Platform</span>
+                <span className="text-[#7d8590]">/</span>
+                <span className="text-[#f0f6fc] font-medium">Settings</span>
+                <span className="text-[9.5px] font-mono font-normal px-1.5 py-0.2 rounded bg-[#1d6cf6]/10 text-[#58a6ff] border border-[#1d6cf6]/30">
+                  Account & Preferences
                 </span>
               </div>
             ) : activeRoute === 'project-blank' ? (
@@ -1333,20 +1367,136 @@ binding = "AI"
                 <span className="hidden sm:inline">Deploy</span>
               </button>
             ) : (
-              <>
-                <select className="bg-[#090d13] border border-[#21262d] text-[#f0f6fc] text-xs px-2 py-1 rounded">
-                  <option>VibTools</option>
-                  <option>Personal</option>
-                </select>
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>New Project</span>
-                </button>
-              </>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>New Project</span>
+              </button>
             )}
+
+            {/* <!-- ================================================================ -->
+                <!-- HEADER USER PROFILE & ACCOUNT CONTROL DROPDOWN -->
+                <!-- Purpose: Replaces legacy vibtools/personal selector with modern -->
+                <!-- user profile avatar button, account management, & session controls -->
+                <!-- Events: Toggle onClick, Dismiss on outside click or ESC key -->
+                <!-- Invariants: Rule 01 (Clean & Compact) & Rule 02 (In-Code Comments) -->
+                <!-- ================================================================ --> */}
+            <div className="relative" ref={profileMenuRef}>
+              <button
+                type="button"
+                onClick={() => setIsProfileMenuOpen((prev) => !prev)}
+                title={`User profile: ${platformSettings.profile?.displayName || 'Prince Raj'} (@${platformSettings.profile?.username || 'vibtools'})`}
+                aria-label="User profile and account navigation"
+                aria-expanded={isProfileMenuOpen}
+                className={`flex items-center gap-1.5 px-2 py-1 rounded border text-xs cursor-pointer transition-all ${
+                  isProfileMenuOpen
+                    ? 'bg-[#21262d] border-[#388bfd] text-[#f0f6fc]'
+                    : 'bg-[#090d13] hover:bg-[#161b22] border-[#21262d] hover:border-[#30363d] text-[#c9d1d9] hover:text-[#f0f6fc]'
+                }`}
+              >
+                <div className="w-5 h-5 rounded-full bg-[#1d6cf6]/20 border border-[#1d6cf6]/50 flex items-center justify-center text-[#58a6ff]">
+                  <User className="w-3 h-3" />
+                </div>
+                <span className="font-mono text-[11px] text-[#f0f6fc] hidden sm:inline">
+                  @{platformSettings.profile?.username || 'vibtools'}
+                </span>
+                <ChevronDown
+                  className={`w-3 h-3 text-[#7d8590] transition-transform duration-150 ${
+                    isProfileMenuOpen ? 'rotate-180 text-[#58a6ff]' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Profile Dropdown Menu */}
+              {isProfileMenuOpen && (
+                <div
+                  className="absolute right-0 top-full mt-1.5 w-60 bg-[#161b22] border border-[#30363d] rounded-md shadow-2xl py-1 z-50 text-xs animate-in fade-in zoom-in-95 duration-100"
+                  role="menu"
+                  aria-orientation="vertical"
+                >
+                  {/* Account Summary Strip */}
+                  <div className="px-3 py-2 border-b border-[#21262d] bg-[#0d1117]/60">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#1d6cf6]/30 to-[#6366f1]/30 border border-[#1d6cf6]/40 flex items-center justify-center text-[#58a6ff] text-xs font-semibold shrink-0">
+                        {platformSettings.profile?.avatarInitial || 'P'}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-[#f0f6fc] font-medium truncate text-xs">
+                            {platformSettings.profile?.displayName || 'Prince Raj'}
+                          </span>
+                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30 shrink-0">
+                            {platformSettings.profile?.plan || 'Pro'}
+                          </span>
+                        </div>
+                        <div className="text-[10px] font-mono text-[#7d8590] truncate">
+                          {platformSettings.profile?.email || 'princeraj1396@gmail.com'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section: Main Actions */}
+                  <div className="py-1">
+                    {/* Go to Accounts Control */}
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setActiveRoute('accounts');
+                        setIsProfileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-1.5 text-left text-[#f0f6fc] hover:bg-[#21262d] transition-colors cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <UserCheck className="w-3.5 h-3.5 text-[#58a6ff] group-hover:text-[#79c0ff]" />
+                        <span className="text-xs">Accounts Control</span>
+                      </div>
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#090d13] text-[#7d8590] border border-[#21262d]">
+                        {isGithubConnected && isCloudflareConnected ? '2 Linked' : '1 Linked'}
+                      </span>
+                    </button>
+
+                    {/* Platform Settings */}
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setActiveRoute('settings');
+                        setIsProfileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-1.5 text-left text-[#f0f6fc] hover:bg-[#21262d] transition-colors cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Settings className="w-3.5 h-3.5 text-[#8b949e] group-hover:text-[#f0f6fc]" />
+                        <span className="text-xs">Platform Settings</span>
+                      </div>
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#090d13] text-[#7d8590] border border-[#21262d]">
+                        Pref & Git
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* Section Divider */}
+                  <div className="border-t border-[#21262d] my-1" />
+
+                  {/* Logout Button */}
+                  <div className="py-0.5">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[#f85149] hover:bg-[#f85149]/10 transition-colors cursor-pointer group"
+                    >
+                      <LogOut className="w-3.5 h-3.5 text-[#f85149] group-hover:translate-x-0.5 transition-transform" />
+                      <span className="text-xs font-medium">Log Out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
@@ -1358,12 +1508,24 @@ binding = "AI"
         {activeRoute === 'dashboard' && (
           <DashboardView
             projects={projects}
+            deploymentsCount={deploymentsList.length}
+            successRate={
+              deploymentsList.length > 0
+                ? Math.round(
+                    (deploymentsList.filter((d) => d.status === 'live' || d.status === 'passed').length /
+                      deploymentsList.length) *
+                      100
+                  )
+                : 100
+            }
             isDeploying={isDeploying}
             deployTimer={deployTimer}
             repoInputUrl={repoInputUrl}
             onRepoInputUrlChange={setRepoInputUrl}
             onTriggerDeployment={triggerDeployment}
             onCopyToClipboard={copyToClipboard}
+            isGithubConnected={isGithubConnected}
+            isCloudflareConnected={isCloudflareConnected}
           />
         )}
 
@@ -1438,6 +1600,21 @@ binding = "AI"
           />
         )}
 
+        {/* 6. PLATFORM SETTINGS VIEW */}
+        {activeRoute === 'settings' && (
+          <SettingsView
+            settings={platformSettings}
+            onUpdateSettings={(newSettings) => {
+              setPlatformSettings(newSettings);
+              showToast('Platform settings updated successfully');
+            }}
+            onCopyToClipboard={(text, label) => {
+              navigator.clipboard.writeText(text);
+              showToast(`Copied ${label}`);
+            }}
+          />
+        )}
+
         {/* ======================================================================== */}
         {/* PHASE 1.5: SCANNER ENGINE & DUAL-SIDEBAR WORKSPACE */}
         {/* ======================================================================== */}
@@ -1502,6 +1679,7 @@ binding = "AI"
               envVars,
               onCopyToClipboard: copyToClipboard,
               onStartDeepScan: startDeepScan,
+              onDeploy: () => triggerDeployment(currentProject.name),
             }}
             variablesProps={{
               envVars,
@@ -1682,10 +1860,16 @@ binding = "AI"
             }}
             historyProps={{
               currentProject,
+              deploymentsList,
+              onRedeploy: (proj) => {
+                setCurrentProject({ name: proj.name, repo: proj.repo });
+                triggerDeployment(proj.name);
+              },
+              onNavigateToLogs: () => setWorkspaceTab('logs'),
             }}
           />
         )}
-      </main>
+      </DualSidebarLayout>
 
       {/* POPUP MODAL: CREATE PROJECT */}
       {isModalOpen && (
@@ -2836,6 +3020,6 @@ binding = "AI"
           <span>{toastMessage}</span>
         </div>
       )}
-    </div>
+    </>
   );
 }

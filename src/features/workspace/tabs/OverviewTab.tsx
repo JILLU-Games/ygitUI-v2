@@ -24,6 +24,7 @@ import {
   FolderGit2,
   Copy,
   RotateCcw,
+  Play,
   Github,
   Code2,
   Cpu,
@@ -39,6 +40,7 @@ export interface OverviewTabProps {
   envVars: EnvVar[];
   onCopyToClipboard: (text: string) => void;
   onStartDeepScan: () => void;
+  onDeploy?: () => void;
 }
 
 export const OverviewTab: React.FC<OverviewTabProps> = ({
@@ -46,6 +48,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   envVars,
   onCopyToClipboard,
   onStartDeepScan,
+  onDeploy,
 }) => {
   return (
     <div className="flex flex-col gap-2 animate-in fade-in duration-150">
@@ -70,6 +73,17 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
         {/* Overview Action Buttons */}
         <div className="flex items-center gap-1.5 self-end sm:self-auto">
+          {onDeploy && (
+            <button
+              type="button"
+              onClick={onDeploy}
+              title="Instant Deploy to Cloudflare Pages"
+              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-semibold px-3 py-1 rounded flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-[0.98]"
+            >
+              <Play className="w-3 h-3 fill-current" />
+              <span>Deploy</span>
+            </button>
+          )}
           <button
             type="button"
             onClick={() => onCopyToClipboard(JSON.stringify(currentProject))}

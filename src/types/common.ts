@@ -9,6 +9,7 @@ export type ActiveRoute =
   | 'deployments'
   | 'accounts'
   | 'templates'
+  | 'settings'
   | 'project-blank'
   | 'project-scan'
   | 'project-workspace';

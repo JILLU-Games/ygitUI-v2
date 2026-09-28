@@ -34,6 +34,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 import { Project } from '../../types';
+import { StatusBadge } from '../../components/badges/StatusBadge';
 
 export interface ProjectsViewProps {
   projectSearch: string;
@@ -111,9 +112,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               >
                 {proj.name}
               </button>
-              <span className="text-[9px] font-semibold px-1 py-0.2 rounded bg-[#238636]/10 text-[#3fb950] border border-[#238636]/20">
-                ● Live
-              </span>
+              <StatusBadge status={(proj.status || 'live') as any} />
             </div>
 
             {/* Card Body: Repository & Edge Monospace Specs */}

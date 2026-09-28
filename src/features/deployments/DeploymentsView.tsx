@@ -103,6 +103,25 @@ export const DeploymentsView: React.FC<DeploymentsViewProps> = ({
     return matchQuery && matchEnv && matchStatus;
   });
 
+  // Dynamic telemetry calculations
+  const successfulCount = deploymentsList.filter(
+    (d) => d.status === 'live' || d.status === 'passed'
+  ).length;
+  const successRate =
+    deploymentsList.length > 0
+      ? Math.round((successfulCount / deploymentsList.length) * 100)
+      : 100;
+
+  const avgBuildTime =
+    deploymentsList.length > 0
+      ? (
+          deploymentsList.reduce(
+            (acc, d) => acc + (parseFloat(d.duration) || 0),
+            0
+          ) / deploymentsList.length
+        ).toFixed(1) + 's'
+      : '12.8s';
+
   return (
     <div className="p-3 sm:p-4 flex flex-col gap-3 max-w-[1600px] w-full mx-auto animate-in fade-in duration-150">
       {/* 
@@ -128,7 +147,9 @@ export const DeploymentsView: React.FC<DeploymentsViewProps> = ({
         <div className="bg-[#161b22] border border-[#21262d] rounded-lg p-2.5 flex items-center justify-between">
           <div>
             <div className="text-[10px] font-mono uppercase text-[#7d8590]">Success Rate</div>
-            <div className="text-sm font-semibold text-[#3fb950] font-mono mt-0.5">100%</div>
+            <div className="text-sm font-semibold text-[#3fb950] font-mono mt-0.5">
+              {successRate}%
+            </div>
           </div>
           <div className="w-7 h-7 rounded bg-[#238636]/10 border border-[#238636]/20 text-[#3fb950] flex items-center justify-center">
             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -139,7 +160,9 @@ export const DeploymentsView: React.FC<DeploymentsViewProps> = ({
         <div className="bg-[#161b22] border border-[#21262d] rounded-lg p-2.5 flex items-center justify-between">
           <div>
             <div className="text-[10px] font-mono uppercase text-[#7d8590]">Avg Build Time</div>
-            <div className="text-sm font-semibold text-[#f0f6fc] font-mono mt-0.5">12.8s</div>
+            <div className="text-sm font-semibold text-[#f0f6fc] font-mono mt-0.5">
+              {avgBuildTime}
+            </div>
           </div>
           <div className="w-7 h-7 rounded bg-[#8957e5]/10 border border-[#8957e5]/20 text-[#a371f7] flex items-center justify-center">
             <Clock className="w-3.5 h-3.5" />

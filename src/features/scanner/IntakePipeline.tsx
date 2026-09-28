@@ -95,7 +95,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
       {/* PROJECT METADATA STRIP */}
       <div className="bg-[#161b22] border border-[#30363d] rounded-md p-2.5 px-3.5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-[#090d13] border border-[#30363d] flex items-center justify-center text-[#1971c2]">
+          <div className="w-7 h-7 rounded bg-[#090d13] border border-[#30363d] flex items-center justify-center text-[#1d6cf6]">
             <FolderGit2 className="w-3.5 h-3.5" />
           </div>
           <div>
@@ -124,7 +124,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
               onSetIsResourcePickerOpen(true);
               onSetResourceSelected('clone');
             }}
-            className="bg-[#1971c2] hover:bg-[#1668b0] text-white text-xs font-medium px-3.5 py-1.5 rounded flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
+            className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3.5 py-1.5 rounded flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Repo</span>
@@ -138,7 +138,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
           <div className="bg-[#161b22] border border-[#30363d] rounded-md p-3.5 flex flex-col gap-3">
             <div className="flex items-center justify-between pb-2 border-b border-[#21262d]">
               <div className="text-[13px] font-semibold text-[#f0f6fc] flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-[#1971c2]" />
+                <Layers className="w-3.5 h-3.5 text-[#1d6cf6]" />
                 <span>Choose a resource</span>
               </div>
               <button
@@ -160,15 +160,15 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 onClick={() => onSetResourceSelected('clone')}
                 className={`border rounded-md p-3 flex flex-col gap-1.5 cursor-pointer transition-all select-none ${
                   resourceSelected === 'clone'
-                    ? 'border-[#1971c2] bg-[#0e1828] shadow-[0_0_0_1px_#1971c2]'
-                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1971c2] hover:bg-[#0f1622]'
+                    ? 'border-[#1d6cf6] bg-[#0e1828] shadow-[0_0_0_1px_#1d6cf6]'
+                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1d6cf6] hover:bg-[#0f1622]'
                 }`}
               >
                 <div
                   className={`w-7 h-7 rounded flex items-center justify-center ${
                     resourceSelected === 'clone'
-                      ? 'bg-[#1971c2]/15 border border-[#1971c2] text-[#1971c2]'
-                      : 'bg-[#161b22] border border-[#21262d] text-[#1971c2]'
+                      ? 'bg-[#1d6cf6]/15 border border-[#1d6cf6] text-[#1d6cf6]'
+                      : 'bg-[#161b22] border border-[#21262d] text-[#1d6cf6]'
                   }`}
                 >
                   <Globe className="w-3.5 h-3.5" />
@@ -177,7 +177,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <div className="text-[11px] text-[#8b949e] leading-[1.35]">Clone any public repository via direct HTTPS URL.</div>
                 <div className="mt-auto pt-1.5 flex items-center justify-between font-mono text-[9.5px] text-[#7d8590] border-t border-[#21262d]/50">
                   <span>● HTTPS Git</span>
-                  <span className="text-[#1971c2]">Configure →</span>
+                  <span className="text-[#1d6cf6]">Configure →</span>
                 </div>
               </div>
 
@@ -186,15 +186,15 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 onClick={() => onSetResourceSelected('import')}
                 className={`border rounded-md p-3 flex flex-col gap-1.5 cursor-pointer transition-all select-none ${
                   resourceSelected === 'import'
-                    ? 'border-[#1971c2] bg-[#0e1828] shadow-[0_0_0_1px_#1971c2]'
-                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1971c2] hover:bg-[#0f1622]'
+                    ? 'border-[#1d6cf6] bg-[#0e1828] shadow-[0_0_0_1px_#1d6cf6]'
+                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1d6cf6] hover:bg-[#0f1622]'
                 }`}
               >
                 <div
                   className={`w-7 h-7 rounded flex items-center justify-center ${
                     resourceSelected === 'import'
-                      ? 'bg-[#1971c2]/15 border border-[#1971c2] text-[#1971c2]'
-                      : 'bg-[#161b22] border border-[#21262d] text-[#1971c2]'
+                      ? 'bg-[#1d6cf6]/15 border border-[#1d6cf6] text-[#1d6cf6]'
+                      : 'bg-[#161b22] border border-[#21262d] text-[#1d6cf6]'
                   }`}
                 >
                   <Github className="w-3.5 h-3.5" />
@@ -203,7 +203,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <div className="text-[11px] text-[#8b949e] leading-[1.35]">Connect and select from your linked GitHub repositories.</div>
                 <div className="mt-auto pt-1.5 flex items-center justify-between font-mono text-[9.5px] text-[#7d8590] border-t border-[#21262d]/50">
                   <span>● GitHub OAuth</span>
-                  <span className="text-[#1971c2]">Select →</span>
+                  <span className="text-[#1d6cf6]">Select →</span>
                 </div>
               </div>
 
@@ -212,15 +212,15 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 onClick={() => onSetResourceSelected('upload')}
                 className={`border rounded-md p-3 flex flex-col gap-1.5 cursor-pointer transition-all select-none ${
                   resourceSelected === 'upload'
-                    ? 'border-[#1971c2] bg-[#0e1828] shadow-[0_0_0_1px_#1971c2]'
-                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1971c2] hover:bg-[#0f1622]'
+                    ? 'border-[#1d6cf6] bg-[#0e1828] shadow-[0_0_0_1px_#1d6cf6]'
+                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1d6cf6] hover:bg-[#0f1622]'
                 }`}
               >
                 <div
                   className={`w-7 h-7 rounded flex items-center justify-center ${
                     resourceSelected === 'upload'
-                      ? 'bg-[#1971c2]/15 border border-[#1971c2] text-[#1971c2]'
-                      : 'bg-[#161b22] border border-[#21262d] text-[#1971c2]'
+                      ? 'bg-[#1d6cf6]/15 border border-[#1d6cf6] text-[#1d6cf6]'
+                      : 'bg-[#161b22] border border-[#21262d] text-[#1d6cf6]'
                   }`}
                 >
                   <UploadCloud className="w-3.5 h-3.5" />
@@ -229,7 +229,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <div className="text-[11px] text-[#8b949e] leading-[1.35]">Deploy static files directly via local zip bundle or folder.</div>
                 <div className="mt-auto pt-1.5 flex items-center justify-between font-mono text-[9.5px] text-[#7d8590] border-t border-[#21262d]/50">
                   <span>● Zip / Folder</span>
-                  <span className="text-[#1971c2]">Drop →</span>
+                  <span className="text-[#1d6cf6]">Drop →</span>
                 </div>
               </div>
 
@@ -238,15 +238,15 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 onClick={() => onSetResourceSelected('template')}
                 className={`border rounded-md p-3 flex flex-col gap-1.5 cursor-pointer transition-all select-none ${
                   resourceSelected === 'template'
-                    ? 'border-[#1971c2] bg-[#0e1828] shadow-[0_0_0_1px_#1971c2]'
-                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1971c2] hover:bg-[#0f1622]'
+                    ? 'border-[#1d6cf6] bg-[#0e1828] shadow-[0_0_0_1px_#1d6cf6]'
+                    : 'border-[#30363d] bg-[#090d13] hover:border-[#1d6cf6] hover:bg-[#0f1622]'
                 }`}
               >
                 <div
                   className={`w-7 h-7 rounded flex items-center justify-center ${
                     resourceSelected === 'template'
-                      ? 'bg-[#1971c2]/15 border border-[#1971c2] text-[#1971c2]'
-                      : 'bg-[#161b22] border border-[#21262d] text-[#1971c2]'
+                      ? 'bg-[#1d6cf6]/15 border border-[#1d6cf6] text-[#1d6cf6]'
+                      : 'bg-[#161b22] border border-[#21262d] text-[#1d6cf6]'
                   }`}
                 >
                   <Sparkles className="w-3.5 h-3.5" />
@@ -255,7 +255,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <div className="text-[11px] text-[#8b949e] leading-[1.35]">Start fast with pre-configured Vite, Next.js, or Astro starters.</div>
                 <div className="mt-auto pt-1.5 flex items-center justify-between font-mono text-[9.5px] text-[#7d8590] border-t border-[#21262d]/50">
                   <span>● Starter Presets</span>
-                  <span className="text-[#1971c2]">Browse →</span>
+                  <span className="text-[#1d6cf6]">Browse →</span>
                 </div>
               </div>
             </div>
@@ -268,7 +268,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
             <div className="bg-[#161b22] border border-[#30363d] rounded-md p-3.5 flex flex-col gap-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between pb-2 border-b border-[#21262d]">
                 <div className="text-[12.5px] font-semibold text-[#f0f6fc] flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5 text-[#1971c2]" />
+                  <Globe className="w-3.5 h-3.5 text-[#1d6cf6]" />
                   <span>Public Git Clone</span>
                 </div>
                 <span className="text-[9.5px] font-semibold uppercase px-1.5 py-0.5 rounded bg-[#21262d] text-[#8b949e] border border-[#30363d]">
@@ -279,14 +279,14 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
               <div className="flex gap-2 flex-wrap sm:flex-nowrap">
                 <input
                   type="text"
-                  className="flex-2 min-w-[200px] bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1971c2] outline-none"
+                  className="flex-2 min-w-[200px] bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] outline-none"
                   placeholder="https://github.com/organization/repository.git"
                   value={cloneInputUrl}
                   onChange={(e) => onSetCloneInputUrl(e.target.value)}
                 />
                 <input
                   type="text"
-                  className="w-32 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1971c2] outline-none"
+                  className="w-32 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] outline-none"
                   placeholder="Branch (e.g. main)"
                   value={cloneBranch}
                   onChange={(e) => onSetCloneBranch(e.target.value)}
@@ -294,7 +294,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <button
                   type="button"
                   onClick={() => onRunIntakePipeline('Public Git Clone', cloneInputUrl || 'vibtools/vib-agent')}
-                  className="bg-[#1971c2] hover:bg-[#1668b0] text-white text-xs font-medium px-3.5 py-1.5 rounded cursor-pointer whitespace-nowrap transition-colors"
+                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3.5 py-1.5 rounded cursor-pointer whitespace-nowrap transition-colors"
                 >
                   Clone & Analyze
                 </button>
@@ -315,7 +315,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
             <div className="bg-[#161b22] border border-[#30363d] rounded-md p-3.5 flex flex-col gap-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between pb-2 border-b border-[#21262d]">
                 <div className="text-[12.5px] font-semibold text-[#f0f6fc] flex items-center gap-1.5">
-                  <Github className="w-3.5 h-3.5 text-[#1971c2]" />
+                  <Github className="w-3.5 h-3.5 text-[#1d6cf6]" />
                   <span>Import GitHub Repository</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -336,7 +336,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
               <div className="flex items-center gap-2">
                 <input
                   type="text"
-                  className="flex-1 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] outline-none focus:border-[#1971c2]"
+                  className="flex-1 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] outline-none focus:border-[#1d6cf6]"
                   placeholder="Search repository..."
                   value={repoSearchQuery}
                   onChange={(e) => onSetRepoSearchQuery(e.target.value)}
@@ -367,7 +367,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                       <button
                         type="button"
                         onClick={() => onRunIntakePipeline('GitHub Direct Import', repo.name)}
-                        className="bg-[#1971c2] hover:bg-[#1668b0] text-white text-[11px] font-medium px-2.5 py-0.5 rounded cursor-pointer transition-colors"
+                        className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-[11px] font-medium px-2.5 py-0.5 rounded cursor-pointer transition-colors"
                       >
                         Import
                       </button>
@@ -382,7 +382,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
             <div className="bg-[#161b22] border border-[#30363d] rounded-md p-3.5 flex flex-col gap-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between pb-2 border-b border-[#21262d]">
                 <div className="text-[12.5px] font-semibold text-[#f0f6fc] flex items-center gap-1.5">
-                  <UploadCloud className="w-3.5 h-3.5 text-[#1971c2]" />
+                  <UploadCloud className="w-3.5 h-3.5 text-[#1d6cf6]" />
                   <span>Direct Asset Upload</span>
                 </div>
                 <span className="text-[9.5px] font-semibold uppercase px-1.5 py-0.5 rounded bg-[#21262d] text-[#8b949e] border border-[#30363d]">
@@ -390,7 +390,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 </span>
               </div>
 
-              <label className="border border-dashed border-[#30363d] hover:border-[#1971c2] rounded-md bg-[#090d13] hover:bg-[#0f1622] p-7 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all">
+              <label className="border border-dashed border-[#30363d] hover:border-[#1d6cf6] rounded-md bg-[#090d13] hover:bg-[#0f1622] p-7 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition-all">
                 <input
                   type="file"
                   className="hidden"
@@ -400,7 +400,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                     }
                   }}
                 />
-                <div className="w-9 h-9 rounded-full bg-[#161b22] border border-[#30363d] flex items-center justify-center text-[#1971c2] mb-1">
+                <div className="w-9 h-9 rounded-full bg-[#161b22] border border-[#30363d] flex items-center justify-center text-[#1d6cf6] mb-1">
                   <UploadCloud className="w-4.5 h-4.5" />
                 </div>
                 <div className="font-semibold text-[12.5px] text-[#f0f6fc]">
@@ -420,7 +420,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
               <div className="flex items-center justify-between gap-2">
                 <input
                   type="text"
-                  className="flex-1 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono outline-none focus:border-[#1971c2]"
+                  className="flex-1 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono outline-none focus:border-[#1d6cf6]"
                   placeholder="Root directory (e.g. dist, build, public)"
                   value={distFolder}
                   onChange={(e) => onSetDistFolder(e.target.value)}
@@ -428,7 +428,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <button
                   type="button"
                   onClick={() => onRunIntakePipeline('Upload Bundle', uploadedFileName || 'bundle.zip')}
-                  className="bg-[#1971c2] hover:bg-[#1668b0] text-white text-xs font-medium px-3.5 py-1.5 rounded cursor-pointer transition-colors"
+                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3.5 py-1.5 rounded cursor-pointer transition-colors"
                 >
                   Deploy Bundle
                 </button>
@@ -441,7 +441,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
             <div className="bg-[#161b22] border border-[#30363d] rounded-md p-3.5 flex flex-col gap-3 animate-in fade-in duration-150">
               <div className="flex items-center justify-between pb-2 border-b border-[#21262d]">
                 <div className="text-[12.5px] font-semibold text-[#f0f6fc] flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#1971c2]" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#1d6cf6]" />
                   <span>Deploy Starter Template</span>
                 </div>
                 <span className="text-[9.5px] font-semibold uppercase px-1.5 py-0.5 rounded bg-[#21262d] text-[#8b949e] border border-[#30363d]">
@@ -458,10 +458,10 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 ].map((tmpl) => (
                   <div
                     key={tmpl.name}
-                    className="bg-[#090d13] border border-[#30363d] hover:border-[#1971c2] rounded p-2.5 flex flex-col justify-between gap-2 transition-colors"
+                    className="bg-[#090d13] border border-[#30363d] hover:border-[#1d6cf6] rounded p-2.5 flex flex-col justify-between gap-2 transition-colors"
                   >
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded bg-[#161b22] border border-[#21262d] flex items-center justify-center text-[11px] font-bold text-[#1971c2]">
+                      <div className="w-6 h-6 rounded bg-[#161b22] border border-[#21262d] flex items-center justify-center text-[11px] font-bold text-[#1d6cf6]">
                         {tmpl.logo}
                       </div>
                       <div>
@@ -472,7 +472,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                     <button
                       type="button"
                       onClick={() => onRunIntakePipeline('Template', tmpl.name)}
-                      className="w-full bg-[#1971c2] hover:bg-[#1668b0] text-white text-[10.5px] font-medium py-1 rounded cursor-pointer transition-colors text-center"
+                      className="w-full bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-[10.5px] font-medium py-1 rounded cursor-pointer transition-colors text-center"
                     >
                       Clone Template
                     </button>
@@ -490,17 +490,17 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                   {intakeCompleted ? (
                     <CheckCircle2 className="w-4 h-4 text-[#3fb950]" />
                   ) : (
-                    <RefreshCw className="w-4 h-4 text-[#1971c2] animate-spin" />
+                    <RefreshCw className="w-4 h-4 text-[#1d6cf6] animate-spin" />
                   )}
                   <span className="font-semibold text-[#f0f6fc]">{intakeStatusText}</span>
                 </div>
-                <span className="font-mono text-xs font-bold text-[#1971c2]">{intakeProgress}%</span>
+                <span className="font-mono text-xs font-bold text-[#1d6cf6]">{intakeProgress}%</span>
               </div>
 
               {/* Progress Bar */}
               <div className="w-full h-1.5 rounded bg-[#090d13] overflow-hidden border border-[#21262d]">
                 <div
-                  className="h-full bg-[#1971c2] transition-all duration-300 ease-out"
+                  className="h-full bg-[#1d6cf6] transition-all duration-300 ease-out"
                   style={{ width: `${intakeProgress}%` }}
                 ></div>
               </div>
@@ -510,7 +510,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <button
                   type="button"
                   onClick={onStartDeepScan}
-                  className="w-full py-2.5 bg-[#1971c2] hover:bg-[#1668b0] text-white font-bold text-xs rounded-md flex items-center justify-center gap-2 cursor-pointer mt-1 shadow-md transition-all active:scale-[0.99]"
+                  className="w-full py-2.5 bg-[#1d6cf6] hover:bg-[#2f7af8] text-white font-bold text-xs rounded-md flex items-center justify-center gap-2 cursor-pointer mt-1 shadow-md transition-all active:scale-[0.99]"
                 >
                   <Search className="w-4 h-4" />
                   <span>Scan Repository</span>

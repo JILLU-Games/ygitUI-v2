@@ -41,22 +41,30 @@ import { Project } from '../../types';
 
 export interface DashboardViewProps {
   projects: Project[];
+  deploymentsCount?: number;
+  successRate?: number;
   isDeploying: boolean;
   deployTimer: number;
   repoInputUrl: string;
   onRepoInputUrlChange: (url: string) => void;
   onTriggerDeployment: (repoName: string) => void;
   onCopyToClipboard: (text: string) => void;
+  isGithubConnected?: boolean;
+  isCloudflareConnected?: boolean;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
   projects,
+  deploymentsCount = 28,
+  successRate = 98,
   isDeploying,
   deployTimer,
   repoInputUrl,
   onRepoInputUrlChange,
   onTriggerDeployment,
   onCopyToClipboard,
+  isGithubConnected = true,
+  isCloudflareConnected = true,
 }) => {
   return (
     <div className="p-3 flex flex-col gap-2 max-w-[1600px] w-full mx-auto animate-in fade-in duration-150">
@@ -78,19 +86,23 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Metric 2: Total Deployments */}
         <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
           <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Deployments</div>
-          <div className="text-sm font-semibold text-[#f0f6fc] font-mono">28</div>
+          <div className="text-sm font-semibold text-[#f0f6fc] font-mono">
+            {deploymentsCount.toString().padStart(2, '0')}
+          </div>
         </div>
 
         {/* Metric 3: Success Rate */}
         <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
           <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Success</div>
-          <div className="text-sm font-semibold text-[#3fb950] font-mono">100%</div>
+          <div className="text-sm font-semibold text-[#3fb950] font-mono">{successRate}%</div>
         </div>
 
         {/* Metric 4: Active Providers */}
         <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
           <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Providers</div>
-          <div className="text-sm font-semibold text-[#3fb950] font-mono">2/2</div>
+          <div className="text-sm font-semibold text-[#3fb950] font-mono">
+            {((isGithubConnected ? 1 : 0) + (isCloudflareConnected ? 1 : 0))}/2
+          </div>
         </div>
 
         {/* Metric 5: Platform Operational State */}
@@ -182,17 +194,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="bg-[#161b22] border border-[#30363d] rounded p-2 text-xs">
               <div className="flex items-center justify-between mb-1">
                 <strong className="text-[#f0f6fc]">GitHub</strong>
-                <span className="text-[9.5px] text-[#3fb950]">Connected</span>
+                <span className={`text-[9.5px] ${isGithubConnected ? 'text-[#3fb950]' : 'text-[#8b949e]'}`}>
+                  {isGithubConnected ? 'Connected' : 'Disconnected'}
+                </span>
               </div>
-              <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">@vibtools</div>
+              <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">
+                {isGithubConnected ? '@vibtools' : 'No account linked'}
+              </div>
             </div>
 
             <div className="bg-[#161b22] border border-[#30363d] rounded p-2 text-xs">
               <div className="flex items-center justify-between mb-1">
                 <strong className="text-[#f0f6fc]">Cloudflare</strong>
-                <span className="text-[9.5px] text-[#3fb950]">Connected</span>
+                <span className={`text-[9.5px] ${isCloudflareConnected ? 'text-[#3fb950]' : 'text-[#8b949e]'}`}>
+                  {isCloudflareConnected ? 'Edge Verified' : 'Disconnected'}
+                </span>
               </div>
-              <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">Edge Verified</div>
+              <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">
+                {isCloudflareConnected ? '310+ Edge POPs' : 'API token required'}
+              </div>
             </div>
           </div>
         </div>
