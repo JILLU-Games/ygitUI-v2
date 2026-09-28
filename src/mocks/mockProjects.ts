@@ -1,0 +1,48 @@
+import { Project } from '../types/project';
+
+export const INITIAL_PROJECTS: Project[] = [
+  {
+    id: 'p1',
+    name: 'vib-tools-app',
+    repo: 'vibtools/main',
+    branch: 'main',
+    provider: 'cloudflare',
+    domain: 'vib.pages.dev',
+    updated: '2m ago',
+    timestamp: 2,
+    status: 'live',
+  },
+  {
+    id: 'p2',
+    name: 'domain-lookup',
+    repo: 'domain/prod',
+    branch: 'prod',
+    provider: 'cloudflare',
+    domain: 'domain.pages.dev',
+    updated: '1h ago',
+    timestamp: 60,
+    status: 'live',
+  },
+  {
+    id: 'p3',
+    name: 'licora-server',
+    repo: 'licora/main',
+    branch: 'main',
+    provider: 'github',
+    domain: 'licora.pages.dev',
+    updated: '3d ago',
+    timestamp: 4320,
+    status: 'live',
+  },
+  {
+    id: 'p4',
+    name: 'ygit-edge-docs',
+    repo: 'docs/master',
+    branch: 'master',
+    provider: 'cloudflare',
+    domain: 'docs.pages.dev',
+    updated: '5d ago',
+    timestamp: 7200,
+    status: 'live',
+  },
+];

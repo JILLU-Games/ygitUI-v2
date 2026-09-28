@@ -1,0 +1,6 @@
+{
+  "name": "YGIT Deployment Platform",
+  "description": "A high-performance open-source website and web app deployment platform mockup with live telemetry, multi-stage pipelines, project setups, and edge worker integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
