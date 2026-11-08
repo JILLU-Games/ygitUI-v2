@@ -28,6 +28,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { EnvVar } from '../../../types';
+import { MetricPill } from '../../../components';
 
 export interface VariablesTabProps {
   envVars: EnvVar[];
@@ -108,9 +109,7 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
             <Key className="w-3.5 h-3.5" />
           </div>
           <h3 className="text-xs font-semibold text-[#f0f6fc]">Environment Variables & Secrets</h3>
-          <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#090d13] border border-[#21262d] text-[#8b949e]">
-            {envVars.length} total
-          </span>
+          <MetricPill variant="neutral">{envVars.length} total</MetricPill>
         </div>
 
         {/* Top Action Buttons (Import, Export, Paste, Bulk) */}
@@ -331,15 +330,18 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
                           {v.key}
                         </span>
                         {v.isSecret && (
-                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#8957e5]/15 text-[#a371f7] border border-[#8957e5]/30 flex items-center gap-1">
-                            <Lock className="w-2.5 h-2.5" />
-                            <span>SECRET</span>
-                          </span>
+                          <MetricPill
+                            variant="purple"
+                            size="xs"
+                            icon={<Lock className="w-2.5 h-2.5" />}
+                          >
+                            SECRET
+                          </MetricPill>
                         )}
                         {isAstRef && (
-                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#1d6cf6]/15 text-[#58a6ff] border border-[#1d6cf6]/30">
+                          <MetricPill variant="blue" size="xs">
                             AST REF
-                          </span>
+                          </MetricPill>
                         )}
                       </div>
                     </td>

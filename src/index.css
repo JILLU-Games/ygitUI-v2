@@ -1,5 +1,42 @@
 @import "tailwindcss";
 
+@theme {
+  --color-canvas-default: #0d1117;
+  --color-canvas-subtle: #161b22;
+  --color-canvas-inset: #090d13;
+  --color-canvas-overlay: rgba(5, 8, 13, 0.75);
+
+  --color-border-default: #30363d;
+  --color-border-muted: #21262d;
+  --color-border-active: #1d6cf6;
+
+  --color-fg-default: #f0f6fc;
+  --color-fg-muted: #8b949e;
+  --color-fg-subtle: #7d8590;
+
+  --color-brand-primary: #1d6cf6;
+  --color-brand-primary-hover: #2f7af8;
+  --color-brand-primary-border: rgba(47, 122, 248, 0.4);
+
+  --color-accent-green: #238636;
+  --color-accent-green-hover: #2ea043;
+  --color-accent-green-text: #3fb950;
+  --color-accent-green-subtle: rgba(35, 134, 54, 0.15);
+
+  --color-accent-red-text: #f85149;
+  --color-accent-red-subtle: rgba(218, 54, 51, 0.15);
+
+  --color-accent-purple: #8957e5;
+  --color-accent-purple-text: #a371f7;
+  --color-accent-purple-subtle: rgba(137, 87, 229, 0.15);
+
+  --color-accent-amber: #d29922;
+  --color-accent-amber-subtle: rgba(210, 153, 34, 0.15);
+
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
 :root {
   --canvas-default: #0d1117;
   --canvas-subtle: #161b22;

@@ -128,8 +128,18 @@ import {
   IconButton,
   StatusBadge,
   FrameworkBadge,
+  MetricPill,
   TemplateThumbnailGraphic,
   TemplateModal,
+  ModalShell,
+  DnsConfigModal,
+  EditCustomDomainModal,
+  AddKvModal,
+  AddD1Modal,
+  AddR2Modal,
+  AddDeployHookModal,
+  PurgeCacheModal,
+  DeleteProjectModal,
   PrimarySidebar,
   SecondarySidebar,
 } from './components';
@@ -1295,27 +1305,23 @@ binding = "AI"
                 <span className="text-[#8b949e]">Platform</span>
                 <span className="text-[#7d8590]">/</span>
                 <span className="text-[#f0f6fc] font-medium">Deployments</span>
-                <span className="text-[9.5px] font-mono font-normal px-1.5 py-0.2 rounded bg-[#090d13] text-[#8b949e] border border-[#21262d]">
-                  {deploymentsList.length} Total
-                </span>
+                <MetricPill variant="neutral">{deploymentsList.length} Total</MetricPill>
               </div>
             ) : activeRoute === 'accounts' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
                 <span className="text-[#8b949e]">Platform</span>
                 <span className="text-[#7d8590]">/</span>
                 <span className="text-[#f0f6fc] font-medium">Connected Accounts</span>
-                <span className="text-[9.5px] font-mono font-normal px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30">
+                <MetricPill variant="green">
                   {isGithubConnected && isCloudflareConnected ? '2 Linked' : isGithubConnected || isCloudflareConnected ? '1 Linked' : '0 Linked'}
-                </span>
+                </MetricPill>
               </div>
             ) : activeRoute === 'settings' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
                 <span className="text-[#8b949e]">Platform</span>
                 <span className="text-[#7d8590]">/</span>
                 <span className="text-[#f0f6fc] font-medium">Settings</span>
-                <span className="text-[9.5px] font-mono font-normal px-1.5 py-0.2 rounded bg-[#1d6cf6]/10 text-[#58a6ff] border border-[#1d6cf6]/30">
-                  Account & Preferences
-                </span>
+                <MetricPill variant="blue">Account & Preferences</MetricPill>
               </div>
             ) : activeRoute === 'project-blank' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
@@ -1427,9 +1433,9 @@ binding = "AI"
                           <span className="text-[#f0f6fc] font-medium truncate text-xs">
                             {platformSettings.profile?.displayName || 'Prince Raj'}
                           </span>
-                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30 shrink-0">
+                          <MetricPill variant="green" size="xs">
                             {platformSettings.profile?.plan || 'Pro'}
-                          </span>
+                          </MetricPill>
                         </div>
                         <div className="text-[10px] font-mono text-[#7d8590] truncate">
                           {platformSettings.profile?.email || 'princeraj1396@gmail.com'}
@@ -1454,9 +1460,9 @@ binding = "AI"
                         <UserCheck className="w-3.5 h-3.5 text-[#58a6ff] group-hover:text-[#79c0ff]" />
                         <span className="text-xs">Accounts Control</span>
                       </div>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#090d13] text-[#7d8590] border border-[#21262d]">
+                      <MetricPill variant="neutral">
                         {isGithubConnected && isCloudflareConnected ? '2 Linked' : '1 Linked'}
-                      </span>
+                      </MetricPill>
                     </button>
 
                     {/* Platform Settings */}
@@ -1473,9 +1479,7 @@ binding = "AI"
                         <Settings className="w-3.5 h-3.5 text-[#8b949e] group-hover:text-[#f0f6fc]" />
                         <span className="text-xs">Platform Settings</span>
                       </div>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#090d13] text-[#7d8590] border border-[#21262d]">
-                        Pref & Git
-                      </span>
+                      <MetricPill variant="neutral">Pref & Git</MetricPill>
                     </button>
                   </div>
 
@@ -1872,1049 +1876,337 @@ binding = "AI"
       </DualSidebarLayout>
 
       {/* POPUP MODAL: CREATE PROJECT */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-xs bg-[#161b22] border border-[#30363d] rounded shadow-xl overflow-hidden">
-            <div className="px-3 py-2 border-b border-[#21262d] flex items-center justify-between text-xs font-semibold">
-              <span>Create Project</span>
-              <button onClick={() => setIsModalOpen(false)} className="text-[#8b949e] hover:text-[#f0f6fc]">
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateProjectSubmit}>
-              <div className="p-3">
-                <input
-                  type="text"
-                  required
-                  autoFocus
-                  placeholder="Project Name"
-                  value={newProjectName}
-                  onChange={(e) => setNewProjectName(e.target.value)}
-                  className="w-full bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-                />
-              </div>
-
-              <div className="px-3 py-2 border-t border-[#21262d] bg-[#090d13] flex justify-end gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="bg-[#21262d] text-[#f0f6fc] px-2.5 py-1 text-xs rounded"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-[#1d6cf6] text-white px-3 py-1 text-xs font-semibold rounded"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
+      <ModalShell
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Create Project"
+        maxWidth="xs"
+      >
+        <form onSubmit={handleCreateProjectSubmit}>
+          <div className="p-3">
+            <input
+              type="text"
+              required
+              autoFocus
+              placeholder="Project Name"
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              className="w-full bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
+            />
           </div>
-        </div>
-      )}
+
+          <div className="px-3 py-2 border-t border-[#21262d] bg-[#090d13] flex justify-end gap-1.5">
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="bg-[#21262d] hover:bg-[#30363d] text-[#f0f6fc] px-2.5 py-1 text-xs rounded cursor-pointer transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3 py-1 text-xs font-semibold rounded cursor-pointer transition-colors"
+            >
+              Create
+            </button>
+          </div>
+        </form>
+      </ModalShell>
 
       {/* POPUP MODAL: PASTE .ENV RAW VARIABLES */}
-      {isPasteEnvModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-lg bg-[#161b22] border border-[#21262d] rounded-lg shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-2">
-                <Clipboard className="w-3.5 h-3.5 text-[#e3b341]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Paste .env Variables</h3>
-              </div>
-              <button
-                onClick={() => {
-                  setIsPasteEnvModalOpen(false);
-                  setPasteEnvText('');
-                }}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
+      <ModalShell
+        isOpen={isPasteEnvModalOpen}
+        onClose={() => {
+          setIsPasteEnvModalOpen(false);
+          setPasteEnvText('');
+        }}
+        title="Paste .env Variables"
+        icon={<Clipboard className="w-3.5 h-3.5 text-[#e3b341]" />}
+        maxWidth="lg"
+      >
+        <div className="p-3.5 flex flex-col gap-2.5">
+          <p className="text-[11px] text-[#8b949e]">
+            Paste raw <code className="text-[#f0f6fc] bg-[#090d13] px-1 py-0.5 rounded font-mono">KEY=VALUE</code> or <code className="text-[#f0f6fc] bg-[#090d13] px-1 py-0.5 rounded font-mono">export KEY="VALUE"</code> declarations. Comments (<code className="text-[#7d8590]">#</code>) and empty lines are automatically ignored.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-[#090d13] p-2 rounded border border-[#21262d]">
+            <div className="flex items-center gap-2">
+              <span className="text-[10.5px] text-[#7d8590] uppercase font-mono">Target Environment:</span>
+              <select
+                value={pasteEnvTarget}
+                onChange={(e) => setPasteEnvTarget(e.target.value as any)}
+                className="bg-[#161b22] border border-[#21262d] rounded px-2 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
               >
-                <X className="w-3.5 h-3.5" />
-              </button>
+                <option value="All">All Environments</option>
+                <option value="Production">Production</option>
+                <option value="Preview">Preview</option>
+                <option value="Development">Development</option>
+              </select>
             </div>
 
-            <div className="p-3.5 flex flex-col gap-2.5">
-              <p className="text-[11px] text-[#8b949e]">
-                Paste raw <code className="text-[#f0f6fc] bg-[#090d13] px-1 py-0.5 rounded font-mono">KEY=VALUE</code> or <code className="text-[#f0f6fc] bg-[#090d13] px-1 py-0.5 rounded font-mono">export KEY="VALUE"</code> declarations. Comments (<code className="text-[#7d8590]">#</code>) and empty lines are automatically ignored.
-              </p>
+            <label className="flex items-center gap-1.5 text-xs text-[#8b949e] cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={pasteEnvIsSecret}
+                onChange={(e) => setPasteEnvIsSecret(e.target.checked)}
+                className="rounded bg-[#161b22] border-[#21262d] text-[#1d6cf6] focus:ring-0 cursor-pointer"
+              />
+              <span className="flex items-center gap-1 text-[11px]">
+                <Lock className="w-3 h-3 text-[#8957e5]" />
+                Encrypt as Secrets
+              </span>
+            </label>
+          </div>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-[#090d13] p-2 rounded border border-[#21262d]">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10.5px] text-[#7d8590] uppercase font-mono">Target Environment:</span>
-                  <select
-                    value={pasteEnvTarget}
-                    onChange={(e) => setPasteEnvTarget(e.target.value as any)}
-                    className="bg-[#161b22] border border-[#21262d] rounded px-2 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-                  >
-                    <option value="All">All Environments</option>
-                    <option value="Production">Production</option>
-                    <option value="Preview">Preview</option>
-                    <option value="Development">Development</option>
-                  </select>
-                </div>
+          <div className="relative">
+            <textarea
+              rows={7}
+              value={pasteEnvText}
+              onChange={(e) => setPasteEnvText(e.target.value)}
+              placeholder={`# Example .env configuration\nVITE_API_URL="https://api.example.com/v1"\nDATABASE_URL="postgres://user:pass@host:5432/db"\nSUPABASE_ANON_KEY="eyJhbGciOi..."\nCF_PAGES_BRANCH="main"`}
+              className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded p-2.5 text-xs text-[#f0f6fc] font-mono leading-relaxed resize-y placeholder:text-[#484f58]"
+            />
+            <div className="text-[10px] font-mono text-[#7d8590] mt-1 flex justify-between">
+              <span>
+                Detected:{' '}
+                <strong className="text-[#3fb950] font-medium">
+                  {
+                    pasteEnvText
+                      .split('\n')
+                      .filter((l) => l.trim() && !l.trim().startsWith('#') && l.includes('=')).length
+                  }{' '}
+                  valid pairs
+                </strong>
+              </span>
+              <span>UTF-8 Plaintext</span>
+            </div>
+          </div>
+        </div>
 
-                <label className="flex items-center gap-1.5 text-xs text-[#8b949e] cursor-pointer select-none">
+        <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-between">
+          <span className="text-[10px] text-[#7d8590]">Existing matching keys will be overwritten.</span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIsPasteEnvModalOpen(false);
+                setPasteEnvText('');
+              }}
+              className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handlePasteEnvSubmit}
+              disabled={
+                pasteEnvText
+                  .split('\n')
+                  .filter((l) => l.trim() && !l.trim().startsWith('#') && l.includes('=')).length === 0
+              }
+              className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3.5 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
+            >
+              Import Variables
+            </button>
+          </div>
+        </div>
+      </ModalShell>
+
+      {/* POPUP MODAL: EDIT VARIABLE */}
+      {editingEnvVar && (
+        <ModalShell
+          isOpen={isEditEnvModalOpen}
+          onClose={() => {
+            setIsEditEnvModalOpen(false);
+            setEditingEnvVar(null);
+          }}
+          title={`Edit Variable: ${editingEnvVar.key}`}
+          icon={<Edit3 className="w-3.5 h-3.5 text-[#1d6cf6]" />}
+          maxWidth="md"
+        >
+          <div className="p-3.5 flex flex-col gap-2.5 text-xs">
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Key</label>
+              <input
+                type="text"
+                value={editingEnvVar.key}
+                onChange={(e) => setEditingEnvVar({ ...editingEnvVar, key: e.target.value })}
+                className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono uppercase"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Value</label>
+              <input
+                type="text"
+                value={editingEnvVar.value}
+                onChange={(e) => setEditingEnvVar({ ...editingEnvVar, value: e.target.value })}
+                className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-0.5">
+              <div className="flex flex-col gap-1">
+                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Environment</label>
+                <select
+                  value={editingEnvVar.environment}
+                  onChange={(e) => setEditingEnvVar({ ...editingEnvVar, environment: e.target.value as any })}
+                  className="bg-[#090d13] border border-[#21262d] rounded px-2 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
+                >
+                  <option value="All">All Environments</option>
+                  <option value="Production">Production</option>
+                  <option value="Preview">Preview</option>
+                  <option value="Development">Development</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col justify-end">
+                <label className="flex items-center gap-1.5 text-xs text-[#8b949e] cursor-pointer select-none bg-[#090d13] p-1.5 rounded border border-[#21262d]">
                   <input
                     type="checkbox"
-                    checked={pasteEnvIsSecret}
-                    onChange={(e) => setPasteEnvIsSecret(e.target.checked)}
+                    checked={editingEnvVar.isSecret}
+                    onChange={(e) => setEditingEnvVar({ ...editingEnvVar, isSecret: e.target.checked })}
                     className="rounded bg-[#161b22] border-[#21262d] text-[#1d6cf6] focus:ring-0 cursor-pointer"
                   />
                   <span className="flex items-center gap-1 text-[11px]">
                     <Lock className="w-3 h-3 text-[#8957e5]" />
-                    Encrypt as Secrets
+                    Secret Encrypted
                   </span>
                 </label>
               </div>
-
-              <div className="relative">
-                <textarea
-                  rows={7}
-                  value={pasteEnvText}
-                  onChange={(e) => setPasteEnvText(e.target.value)}
-                  placeholder={`# Example .env configuration\nVITE_API_URL="https://api.example.com/v1"\nDATABASE_URL="postgres://user:pass@host:5432/db"\nSUPABASE_ANON_KEY="eyJhbGciOi..."\nCF_PAGES_BRANCH="main"`}
-                  className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded p-2.5 text-xs text-[#f0f6fc] font-mono leading-relaxed resize-y placeholder:text-[#484f58]"
-                />
-                <div className="text-[10px] font-mono text-[#7d8590] mt-1 flex justify-between">
-                  <span>
-                    Detected:{' '}
-                    <strong className="text-[#3fb950] font-medium">
-                      {
-                        pasteEnvText
-                          .split('\n')
-                          .filter((l) => l.trim() && !l.trim().startsWith('#') && l.includes('=')).length
-                      }{' '}
-                      valid pairs
-                    </strong>
-                  </span>
-                  <span>UTF-8 Plaintext</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-between">
-              <span className="text-[10px] text-[#7d8590]">Existing matching keys will be overwritten.</span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsPasteEnvModalOpen(false);
-                    setPasteEnvText('');
-                  }}
-                  className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handlePasteEnvSubmit}
-                  disabled={
-                    pasteEnvText
-                      .split('\n')
-                      .filter((l) => l.trim() && !l.trim().startsWith('#') && l.includes('=')).length === 0
-                  }
-                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3.5 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-                >
-                  Import Variables
-                </button>
-              </div>
             </div>
           </div>
-        </div>
-      )}
 
-      {/* POPUP MODAL: EDIT VARIABLE */}
-      {isEditEnvModalOpen && editingEnvVar && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded-lg shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-2">
-                <Edit3 className="w-3.5 h-3.5 text-[#1d6cf6]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Edit Variable: {editingEnvVar.key}</h3>
-              </div>
-              <button
-                onClick={() => {
-                  setIsEditEnvModalOpen(false);
-                  setEditingEnvVar(null);
-                }}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Key</label>
-                <input
-                  type="text"
-                  value={editingEnvVar.key}
-                  onChange={(e) => setEditingEnvVar({ ...editingEnvVar, key: e.target.value })}
-                  className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono uppercase"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Value</label>
-                <input
-                  type="text"
-                  value={editingEnvVar.value}
-                  onChange={(e) => setEditingEnvVar({ ...editingEnvVar, value: e.target.value })}
-                  className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 pt-0.5">
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-mono uppercase text-[#7d8590]">Environment</label>
-                  <select
-                    value={editingEnvVar.environment}
-                    onChange={(e) => setEditingEnvVar({ ...editingEnvVar, environment: e.target.value as any })}
-                    className="bg-[#090d13] border border-[#21262d] rounded px-2 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-                  >
-                    <option value="All">All Environments</option>
-                    <option value="Production">Production</option>
-                    <option value="Preview">Preview</option>
-                    <option value="Development">Development</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col justify-end">
-                  <label className="flex items-center gap-1.5 text-xs text-[#8b949e] cursor-pointer select-none bg-[#090d13] p-1.5 rounded border border-[#21262d]">
-                    <input
-                      type="checkbox"
-                      checked={editingEnvVar.isSecret}
-                      onChange={(e) => setEditingEnvVar({ ...editingEnvVar, isSecret: e.target.checked })}
-                      className="rounded bg-[#161b22] border-[#21262d] text-[#1d6cf6] focus:ring-0 cursor-pointer"
-                    />
-                    <span className="flex items-center gap-1 text-[11px]">
-                      <Lock className="w-3 h-3 text-[#8957e5]" />
-                      Secret Encrypted
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsEditEnvModalOpen(false);
-                  setEditingEnvVar(null);
-                }}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveEditedEnvVar}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3.5 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-              >
-                Save Changes
-              </button>
-            </div>
+          <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setIsEditEnvModalOpen(false);
+                setEditingEnvVar(null);
+              }}
+              className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSaveEditedEnvVar}
+              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3.5 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
+            >
+              Save Changes
+            </button>
           </div>
-        </div>
+        </ModalShell>
       )}
 
-      {/* 
-        ====================================================================
-        POPUP MODAL: DNS CONFIGURATION & RESOLUTION PROBE
-        PURPOSE: Displays required DNS CNAME / A / TXT records for custom domains
-                 with 1-click copy affordances, registrar instructions, and
-                 real-time DNS propagation probe simulator.
-        ====================================================================
-      */}
-      {/* 
-        ====================================================================
-        POPUP MODAL: DNS CONFIGURATION & RESOLUTION PROBE
-        ====================================================================
-      */}
-      {isDnsModalOpen && selectedDnsDomain && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-2xl bg-[#161b22] border border-[#21262d] rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            {/* Modal Header */}
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded bg-[#1d6cf6]/15 text-[#58a6ff]">
-                  <FileText className="w-3.5 h-3.5" />
-                </div>
-                <div>
-                  <h3 className="text-xs font-medium text-[#f0f6fc] flex items-center gap-2">
-                    <span>DNS Records: {selectedDnsDomain.domain}</span>
-                    <span className={`text-[9.5px] font-mono px-1.5 py-0.2 rounded font-normal ${
-                      selectedDnsDomain.dnsStatus === 'verified'
-                        ? 'bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30'
-                        : 'bg-[#d29922]/15 text-[#e3b341] border border-[#d29922]/30'
-                    }`}>
-                      {selectedDnsDomain.dnsStatus === 'verified' ? '✓ Verified & Active' : '○ Pending Verification'}
-                    </span>
-                  </h3>
-                  <p className="text-[10px] text-[#8b949e]">
-                    Configure these records at your DNS provider (Cloudflare, Namecheap, GoDaddy, AWS Route53).
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => {
-                  setIsDnsModalOpen(false);
-                  setSelectedDnsDomain(null);
-                  setDnsProbeActive(false);
-                  setDnsProbeLogs([]);
-                }}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
+      {/* POPUP MODAL: DNS CONFIGURATION & RESOLUTION PROBE */}
+      <DnsConfigModal
+        isOpen={isDnsModalOpen}
+        domainItem={selectedDnsDomain}
+        onClose={() => {
+          setIsDnsModalOpen(false);
+          setSelectedDnsDomain(null);
+          setDnsProbeActive(false);
+          setDnsProbeLogs([]);
+        }}
+        onVerify={handleVerifyCustomDomain}
+        dnsProbeActive={dnsProbeActive}
+        dnsProbeLogs={dnsProbeLogs}
+        onRunProbe={handleRunDnsProbe}
+        onCopyToClipboard={copyToClipboard}
+      />
 
-            {/* Modal Body */}
-            <div className="p-3 overflow-y-auto flex flex-col gap-2.5 text-xs">
-              {/* Instructions Callout */}
-              <div className="bg-[#090d13] border border-[#21262d] rounded p-2 flex items-start gap-2">
-                <AlertTriangle className="w-3.5 h-3.5 text-[#e3b341] shrink-0 mt-0.5" />
-                <div className="text-[10.5px] text-[#c9d1d9] leading-relaxed">
-                  Add the following DNS records for <span className="text-[#f0f6fc] font-mono">{selectedDnsDomain.domain}</span> in your DNS provider control panel.
-                </div>
-              </div>
+      {/* POPUP MODAL: EDIT CUSTOM DOMAIN SETTINGS */}
+      <EditCustomDomainModal
+        isOpen={isEditDomainModalOpen}
+        domainItem={editingDomain}
+        onDomainItemChange={setEditingDomain}
+        onClose={() => {
+          setIsEditDomainModalOpen(false);
+          setEditingDomain(null);
+        }}
+        onSave={handleSaveEditedDomain}
+      />
 
-              {/* DNS Records Table */}
-              <div className="border border-[#21262d] rounded bg-[#090d13] overflow-hidden">
-                <div className="px-2.5 py-1 bg-[#161b22] border-b border-[#21262d] text-[10px] font-mono uppercase text-[#7d8590] flex justify-between items-center">
-                  <span>DNS Records</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const allText = selectedDnsDomain.isApex
-                        ? `Type: A | Host: @ | Value: ${selectedDnsDomain.apexIp}\nType: TXT | Host: ${selectedDnsDomain.txtRecordName} | Value: ${selectedDnsDomain.txtRecordValue}`
-                        : `Type: CNAME | Host: ${selectedDnsDomain.domain.split('.')[0]} | Value: ${selectedDnsDomain.cnameTarget}\nType: TXT | Host: ${selectedDnsDomain.txtRecordName} | Value: ${selectedDnsDomain.txtRecordValue}`;
-                      copyToClipboard(allText);
-                      showToast('Copied DNS records');
-                    }}
-                    className="text-[#58a6ff] hover:text-[#79c0ff] cursor-pointer hover:underline flex items-center gap-1 font-normal"
-                  >
-                    <Copy className="w-3 h-3" />
-                    <span>Copy all</span>
-                  </button>
-                </div>
+      {/* POPUP MODAL: PURGE CLOUDFLARE EDGE CACHE */}
+      <PurgeCacheModal
+        isOpen={isPurgeModalOpen}
+        onClose={() => setIsPurgeModalOpen(false)}
+        purgeType={purgeType}
+        onPurgeTypeChange={setPurgeType}
+        purgeUrlsText={purgeUrlsText}
+        onPurgeUrlsTextChange={setPurgeUrlsText}
+        isPurging={isPurgingCache}
+        onExecutePurge={handleExecutePurgeCache}
+      />
 
-                <table className="w-full text-left text-xs font-mono">
-                  <thead>
-                    <tr className="border-b border-[#21262d] bg-[#090d13] text-[9.5px] text-[#7d8590]">
-                      <th className="p-2">Type</th>
-                      <th className="p-2">Host</th>
-                      <th className="p-2">Target</th>
-                      <th className="p-2">TTL</th>
-                      <th className="p-2 text-right">Copy</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#21262d]">
-                    {/* Record 1: Primary Routing */}
-                    <tr className="hover:bg-[#161b22]/50 transition-colors">
-                      <td className="p-2 align-middle">
-                        <span className="px-1.5 py-0.2 rounded bg-[#1d6cf6]/15 text-[#58a6ff] font-normal text-[10px]">
-                          {selectedDnsDomain.isApex ? 'A' : 'CNAME'}
-                        </span>
-                      </td>
-                      <td className="p-2 align-middle text-[#f0f6fc]">
-                        {selectedDnsDomain.isApex ? '@' : selectedDnsDomain.domain.split('.')[0]}
-                      </td>
-                      <td className="p-2 align-middle text-[#3fb950] select-all">
-                        {selectedDnsDomain.isApex ? selectedDnsDomain.apexIp : selectedDnsDomain.cnameTarget}
-                      </td>
-                      <td className="p-2 align-middle text-[#8b949e]">Auto</td>
-                      <td className="p-2 align-middle text-right">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            copyToClipboard(selectedDnsDomain.isApex ? selectedDnsDomain.apexIp : selectedDnsDomain.cnameTarget);
-                            showToast(`Copied target`);
-                          }}
-                          className="p-1 text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#21262d] rounded cursor-pointer"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
-                      </td>
-                    </tr>
+      {/* POPUP MODAL: ADD KV NAMESPACE BINDING */}
+      <AddKvModal
+        isOpen={isAddKvModalOpen}
+        onClose={() => setIsAddKvModalOpen(false)}
+        name={newKvName}
+        onNameChange={setNewKvName}
+        namespaceId={newKvNamespaceId}
+        onNamespaceIdChange={setNewKvNamespaceId}
+        environment={newKvEnvironment}
+        onEnvironmentChange={setNewKvEnvironment}
+        onAdd={handleAddKvBinding}
+      />
 
-                    {/* Record 2: Ownership Verification TXT */}
-                    <tr className="hover:bg-[#161b22]/50 transition-colors">
-                      <td className="p-2 align-middle">
-                        <span className="px-1.5 py-0.2 rounded bg-[#8957e5]/15 text-[#a371f7] font-normal text-[10px]">
-                          TXT
-                        </span>
-                      </td>
-                      <td className="p-2 align-middle text-[#f0f6fc] truncate max-w-[140px]" title={selectedDnsDomain.txtRecordName}>
-                        {selectedDnsDomain.txtRecordName}
-                      </td>
-                      <td className="p-2 align-middle text-[#c9d1d9] truncate max-w-[200px] select-all" title={selectedDnsDomain.txtRecordValue}>
-                        {selectedDnsDomain.txtRecordValue}
-                      </td>
-                      <td className="p-2 align-middle text-[#8b949e]">Auto</td>
-                      <td className="p-2 align-middle text-right">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            copyToClipboard(selectedDnsDomain.txtRecordValue);
-                            showToast(`Copied TXT token`);
-                          }}
-                          className="p-1 text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#21262d] rounded cursor-pointer"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+      {/* POPUP MODAL: ADD D1 SQL DATABASE BINDING */}
+      <AddD1Modal
+        isOpen={isAddD1ModalOpen}
+        onClose={() => setIsAddD1ModalOpen(false)}
+        name={newD1Name}
+        onNameChange={setNewD1Name}
+        databaseId={newD1DatabaseId}
+        onDatabaseIdChange={setNewD1DatabaseId}
+        environment={newD1Environment}
+        onEnvironmentChange={setNewD1Environment}
+        onAdd={handleAddD1Binding}
+      />
 
-              {/* DNS Propagation Probe Terminal Simulator */}
-              <div className="bg-[#090d13] border border-[#21262d] rounded p-2 flex flex-col gap-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-[10px] font-mono text-[#7d8590]">
-                    <Terminal className="w-3 h-3 text-[#58a6ff]" />
-                    <span>DNS Resolver Probe</span>
-                  </div>
-                  <button
-                    type="button"
-                    disabled={dnsProbeActive}
-                    onClick={() => handleRunDnsProbe(selectedDnsDomain)}
-                    className="bg-[#21262d] hover:bg-[#282e36] text-[#58a6ff] hover:text-[#79c0ff] border border-[#30363d] px-2 py-0.5 rounded text-[10px] font-normal cursor-pointer transition-colors flex items-center gap-1.5"
-                  >
-                    <RefreshCw className={`w-3 h-3 ${dnsProbeActive ? 'animate-spin text-[#1d6cf6]' : ''}`} />
-                    <span>{dnsProbeActive ? 'Probing...' : 'Run Probe'}</span>
-                  </button>
-                </div>
+      {/* POPUP MODAL: ADD R2 STORAGE BUCKET BINDING */}
+      <AddR2Modal
+        isOpen={isAddR2ModalOpen}
+        onClose={() => setIsAddR2ModalOpen(false)}
+        name={newR2Name}
+        onNameChange={setNewR2Name}
+        bucketName={newR2BucketName}
+        onBucketNameChange={setNewR2BucketName}
+        environment={newR2Environment}
+        onEnvironmentChange={setNewR2Environment}
+        onAdd={handleAddR2Binding}
+      />
 
-                {dnsProbeLogs.length > 0 ? (
-                  <div className="bg-[#05080d] p-2 rounded border border-[#161b22] font-mono text-[10px] flex flex-col gap-0.5">
-                    {dnsProbeLogs.map((log, idx) => (
-                      <div
-                        key={idx}
-                        className={`${
-                          log.includes('SUCCESS') || log.includes('OK') || log.includes('MATCH')
-                            ? 'text-[#3fb950]'
-                            : log.includes('Initiating')
-                            ? 'text-[#58a6ff]'
-                            : 'text-[#8b949e]'
-                        }`}
-                      >
-                        {log}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-[9.5px] text-[#7d8590]">
-                    Click "Run Probe" to test resolution across Cloudflare (1.1.1.1) and Google (8.8.8.8).
-                  </div>
-                )}
-              </div>
-            </div>
+      {/* POPUP MODAL: CREATE DEPLOY HOOK (WEBHOOK) */}
+      <AddDeployHookModal
+        isOpen={isAddDeployHookModalOpen}
+        onClose={() => setIsAddDeployHookModalOpen(false)}
+        name={newDeployHookName}
+        onNameChange={setNewDeployHookName}
+        branch={newDeployHookBranch}
+        onBranchChange={setNewDeployHookBranch}
+        onAdd={handleAddDeployHook}
+      />
 
-            {/* Modal Footer */}
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-between">
-              <span className="text-[9.5px] text-[#7d8590]">SSL certificate provisions automatically once DNS resolves.</span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsDnsModalOpen(false);
-                    setSelectedDnsDomain(null);
-                  }}
-                  className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-2.5 py-1 text-xs rounded transition-colors cursor-pointer"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleVerifyCustomDomain(selectedDnsDomain.id);
-                    setIsDnsModalOpen(false);
-                  }}
-                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-2.5 py-1 text-xs font-normal rounded cursor-pointer transition-colors shadow-sm flex items-center gap-1"
-                >
-                  <Check className="w-3.5 h-3.5" />
-                  <span>Verify</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        ====================================================================
-        POPUP MODAL: EDIT CUSTOM DOMAIN SETTINGS
-        ====================================================================
-      */}
-      {isEditDomainModalOpen && editingDomain && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded-lg shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-2">
-                <Edit3 className="w-3.5 h-3.5 text-[#1d6cf6]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Edit Domain: {editingDomain.domain}</h3>
-              </div>
-              <button
-                onClick={() => {
-                  setIsEditDomainModalOpen(false);
-                  setEditingDomain(null);
-                }}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Domain Name</label>
-                <input
-                  type="text"
-                  value={editingDomain.domain}
-                  disabled
-                  className="w-full bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1 font-mono text-xs text-[#8b949e] cursor-not-allowed"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Target Branch</label>
-                <select
-                  value={editingDomain.targetBranch}
-                  onChange={(e) => setEditingDomain({ ...editingDomain, targetBranch: e.target.value })}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-                >
-                  <option value="main">Production (main)</option>
-                  <option value="preview">Preview (staging)</option>
-                  <option value="development">Development (dev)</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Redirect Mode</label>
-                <select
-                  value={editingDomain.redirectMode}
-                  onChange={(e) => setEditingDomain({ ...editingDomain, redirectMode: e.target.value as any })}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-                >
-                  <option value="https_only">Force HTTPS Only</option>
-                  <option value="apex_to_www">Redirect apex to www</option>
-                  <option value="www_to_apex">Redirect www to apex</option>
-                  <option value="none">No Redirect</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">SSL / TLS Certificate</label>
-                <div className="bg-[#090d13] p-2 rounded border border-[#21262d] flex items-center justify-between">
-                  <span className="text-[#3fb950] flex items-center gap-1 font-mono text-[10.5px]">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    Automatic Edge TLS
-                  </span>
-                  <span className="text-[9.5px] text-[#8b949e]">Active</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsEditDomainModalOpen(false);
-                  setEditingDomain(null);
-                }}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveEditedDomain}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        ====================================================================
-        POPUP MODAL: PURGE CLOUDFLARE EDGE CACHE
-        ====================================================================
-      */}
-      {isPurgeModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-1.5">
-                <Flame className="w-3.5 h-3.5 text-[#e3b341]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Purge Cloudflare Edge Cache</h3>
-              </div>
-              <button
-                onClick={() => setIsPurgeModalOpen(false)}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <div className="text-[11px] text-[#8b949e]">
-                Purging cache forces Cloudflare edge nodes to retrieve fresh assets from origin on the next request.
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPurgeType('everything')}
-                  className={`p-2 rounded border text-left flex flex-col gap-0.5 cursor-pointer transition-all ${
-                    purgeType === 'everything'
-                      ? 'bg-[#1d6cf6]/10 border-[#1d6cf6]/40 text-[#f0f6fc]'
-                      : 'bg-[#090d13] border-[#21262d] text-[#8b949e]'
-                  }`}
-                >
-                  <span className="font-medium text-xs text-[#f0f6fc]">Purge Everything</span>
-                  <span className="text-[10px] text-[#8b949e]">Invalidates all 310+ edge caches</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPurgeType('custom')}
-                  className={`p-2 rounded border text-left flex flex-col gap-0.5 cursor-pointer transition-all ${
-                    purgeType === 'custom'
-                      ? 'bg-[#1d6cf6]/10 border-[#1d6cf6]/40 text-[#f0f6fc]'
-                      : 'bg-[#090d13] border-[#21262d] text-[#8b949e]'
-                  }`}
-                >
-                  <span className="font-medium text-xs text-[#f0f6fc]">Custom URLs</span>
-                  <span className="text-[10px] text-[#8b949e]">Purge specific URLs or cache tags</span>
-                </button>
-              </div>
-
-              {purgeType === 'custom' && (
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-mono uppercase text-[#7d8590]">URLs or Prefixes (one per line)</label>
-                  <textarea
-                    rows={3}
-                    value={purgeUrlsText}
-                    onChange={(e) => setPurgeUrlsText(e.target.value)}
-                    placeholder="https://app.vibtools.dev/assets/*&#10;https://app.vibtools.dev/index.html"
-                    className="bg-[#090d13] border border-[#21262d] rounded p-2 text-xs font-mono text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-                  />
-                </div>
-              )}
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setIsPurgeModalOpen(false)}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={isPurgingCache}
-                onClick={handleExecutePurgeCache}
-                className="bg-[#e3b341] hover:bg-[#f2cc60] text-[#090d13] px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm flex items-center gap-1.5"
-              >
-                {isPurgingCache ? (
-                  <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Purging Edge...</span>
-                  </>
-                ) : (
-                  <>
-                    <Flame className="w-3.5 h-3.5 fill-current" />
-                    <span>Purge Cache</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        ====================================================================
-        POPUP MODAL: ADD KV NAMESPACE BINDING
-        ====================================================================
-      */}
-      {isAddKvModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-1.5">
-                <Database className="w-3.5 h-3.5 text-[#1d6cf6]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Add KV Namespace Binding</h3>
-              </div>
-              <button
-                onClick={() => setIsAddKvModalOpen(false)}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. CACHE_KV, USER_SESSIONS"
-                  value={newKvName}
-                  onChange={(e) => setNewKvName(e.target.value.toUpperCase())}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">KV Namespace ID</label>
-                <input
-                  type="text"
-                  placeholder="e.g. 9b7f3a8820c845b4a92c31e"
-                  value={newKvNamespaceId}
-                  onChange={(e) => setNewKvNamespaceId(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Environment Target</label>
-                <select
-                  value={newKvEnvironment}
-                  onChange={(e) => setNewKvEnvironment(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2 py-1.5 text-xs text-[#f0f6fc] focus:border-[#1d6cf6] focus:outline-none"
-                >
-                  <option value="Production">Production only</option>
-                  <option value="Preview">Preview only</option>
-                  <option value="All">All environments</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAddKvModalOpen(false)}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={!newKvName.trim() || !newKvNamespaceId.trim()}
-                onClick={handleAddKvBinding}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-              >
-                Add Binding
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        ====================================================================
-        POPUP MODAL: ADD D1 SQL DATABASE BINDING
-        ====================================================================
-      */}
-      {isAddD1ModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-1.5">
-                <HardDrive className="w-3.5 h-3.5 text-[#3fb950]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Add D1 SQL Database Binding</h3>
-              </div>
-              <button
-                onClick={() => setIsAddD1ModalOpen(false)}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. DB, ANALYTICS_DB"
-                  value={newD1Name}
-                  onChange={(e) => setNewD1Name(e.target.value.toUpperCase())}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">D1 Database ID / UUID</label>
-                <input
-                  type="text"
-                  placeholder="e.g. 04a991f3-e381-42e5-bc09-085709926031"
-                  value={newD1DatabaseId}
-                  onChange={(e) => setNewD1DatabaseId(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Environment Target</label>
-                <select
-                  value={newD1Environment}
-                  onChange={(e) => setNewD1Environment(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2 py-1.5 text-xs text-[#f0f6fc] focus:border-[#1d6cf6] focus:outline-none"
-                >
-                  <option value="Production">Production only</option>
-                  <option value="Preview">Preview only</option>
-                  <option value="All">All environments</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAddD1ModalOpen(false)}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={!newD1Name.trim() || !newD1DatabaseId.trim()}
-                onClick={handleAddD1Binding}
-                className="bg-[#238636] hover:bg-[#2ea043] disabled:opacity-50 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-              >
-                Add D1 Database
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        ====================================================================
-        POPUP MODAL: ADD R2 STORAGE BUCKET BINDING
-        ====================================================================
-      */}
-      {isAddR2ModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-1.5">
-                <Boxes className="w-3.5 h-3.5 text-[#e3b341]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Add R2 Storage Bucket Binding</h3>
-              </div>
-              <button
-                onClick={() => setIsAddR2ModalOpen(false)}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. ASSETS_BUCKET, UPLOADS_R2"
-                  value={newR2Name}
-                  onChange={(e) => setNewR2Name(e.target.value.toUpperCase())}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Target R2 Bucket Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. ygit-vibtools-assets-prod"
-                  value={newR2BucketName}
-                  onChange={(e) => setNewR2BucketName(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Environment Target</label>
-                <select
-                  value={newR2Environment}
-                  onChange={(e) => setNewR2Environment(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2 py-1.5 text-xs text-[#f0f6fc] focus:border-[#1d6cf6] focus:outline-none"
-                >
-                  <option value="Production">Production only</option>
-                  <option value="Preview">Preview only</option>
-                  <option value="All">All environments</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAddR2ModalOpen(false)}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={!newR2Name.trim() || !newR2BucketName.trim()}
-                onClick={handleAddR2Binding}
-                className="bg-[#e3b341] hover:bg-[#f2cc60] disabled:opacity-50 text-[#090d13] px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-              >
-                Add R2 Bucket
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        ====================================================================
-        POPUP MODAL: CREATE DEPLOY HOOK (WEBHOOK)
-        ====================================================================
-      */}
-      {isAddDeployHookModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-1.5">
-                <Webhook className="w-3.5 h-3.5 text-[#1d6cf6]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Create Deploy Webhook</h3>
-              </div>
-              <button
-                onClick={() => setIsAddDeployHookModalOpen(false)}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Deploy Hook Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Sanity CMS Publish, Daily Cron"
-                  value={newDeployHookName}
-                  onChange={(e) => setNewDeployHookName(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Target Branch</label>
-                <input
-                  type="text"
-                  value={newDeployHookBranch}
-                  onChange={(e) => setNewDeployHookBranch(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono focus:border-[#1d6cf6] focus:outline-none"
-                />
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setIsAddDeployHookModalOpen(false)}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={!newDeployHookName.trim()}
-                onClick={handleAddDeployHook}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-              >
-                Generate Hook
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 
-        ====================================================================
-        POPUP MODAL: DELETE PROJECT SAFEGUARD
-        ====================================================================
-      */}
-      {isDeleteProjectModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/85 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#da3633]/40 rounded shadow-2xl overflow-hidden">
-            <div className="px-3.5 py-2.5 border-b border-[#da3633]/20 flex items-center justify-between bg-[#da3633]/10">
-              <div className="flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-[#f85149]" />
-                <h3 className="text-xs font-medium text-[#f85149]">Delete Project Confirmation</h3>
-              </div>
-              <button
-                onClick={() => {
-                  setIsDeleteProjectModalOpen(false);
-                  setDeleteConfirmText('');
-                }}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              <p className="text-[#c9d1d9] leading-relaxed">
-                This action is irreversible. It will immediately take down your deployments, DNS records, and KV/D1 database bindings for <span className="text-[#f0f6fc] font-mono">{cfProjectName}</span>.
-              </p>
-
-              <div className="flex flex-col gap-1">
-                <label className="text-[10.5px] text-[#8b949e]">
-                  Please type <span className="text-[#f0f6fc] font-mono select-all font-medium">{cfProjectName}</span> to confirm:
-                </label>
-                <input
-                  type="text"
-                  value={deleteConfirmText}
-                  onChange={(e) => setDeleteConfirmText(e.target.value)}
-                  placeholder={cfProjectName}
-                  className="bg-[#090d13] border border-[#21262d] focus:border-[#da3633] focus:outline-none rounded px-2.5 py-1.5 font-mono text-xs text-[#f0f6fc]"
-                />
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsDeleteProjectModalOpen(false);
-                  setDeleteConfirmText('');
-                }}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={deleteConfirmText.trim() !== cfProjectName}
-                onClick={() => {
-                  setIsDeleteProjectModalOpen(false);
-                  setDeleteConfirmText('');
-                  setActiveRoute('projects');
-                  showToast(`Project ${cfProjectName} was deleted.`);
-                }}
-                className="bg-[#da3633] hover:bg-[#f85149] disabled:opacity-40 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-              >
-                Delete Permanently
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* POPUP MODAL: DELETE PROJECT SAFEGUARD */}
+      <DeleteProjectModal
+        isOpen={isDeleteProjectModalOpen}
+        projectName={cfProjectName}
+        confirmText={deleteConfirmText}
+        onConfirmTextChange={setDeleteConfirmText}
+        onClose={() => {
+          setIsDeleteProjectModalOpen(false);
+          setDeleteConfirmText('');
+        }}
+        onDelete={() => {
+          setIsDeleteProjectModalOpen(false);
+          setDeleteConfirmText('');
+          setActiveRoute('projects');
+          showToast(`Project ${cfProjectName} was deleted.`);
+        }}
+      />
 
       {/* 
         ====================================================================
