@@ -17,12 +17,12 @@ export const FrameworkBadge: React.FC<FrameworkBadgeProps> = ({
 }) => {
   const variantClass =
     variant === 'blue'
-      ? 'bg-[#090d13] text-[#58a6ff] border-[#21262d]'
-      : 'bg-[#090d13] text-[#7d8590] border-[#21262d]';
+      ? 'bg-canvas-inset text-accent-primary border-border-subtle'
+      : 'bg-canvas-inset text-fg-muted border-border-subtle';
 
   return (
     <span
-      className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded border select-none ${variantClass} ${className}`}
+      className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded-none border select-none ${variantClass} ${className}`}
     >
       {framework}
     </span>

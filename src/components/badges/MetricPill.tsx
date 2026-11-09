@@ -31,12 +31,12 @@ export const MetricPill: React.FC<MetricPillProps> = ({
   title,
 }) => {
   const variantStyles: Record<MetricPillVariant, string> = {
-    neutral: 'bg-[#090d13] text-[#8b949e] border-[#21262d]',
-    green: 'bg-[#238636]/15 text-[#3fb950] border-[#238636]/30',
-    blue: 'bg-[#1d6cf6]/10 text-[#58a6ff] border-[#1d6cf6]/30',
-    purple: 'bg-[#8957e5]/15 text-[#a371f7] border-[#8957e5]/30',
-    amber: 'bg-[#d29922]/10 text-[#d29922] border-[#d29922]/30',
-    red: 'bg-[#da3633]/15 text-[#f85149] border-[#da3633]/30',
+    neutral: 'bg-canvas-inset text-fg-muted border-border-subtle',
+    green: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/25',
+    blue: 'bg-accent-primary/10 text-accent-primary border-accent-primary/25',
+    purple: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/25',
+    amber: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/25',
+    red: 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/25',
   };
 
   const sizeStyles = {

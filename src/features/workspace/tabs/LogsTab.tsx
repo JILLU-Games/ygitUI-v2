@@ -279,7 +279,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({
                     </span>
                   )}
 
-                  {/* Message Line with subtle balanced colors */}
+                  {/* Message Line with high-contrast readable colors in both light & dark */}
                   <span
                     className={`text-[11px] font-mono leading-tight ${
                       entry.highlight === 'yellow' ||
@@ -287,16 +287,16 @@ export const LogsTab: React.FC<LogsTabProps> = ({
                       entry.text.startsWith('#14') ||
                       entry.text.startsWith('#12') ||
                       entry.text.startsWith('#13')
-                        ? 'text-amber-400'
+                        ? 'text-amber-700 dark:text-amber-400 font-medium'
                         : entry.highlight === 'green' ||
                           entry.text.includes('✓') ||
                           entry.text.includes('Healthy') ||
                           entry.text.includes('Started') ||
                           entry.text.includes('DONE') ||
                           entry.text.includes('✨')
-                        ? 'text-emerald-500'
+                        ? 'text-emerald-700 dark:text-emerald-400 font-medium'
                         : entry.highlight === 'blue' || entry.text.startsWith('Importing')
-                        ? 'text-accent-primary'
+                        ? 'text-accent-primary font-medium'
                         : entry.highlight === 'muted' || entry.text.startsWith('---') || entry.text.startsWith('Gracefully')
                         ? 'text-fg-subtle'
                         : 'text-fg-default'

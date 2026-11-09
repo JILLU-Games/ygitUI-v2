@@ -100,42 +100,42 @@
 .light {
   --radius: 0rem;
 
-  /* Surfaces & Canvas (Light) */
-  --canvas-default: #ffffff;
-  --canvas-subtle: #f6f8fa;
+  /* Surfaces & Canvas (Light - Crisp, High-Contrast Vercel/Linear Style) */
+  --canvas-default: #f6f8fa;
+  --canvas-subtle: #ffffff;
   --canvas-inset: #f0f2f5;
-  --canvas-inset-secondary: #e9ecef;
-  --canvas-deep: #e1e4e8;
-  --canvas-selected: #ddf4ff;
-  --canvas-hover: #f3f4f6;
-  --canvas-overlay: rgba(255, 255, 255, 0.85);
-  --surface-hover: #eaeef2;
+  --canvas-inset-secondary: #f4f6f8;
+  --canvas-deep: #e5e8ec;
+  --canvas-selected: #e8f2ff;
+  --canvas-hover: #f1f4f8;
+  --canvas-overlay: rgba(255, 255, 255, 0.9);
+  --surface-hover: #eaeef3;
 
-  /* Single Subtle Border Token - Soft light border */
-  --border-subtle: rgba(0, 0, 0, 0.1);
+  /* Single Subtle Border Token - Crisp 1px division */
+  --border-subtle: #d8dee4;
 
-  /* Foreground / Text */
-  --fg-default: #1f2328;
-  --fg-secondary: #32383f;
-  --fg-muted: #656d76;
-  --fg-subtle: #6e7781;
-  --fg-placeholder: #8c959f;
+  /* Foreground / Text (WCAG AAA High-Contrast Readability) */
+  --fg-default: #0f172a;
+  --fg-secondary: #334155;
+  --fg-muted: #475569;
+  --fg-subtle: #64748b;
+  --fg-placeholder: #94a3b8;
 
   /* Two Clean Accent Color Tokens */
   --accent-primary: #0969da;
   --accent-primary-hover: #0860ca;
-  --accent-primary-border: rgba(9, 105, 218, 0.4);
+  --accent-primary-border: rgba(9, 105, 218, 0.35);
 
   --accent-secondary: #1a7f37;
   --accent-secondary-hover: #1f883d;
   --accent-secondary-text: #1a7f37;
   --accent-secondary-subtle: rgba(26, 127, 55, 0.12);
 
-  /* Semantic State Tokens */
+  /* Semantic State Tokens - Deepened for Crisp Contrast on White/Light */
   --accent-red: #cf222e;
-  --accent-red-text: #a40e26;
-  --accent-purple: #8250df;
-  --accent-amber: #9a6700;
+  --accent-red-text: #b91c1c;
+  --accent-purple: #7c3aed;
+  --accent-amber: #b45309;
   --accent-blue-light: #0969da;
 
   color-scheme: light;
