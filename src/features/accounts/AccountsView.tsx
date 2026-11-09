@@ -46,6 +46,7 @@
 
 import React from 'react';
 import { Key, Github, RefreshCw, Cloud, ShieldCheck } from 'lucide-react';
+import { PrimaryButton, SecondaryButton } from '../../components/buttons';
 
 export interface AccountsViewProps {
   isGithubConnected: boolean;
@@ -87,7 +88,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
           <h2 className="text-xs font-medium text-[#f0f6fc]">
             Connected Accounts
           </h2>
-          <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#090d13] border border-[#21262d] text-[#8b949e]">
+          <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#090d13] border border-[#21262d] text-[#8b949e]">
             {(isGithubConnected ? 1 : 0) + (isCloudflareConnected ? 1 : 0)} / 2 Active
           </span>
         </div>
@@ -203,45 +204,37 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
           <div className="pt-2 border-t border-[#21262d] flex items-center justify-between gap-2">
             {isGithubConnected ? (
               <>
-                <button
-                  type="button"
+                <SecondaryButton
+                  size="sm"
                   onClick={onSyncGithub}
                   disabled={isGithubSyncing}
-                  className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] border border-[#30363d] px-2.5 py-1 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-colors"
+                  isLoading={isGithubSyncing}
+                  loadingText="Syncing..."
+                  icon={<RefreshCw className="w-3 h-3 text-[#7d8590]" />}
                 >
-                  <RefreshCw
-                    className={`w-3 h-3 ${isGithubSyncing ? 'animate-spin text-[#1d6cf6]' : 'text-[#7d8590]'}`}
-                  />
-                  <span>{isGithubSyncing ? 'Syncing...' : 'Re-sync Account'}</span>
-                </button>
+                  Re-sync Account
+                </SecondaryButton>
 
                 <button
                   type="button"
                   onClick={onToggleGithub}
-                  className="text-[#f85149] hover:bg-[#da3633]/15 px-2.5 py-1 rounded text-xs border border-[#da3633]/30 cursor-pointer transition-colors"
+                  className="text-[#f85149] hover:bg-[#da3633]/15 px-2.5 py-1 rounded text-xs border border-[#da3633]/30 cursor-pointer transition-colors active:scale-95"
                 >
                   Disconnect
                 </button>
               </>
             ) : (
-              <button
-                type="button"
+              <PrimaryButton
+                fullWidth
+                size="md"
                 onClick={onToggleGithub}
                 disabled={isGithubSyncing}
-                className="w-full bg-[#1d6cf6] hover:bg-[#2f7af8] text-white py-1.5 px-3 rounded-md text-xs font-normal flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-sm"
+                isLoading={isGithubSyncing}
+                loadingText="Connecting GitHub..."
+                icon={<Github className="w-3.5 h-3.5" />}
               >
-                {isGithubSyncing ? (
-                  <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Connecting GitHub...</span>
-                  </>
-                ) : (
-                  <>
-                    <Github className="w-3.5 h-3.5" />
-                    <span>Connect GitHub Account</span>
-                  </>
-                )}
-              </button>
+                Connect GitHub Account
+              </PrimaryButton>
             )}
           </div>
         </div>
@@ -342,45 +335,37 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
           <div className="pt-2 border-t border-[#21262d] flex items-center justify-between gap-2">
             {isCloudflareConnected ? (
               <>
-                <button
-                  type="button"
+                <SecondaryButton
+                  size="sm"
                   onClick={onSyncCloudflare}
                   disabled={isCloudflareSyncing}
-                  className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] border border-[#30363d] px-2.5 py-1 rounded text-xs flex items-center gap-1.5 cursor-pointer transition-colors"
+                  isLoading={isCloudflareSyncing}
+                  loadingText="Verifying..."
+                  icon={<RefreshCw className="w-3 h-3 text-[#7d8590]" />}
                 >
-                  <RefreshCw
-                    className={`w-3 h-3 ${isCloudflareSyncing ? 'animate-spin text-[#1d6cf6]' : 'text-[#7d8590]'}`}
-                  />
-                  <span>{isCloudflareSyncing ? 'Verifying...' : 'Verify API Token'}</span>
-                </button>
+                  Verify API Token
+                </SecondaryButton>
 
                 <button
                   type="button"
                   onClick={onToggleCloudflare}
-                  className="text-[#f85149] hover:bg-[#da3633]/15 px-2.5 py-1 rounded text-xs border border-[#da3633]/30 cursor-pointer transition-colors"
+                  className="text-[#f85149] hover:bg-[#da3633]/15 px-2.5 py-1 rounded text-xs border border-[#da3633]/30 cursor-pointer transition-colors active:scale-95"
                 >
                   Disconnect
                 </button>
               </>
             ) : (
-              <button
-                type="button"
+              <PrimaryButton
+                fullWidth
+                size="md"
                 onClick={onToggleCloudflare}
                 disabled={isCloudflareSyncing}
-                className="w-full bg-[#1d6cf6] hover:bg-[#2f7af8] text-white py-1.5 px-3 rounded-md text-xs font-normal flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-sm"
+                isLoading={isCloudflareSyncing}
+                loadingText="Verifying Credentials..."
+                icon={<Cloud className="w-3.5 h-3.5" />}
               >
-                {isCloudflareSyncing ? (
-                  <>
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Verifying Credentials...</span>
-                  </>
-                ) : (
-                  <>
-                    <Cloud className="w-3.5 h-3.5" />
-                    <span>Connect Cloudflare API</span>
-                  </>
-                )}
-              </button>
+                Connect Cloudflare API
+              </PrimaryButton>
             )}
           </div>
         </div>

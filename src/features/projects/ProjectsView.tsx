@@ -35,6 +35,7 @@ import React from 'react';
 import { Plus } from 'lucide-react';
 import { Project } from '../../types';
 import { StatusBadge } from '../../components/badges/StatusBadge';
+import { PrimaryButton, SecondaryButton } from '../../components/buttons';
 
 export interface ProjectsViewProps {
   projectSearch: string;
@@ -82,14 +83,13 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
           </select>
         </div>
 
-        <button
-          type="button"
+        <PrimaryButton
+          size="sm"
+          icon={<Plus className="w-3.5 h-3.5" />}
           onClick={onCreateProject}
-          className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-semibold px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer transition-colors"
         >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Create Project</span>
-        </button>
+          Create Project
+        </PrimaryButton>
       </div>
 
       {/* 
@@ -130,13 +130,12 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
             {/* Card Footer: Timestamp & Manage Trigger */}
             <div className="flex items-center justify-between pt-1 border-t border-[#21262d] text-[10px]">
               <span className="text-[#7d8590] font-mono">{proj.updated}</span>
-              <button
-                type="button"
+              <SecondaryButton
+                size="sm"
                 onClick={() => onSelectProject({ name: proj.name, repo: proj.repo })}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-2 py-0.5 rounded cursor-pointer transition-colors"
               >
                 Manage
-              </button>
+              </SecondaryButton>
             </div>
           </div>
         ))}

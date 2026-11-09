@@ -4,6 +4,7 @@ export type DeploymentStatusType = 'live' | 'passed' | 'building' | 'failed' | '
 
 export interface StatusBadgeProps {
   status: DeploymentStatusType;
+  label?: string;
   showDot?: boolean;
   className?: string;
 }
@@ -14,6 +15,7 @@ export interface StatusBadgeProps {
  */
 export const StatusBadge: React.FC<StatusBadgeProps> = ({
   status,
+  label,
   showDot = true,
   className = '',
 }) => {
@@ -80,7 +82,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
           }`}
         />
       )}
-      <span>{config.label}</span>
+      <span>{label || config.label}</span>
     </span>
   );
 };

@@ -54,6 +54,9 @@ import {
 import { ReadyTemplate } from '../../types';
 import { READY_TEMPLATES } from '../../mocks';
 import { TemplateThumbnailGraphic } from '../../components/templates/TemplateThumbnailGraphic';
+import { FrameworkBadge } from '../../components/badges/FrameworkBadge';
+import { MetricPill } from '../../components/badges/MetricPill';
+import { PrimaryButton, SecondaryButton } from '../../components/buttons';
 
 export interface TemplatesViewProps {
   templateSearch: string;
@@ -108,7 +111,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({
           <h2 className="text-xs font-medium text-[#f0f6fc]">
             Ready Website Templates
           </h2>
-          <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#090d13] border border-[#21262d] text-[#8b949e]">
+          <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#090d13] border border-[#21262d] text-[#8b949e]">
             {READY_TEMPLATES.length} Production Starters
           </span>
         </div>
@@ -188,7 +191,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({
               >
                 <span>{cat}</span>
                 <span
-                  className={`text-[9px] font-mono px-1 py-0.2 rounded ${
+                  className={`text-[9px] font-mono px-1 py-0.5 rounded ${
                     templateCategoryFilter === cat ? 'bg-white/20 text-white' : 'bg-[#161b22] text-[#7d8590]'
                   }`}
                 >
@@ -236,9 +239,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({
                   >
                     {tmpl.name}
                   </h3>
-                  <span className="text-[9.5px] font-mono font-medium px-2 py-0.5 rounded-full bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30 shrink-0">
-                    Free
-                  </span>
+                  <MetricPill variant="green" size="xs">Free</MetricPill>
                 </div>
 
                 {/* Metadata Row: Author · Framework · Rating · Deploys */}
@@ -251,9 +252,7 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({
                   </span>
                   <span>·</span>
                   <span className="text-[#8b949e]">{tmpl.deploys} uses</span>
-                  <span className="ml-auto text-[9px] px-1.5 py-0.2 rounded bg-[#090d13] text-[#58a6ff] border border-[#21262d]">
-                    {tmpl.framework}
-                  </span>
+                  <FrameworkBadge framework={tmpl.framework} variant="blue" className="ml-auto" />
                 </div>
 
                 {/* Short Description */}
@@ -290,14 +289,13 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({
             <div className="p-2.5 px-3 border-t border-[#21262d] bg-[#090d13]/70 flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
                 {/* Quick View / Details Trigger */}
-                <button
-                  type="button"
+                <SecondaryButton
+                  size="md"
+                  icon={<Eye className="w-3.5 h-3.5 text-[#58a6ff]" />}
                   onClick={() => onSelectTemplateForDetails(tmpl)}
-                  className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] border border-[#30363d] px-2.5 py-1.5 rounded text-xs font-normal flex items-center gap-1.5 cursor-pointer transition-colors shadow-xs active:scale-95"
                 >
-                  <Eye className="w-3.5 h-3.5 text-[#58a6ff]" />
-                  <span>Details</span>
-                </button>
+                  Details
+                </SecondaryButton>
 
                 {/* Live Demo Link */}
                 <a
@@ -312,24 +310,16 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({
               </div>
 
               {/* Use Template Action Button */}
-              <button
-                type="button"
+              <PrimaryButton
+                size="md"
                 onClick={() => onUseTemplate(tmpl)}
                 disabled={deployingTemplateId === tmpl.id}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:bg-[#1d6cf6]/50 text-white px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-sm active:scale-95"
+                isLoading={deployingTemplateId === tmpl.id}
+                loadingText="Cloning..."
+                icon={<Sparkles className="w-3 h-3" />}
               >
-                {deployingTemplateId === tmpl.id ? (
-                  <>
-                    <RefreshCw className="w-3 h-3 animate-spin" />
-                    <span>Cloning...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-3 h-3" />
-                    <span>Use Template</span>
-                  </>
-                )}
-              </button>
+                Use Template
+              </PrimaryButton>
             </div>
           </div>
         ))}
@@ -340,17 +330,17 @@ export const TemplatesView: React.FC<TemplatesViewProps> = ({
             <Sparkles className="w-6 h-6 text-[#7d8590]" />
             <div className="text-xs font-medium text-[#f0f6fc]">No ready templates found</div>
             <div className="text-[11px] text-[#7d8590]">Try adjusting search query or category filters.</div>
-            <button
-              type="button"
+            <SecondaryButton
+              size="sm"
               onClick={() => {
                 onTemplateSearchChange('');
                 onTemplateCategoryFilterChange('All');
                 onTemplateFrameworkFilterChange('All');
               }}
-              className="mt-2 bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] text-xs px-3 py-1 rounded cursor-pointer border border-[#30363d]"
+              className="mt-2"
             >
               Reset Filters
-            </button>
+            </SecondaryButton>
           </div>
         )}
       </div>

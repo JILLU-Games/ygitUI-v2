@@ -183,16 +183,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <span className="text-[11px] font-mono text-[#8b949e]">
               @{formState.profile.username}
             </span>
-            <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#1d6cf6]/10 border border-[#1d6cf6]/30 text-[#58a6ff]">
+            <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#1d6cf6]/10 border border-[#1d6cf6]/30 text-[#58a6ff]">
               {formState.profile.plan}
             </span>
             {isDirty ? (
-              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#d29922]/10 border border-[#d29922]/30 text-[#d29922] flex items-center gap-1">
+              <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#d29922]/10 border border-[#d29922]/30 text-[#d29922] flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#d29922] animate-pulse"></span>
                 Unsaved
               </span>
             ) : (
-              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#238636]/10 border border-[#238636]/30 text-[#3fb950] flex items-center gap-1">
+              <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#238636]/10 border border-[#238636]/30 text-[#3fb950] flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3fb950]"></span>
                 Synced
               </span>
@@ -306,7 +306,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         >
           <Key className={`w-3 h-3 ${activeTab === 'tokens' ? 'text-[#1d6cf6]' : 'text-[#7d8590]'}`} />
           <span>Access Tokens</span>
-          <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#090d13] text-[#8b949e] border border-[#21262d]">
+          <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[#090d13] text-[#8b949e] border border-[#21262d]">
             {formState.tokens.length}
           </span>
         </button>
@@ -512,7 +512,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 <h3 className="text-xs font-semibold text-[#f0f6fc]">
                   Personal Access Tokens (PAT)
                 </h3>
-                <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#090d13] text-[#8b949e] border border-[#21262d]">
+                <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[#090d13] text-[#8b949e] border border-[#21262d]">
                   {formState.tokens.length}
                 </span>
               </div>
@@ -592,7 +592,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                           {token.tokenMasked}
                         </td>
                         <td className="py-1.5 px-2.5">
-                          <span className="text-[9px] font-mono px-1 py-0.2 rounded border text-[#58a6ff] bg-[#1d6cf6]/10 border-[#1d6cf6]/30">
+                          <span className="text-[9px] font-mono px-1 py-0.5 rounded border text-[#58a6ff] bg-[#1d6cf6]/10 border-[#1d6cf6]/30">
                             {token.scope}
                           </span>
                         </td>

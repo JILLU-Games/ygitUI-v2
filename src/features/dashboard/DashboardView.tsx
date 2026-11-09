@@ -38,6 +38,8 @@
 import React from 'react';
 import { Copy } from 'lucide-react';
 import { Project } from '../../types';
+import { MetricPill } from '../../components/badges/MetricPill';
+import { PrimaryButton, IconButton } from '../../components/buttons';
 
 export interface DashboardViewProps {
   projects: Project[];
@@ -134,13 +136,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 flex flex-col gap-2">
             <div className="flex items-center justify-between pb-1 border-b border-[#21262d] text-xs font-semibold text-[#f0f6fc]">
               <span>Pipeline</span>
-              <button
-                type="button"
+              <PrimaryButton
+                size="sm"
                 onClick={() => onTriggerDeployment('Git Repo')}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-2.5 py-0.5 text-[11px] font-semibold rounded cursor-pointer transition-colors"
               >
                 Start
-              </button>
+              </PrimaryButton>
             </div>
 
             {/* 4-Step Visual Progress Breakdown */}
@@ -179,13 +180,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 onChange={(e) => onRepoInputUrlChange(e.target.value)}
                 className="flex-1 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono placeholder:text-[#484f58] focus:border-[#1d6cf6] focus:outline-none"
               />
-              <button
-                type="button"
+              <PrimaryButton
+                size="sm"
                 onClick={() => onTriggerDeployment(repoInputUrl || 'vibtools/app')}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-semibold px-3 py-1 rounded cursor-pointer transition-colors"
               >
                 Deploy
-              </button>
+              </PrimaryButton>
             </div>
           </div>
 
@@ -194,9 +194,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="bg-[#161b22] border border-[#30363d] rounded p-2 text-xs">
               <div className="flex items-center justify-between mb-1">
                 <strong className="text-[#f0f6fc]">GitHub</strong>
-                <span className={`text-[9.5px] ${isGithubConnected ? 'text-[#3fb950]' : 'text-[#8b949e]'}`}>
+                <MetricPill variant={isGithubConnected ? 'green' : 'neutral'} size="xs">
                   {isGithubConnected ? 'Connected' : 'Disconnected'}
-                </span>
+                </MetricPill>
               </div>
               <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">
                 {isGithubConnected ? '@vibtools' : 'No account linked'}
@@ -206,9 +206,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="bg-[#161b22] border border-[#30363d] rounded p-2 text-xs">
               <div className="flex items-center justify-between mb-1">
                 <strong className="text-[#f0f6fc]">Cloudflare</strong>
-                <span className={`text-[9.5px] ${isCloudflareConnected ? 'text-[#3fb950]' : 'text-[#8b949e]'}`}>
+                <MetricPill variant={isCloudflareConnected ? 'green' : 'neutral'} size="xs">
                   {isCloudflareConnected ? 'Edge Verified' : 'Disconnected'}
-                </span>
+                </MetricPill>
               </div>
               <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">
                 {isCloudflareConnected ? '310+ Edge POPs' : 'API token required'}
@@ -261,14 +261,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             >
               ygit.pages.dev
             </a>
-            <button
-              type="button"
-              onClick={() => onCopyToClipboard('https://ygit.pages.dev')}
-              className="text-[#8b949e] hover:text-[#f0f6fc] cursor-pointer transition-colors p-0.5"
+            <IconButton
+              size="sm"
+              icon={<Copy className="w-3 h-3" />}
               title="Copy Edge URL"
-            >
-              <Copy className="w-3 h-3" />
-            </button>
+              onClick={() => onCopyToClipboard('https://ygit.pages.dev')}
+            />
           </div>
         </div>
       </div>

@@ -43,7 +43,7 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
           <span className="truncate">https://{template.id.replace('tmpl-', '')}.ygit.net</span>
         </div>
 
-        <span className="text-[8.5px] font-mono text-[#58a6ff] bg-[#1d6cf6]/10 px-1.5 py-0.2 rounded border border-[#1d6cf6]/20">
+        <span className="text-[8.5px] font-mono text-[#58a6ff] bg-[#1d6cf6]/10 px-1.5 py-0.5 rounded border border-[#1d6cf6]/20">
           {template.framework}
         </span>
       </div>

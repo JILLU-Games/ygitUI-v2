@@ -62,6 +62,7 @@ import {
 } from 'lucide-react';
 import { GlobalDeployment } from '../../types';
 import { StatusBadge } from '../../components/badges/StatusBadge';
+import { PrimaryButton, SecondaryButton, IconButton } from '../../components/buttons';
 
 export interface DeploymentsViewProps {
   deploymentsList: GlobalDeployment[];
@@ -241,23 +242,21 @@ export const DeploymentsView: React.FC<DeploymentsViewProps> = ({
 
         {/* Action CTA Buttons (Create Project & Connect Accounts) */}
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            type="button"
+          <SecondaryButton
+            size="md"
+            icon={<Github className="w-3.5 h-3.5 text-[#58a6ff]" />}
             onClick={onConnectAccounts}
-            className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] border border-[#30363d] px-3 py-1.5 rounded-md text-xs font-normal flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
           >
-            <Github className="w-3.5 h-3.5 text-[#58a6ff]" />
-            <span>Connect Accounts</span>
-          </button>
+            Connect Accounts
+          </SecondaryButton>
 
-          <button
-            type="button"
+          <PrimaryButton
+            size="md"
+            icon={<Plus className="w-3.5 h-3.5" />}
             onClick={onCreateProject}
-            className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3 py-1.5 rounded-md text-xs font-normal flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Create Project</span>
-          </button>
+            Create Project
+          </PrimaryButton>
         </div>
       </div>
 
@@ -354,25 +353,24 @@ export const DeploymentsView: React.FC<DeploymentsViewProps> = ({
                 <td className="p-2.5 px-3 align-middle text-right">
                   <div className="flex items-center justify-end gap-1.5 flex-wrap">
                     {/* Open Project Workspace */}
-                    <button
-                      type="button"
-                      onClick={() => onNavigateWorkspace({ name: dep.projectName, repo: dep.repo }, 'overview')}
+                    <SecondaryButton
+                      size="sm"
+                      icon={<ArrowRight className="w-3 h-3 text-[#58a6ff]" />}
+                      iconPosition="right"
                       title="Go to Project Workspace"
-                      className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] text-[10.5px] px-2 py-0.5 rounded cursor-pointer transition-colors border border-[#30363d] flex items-center gap-1 font-normal"
+                      onClick={() => onNavigateWorkspace({ name: dep.projectName, repo: dep.repo }, 'overview')}
                     >
-                      <span>Workspace</span>
-                      <ArrowRight className="w-3 h-3 text-[#58a6ff]" />
-                    </button>
+                      Workspace
+                    </SecondaryButton>
 
                     {/* View Build Logs */}
-                    <button
-                      type="button"
-                      onClick={() => onNavigateWorkspace({ name: dep.projectName, repo: dep.repo }, 'logs')}
+                    <IconButton
+                      size="sm"
+                      icon={<Terminal className="w-3.5 h-3.5" />}
                       title="View Terminal Logs"
-                      className="p-1 text-[#8b949e] hover:text-[#58a6ff] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
-                    >
-                      <Terminal className="w-3.5 h-3.5" />
-                    </button>
+                      onClick={() => onNavigateWorkspace({ name: dep.projectName, repo: dep.repo }, 'logs')}
+                      className="hover:text-[#58a6ff]"
+                    />
 
                     {/* Open Live URL */}
                     <a
@@ -386,14 +384,13 @@ export const DeploymentsView: React.FC<DeploymentsViewProps> = ({
                     </a>
 
                     {/* Redeploy Trigger */}
-                    <button
-                      type="button"
-                      onClick={() => onRedeploy({ name: dep.projectName, repo: dep.repo })}
+                    <IconButton
+                      size="sm"
+                      icon={<RotateCcw className="w-3.5 h-3.5" />}
                       title="Redeploy Commit"
-                      className="p-1 text-[#8b949e] hover:text-[#e3b341] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
-                    >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                    </button>
+                      onClick={() => onRedeploy({ name: dep.projectName, repo: dep.repo })}
+                      className="hover:text-[#e3b341]"
+                    />
                   </div>
                 </td>
               </tr>

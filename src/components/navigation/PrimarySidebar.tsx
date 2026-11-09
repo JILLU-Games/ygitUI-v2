@@ -103,7 +103,7 @@ export const PrimarySidebar: React.FC<PrimarySidebarProps> = ({
               {!isCollapsed && <span>Projects</span>}
             </div>
             {!isCollapsed ? (
-              <span className="text-[10px] font-mono text-[#8b949e] bg-[#090d13] px-1 py-0.2 rounded border border-[#21262d]">
+              <span className="text-[10px] font-mono text-[#8b949e] bg-[#090d13] px-1 py-0.5 rounded border border-[#21262d]">
                 {projectsCount}
               </span>
             ) : (
@@ -133,7 +133,7 @@ export const PrimarySidebar: React.FC<PrimarySidebarProps> = ({
               {!isCollapsed && <span>Deployments</span>}
             </div>
             {!isCollapsed && (
-              <span className="text-[10px] font-mono text-[#8b949e] bg-[#090d13] px-1 py-0.2 rounded border border-[#21262d]">
+              <span className="text-[10px] font-mono text-[#8b949e] bg-[#090d13] px-1 py-0.5 rounded border border-[#21262d]">
                 {deploymentsCount}
               </span>
             )}
@@ -162,7 +162,7 @@ export const PrimarySidebar: React.FC<PrimarySidebarProps> = ({
             </div>
             {!isCollapsed && (
               <span
-                className={`text-[9px] font-mono px-1 py-0.2 rounded border ${
+                className={`text-[9px] font-mono px-1 py-0.5 rounded border ${
                   isGithubConnected && isCloudflareConnected
                     ? 'text-[#3fb950] bg-[#238636]/10 border-[#238636]/30'
                     : isGithubConnected || isCloudflareConnected
@@ -201,7 +201,7 @@ export const PrimarySidebar: React.FC<PrimarySidebarProps> = ({
               {!isCollapsed && <span>Templates</span>}
             </div>
             {!isCollapsed && (
-              <span className="text-[10px] font-mono text-[#8b949e] bg-[#090d13] px-1 py-0.2 rounded border border-[#21262d]">
+              <span className="text-[10px] font-mono text-[#8b949e] bg-[#090d13] px-1 py-0.5 rounded border border-[#21262d]">
                 {templatesCount}
               </span>
             )}

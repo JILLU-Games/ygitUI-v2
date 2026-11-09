@@ -28,7 +28,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { EnvVar } from '../../../types';
-import { MetricPill } from '../../../components';
+import { MetricPill, PrimaryButton, SecondaryButton, IconButton } from '../../../components';
 
 export interface VariablesTabProps {
   envVars: EnvVar[];
@@ -114,35 +114,32 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
 
         {/* Top Action Buttons (Import, Export, Paste, Bulk) */}
         <div className="flex flex-wrap items-center gap-1.5 self-end sm:self-auto">
-          <button
-            type="button"
+          <SecondaryButton
+            size="sm"
+            icon={<Upload className="w-3 h-3 text-[#1d6cf6]" />}
             onClick={() => fileInputRef.current?.click()}
             title="Import variables from a local .env file"
-            className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1.5 cursor-pointer transition-colors border border-[#30363d]"
           >
-            <Upload className="w-3 h-3 text-[#1d6cf6]" />
-            <span>Import .env</span>
-          </button>
+            Import .env
+          </SecondaryButton>
 
-          <button
-            type="button"
+          <SecondaryButton
+            size="sm"
+            icon={<Download className="w-3 h-3 text-[#3fb950]" />}
             onClick={onExportEnvFile}
             title="Export all variables as a .env file"
-            className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1.5 cursor-pointer transition-colors border border-[#30363d]"
           >
-            <Download className="w-3 h-3 text-[#3fb950]" />
-            <span>Export .env</span>
-          </button>
+            Export .env
+          </SecondaryButton>
 
-          <button
-            type="button"
+          <SecondaryButton
+            size="sm"
+            icon={<Clipboard className="w-3 h-3 text-[#e3b341]" />}
             onClick={onOpenPasteEnvModal}
             title="Paste multiple KEY=VALUE pairs in bulk"
-            className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1.5 cursor-pointer transition-colors border border-[#30363d]"
           >
-            <Clipboard className="w-3 h-3 text-[#e3b341]" />
-            <span>Paste .env</span>
-          </button>
+            Paste .env
+          </SecondaryButton>
         </div>
       </div>
 
@@ -158,14 +155,14 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
               </span>
             </div>
           </div>
-          <button
-            type="button"
+          <PrimaryButton
+            size="sm"
+            icon={<Play className="w-3 h-3 fill-current" />}
             onClick={onTriggerDeployment}
-            className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3 py-1 rounded flex items-center gap-1.5 cursor-pointer shadow-sm shrink-0 self-end sm:self-auto transition-all active:scale-[0.98]"
+            className="shrink-0 self-end sm:self-auto"
           >
-            <Play className="w-3 h-3 fill-current" />
-            <span>Deploy & Apply</span>
-          </button>
+            Deploy & Apply
+          </PrimaryButton>
         </div>
       )}
 
@@ -222,13 +219,13 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
             </span>
           </label>
 
-          <button
+          <PrimaryButton
             type="submit"
+            size="sm"
             disabled={!newEnvKey.trim()}
-            className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white text-xs font-medium px-3 py-1 rounded cursor-pointer transition-colors shadow-sm whitespace-nowrap"
           >
             + Add
-          </button>
+          </PrimaryButton>
         </form>
       </div>
 
@@ -272,24 +269,14 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
             })}
           </div>
 
-          <button
-            type="button"
+          <SecondaryButton
+            size="sm"
             onClick={onToggleAllSecrets}
             title={showAllSecrets ? 'Mask all secret values' : 'Reveal all secret values'}
-            className="bg-[#161b22] hover:bg-[#21262d] text-[#8b949e] hover:text-[#f0f6fc] border border-[#21262d] p-1 rounded cursor-pointer transition-colors text-xs flex items-center gap-1 px-2"
+            icon={showAllSecrets ? <EyeOff className="w-3 h-3 text-[#e3b341]" /> : <Eye className="w-3 h-3 text-[#1d6cf6]" />}
           >
-            {showAllSecrets ? (
-              <>
-                <EyeOff className="w-3 h-3 text-[#e3b341]" />
-                <span className="text-[10px] hidden md:inline">Mask All</span>
-              </>
-            ) : (
-              <>
-                <Eye className="w-3 h-3 text-[#1d6cf6]" />
-                <span className="text-[10px] hidden md:inline">Reveal All</span>
-              </>
-            )}
-          </button>
+            <span className="text-[10px] hidden md:inline">{showAllSecrets ? 'Mask All' : 'Reveal All'}</span>
+          </SecondaryButton>
         </div>
       </div>
 
@@ -407,22 +394,20 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
                     {/* Action Buttons (Edit & Delete) */}
                     <td className="p-2.5 align-middle text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <button
-                          type="button"
-                          onClick={() => onEditEnvVar(v)}
+                        <IconButton
+                          size="sm"
+                          icon={<Edit3 className="w-3.5 h-3.5" />}
                           title={`Edit ${v.key}`}
-                          className="p-1 text-[#8b949e] hover:text-[#58a6ff] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => onDeleteEnvVar(v.id)}
+                          onClick={() => onEditEnvVar(v)}
+                          className="hover:text-[#58a6ff]"
+                        />
+                        <IconButton
+                          size="sm"
+                          icon={<Trash2 className="w-3.5 h-3.5" />}
                           title={`Delete ${v.key}`}
-                          className="p-1 text-[#8b949e] hover:text-[#f85149] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                          onClick={() => onDeleteEnvVar(v.id)}
+                          className="hover:text-[#f85149]"
+                        />
                       </div>
                     </td>
                   </tr>

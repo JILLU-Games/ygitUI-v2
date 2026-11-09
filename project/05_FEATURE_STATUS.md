@@ -1,54 +1,106 @@
-# YGIT Platform UI — Feature Inventory & Implementation Status
-
-> **Document**: 05_FEATURE_STATUS.md  
-> **Status**: Comprehensive Feature Capability Ledger  
-> **Updated**: September 28, 2026 (Phase 1.6 Forensic Audit & Scope Lock Verified — 100% Hardened)
+# YGIT PLATFORM UI — FEATURE PARITY & IMPLEMENTATION MATRIX
+**Document ID:** `YGIT-DOC-005-FEATURE-PARITY`  
+**Date:** November 8, 2026  
+**Status:** `BASELINE LIVE (100% WORKING)`  
 
 ---
 
-## 1. Current Actual Working Features Matrix
+## 1. Current Working Features (Baseline Inventory)
 
-| Feature Area | Component / Screen | Current Working Status in Prototype | Interactive Capabilities | Architecture & Hardening Status |
+All features below are verified active, navigable, and functioning in the current baseline:
+
+### 1.1 Global Platform Navigation & Shell
+- [x] **Dual-Sidebar Layout**:
+  - Primary Sidebar: Global navigation (`Dashboard`, `Projects`, `Deployments`, `Accounts`, `Templates`, `Settings`).
+  - Collapse / Expand Toggle: `PanelLeftClose` / `PanelLeft` with icon ambient glow.
+  - Secondary Sidebar: Project-scoped workspace tabs (`Overview`, `Variables`, `Cloudflare`, `Domains`, `Logs`, `History`).
+- [x] **Header Bar**:
+  - Route breadcrumbs with dynamic badge metadata.
+  - Search input with clear button.
+  - Global CTA ("New Project" / "Deploy").
+  - User profile menu (@vibtools) with Account Control, Settings, and Log Out options.
+- [x] **Toast Notification Engine**:
+  - Bottom-right feedback banner with auto-dismiss after 2.5s.
+
+### 1.2 Core Application Views
+- [x] **Dashboard (`DashboardView.tsx`)**:
+  - 6-metric telemetry strip (Projects, Deployments, Success rate, Providers, Platform status, Queue).
+  - 4-step rapid pipeline preview card (Paste, Analyze, Connect, Deploy).
+  - Instant repo URL intake with deploy trigger.
+  - GitHub & Cloudflare provider micro-cards.
+- [x] **Projects Catalog (`ProjectsView.tsx`)**:
+  - Live filtering by name, repository, and provider (Cloudflare / GitHub).
+  - High-density project cards with status pills, repo paths, and workspace links.
+- [x] **Deployments Stream (`DeploymentsView.tsx`)**:
+  - Real-time global deployment history table.
+  - Multi-filter toolbar (search, environment, status).
+  - Telemetry stats (total, success rate, average build duration, edge POPs).
+  - Quick action controls (Workspace, View Logs, Live URL, Redeploy).
+- [x] **Connected Accounts (`AccountsView.tsx`)**:
+  - GitHub OAuth live connect/disconnect, sync triggers, OAuth scopes inspection.
+  - Cloudflare Pages Edge credentials verification, token scopes, POP count.
+- [x] **Ready Templates Marketplace (`TemplatesView.tsx`)**:
+  - 8 curated Jamstack starters with macOS browser-framed graphics.
+  - Category filter pills with live counts.
+  - Framework filter dropdown.
+  - Deep inspection modal (`TemplateModal`) with routes, dependencies, and environment variables.
+  - 1-Click "Use Template" action with spinning clone state.
+- [x] **Developer Settings (`SettingsView.tsx`)**:
+  - UI preferences (theme, font, telemetry).
+  - Git defaults (branch, package manager, output dir).
+  - Personal Access Tokens (PAT) generator modal with expiration and copy affordance.
+  - Notification webhook alert toggles (Discord/Slack).
+
+### 1.3 Repository Intake & Deep Scan Console
+- [x] **Intake Pipeline (`IntakePipeline.tsx`)**:
+  - 4-channel intake selector (Public Git Clone, GitHub Import, Asset Upload, Template Clone).
+  - Progress bar animation with simulated intake pipeline stages.
+  - Big "Scan Repository →" CTA upon pipeline completion.
+- [x] **14-Stage Deep Codebase AST Analyzer (`ScanConsole.tsx`)**:
+  - Live scanning animation with glowing progress bar and 14 passing checkpoints.
+  - Terminal output stream with AST and engine logs.
+  - Post-scan Deep Analysis report, 14 Invariants checklist, and raw JSON spec.
+
+### 1.4 Post-Scan Dual-Sidebar Workspace
+- [x] **Overview Tab (`OverviewTab.tsx`)**:
+  - Codebase analysis summary, commit SHA verification, instant deploy action.
+- [x] **Variables & Secrets Tab (`VariablesTab.tsx`)**:
+  - Key-value table with environment targets (Production, Preview, Development).
+  - Encrypted secrets masking toggle (`••••••••`).
+  - Import / Export `.env` files.
+  - Bulk raw `.env` paste modal with valid pairs counter.
+- [x] **Cloudflare Pages Configuration Tab (`CloudflareTab.tsx`)**:
+  - Build settings (Framework preset, build command, root dir, output dir).
+  - KV, D1 SQL, and R2 bucket storage bindings modals.
+  - Worker routes configuration.
+  - Edge cache purge modal with URL purging.
+  - Destructive project deletion safeguard modal.
+- [x] **Domains & Networking Tab (`DomainsTab.tsx`)**:
+  - Free default domain (`*.pages.dev`) and free YGIT gateway (`*.ygit.net`).
+  - Subdomain search and claim workflow.
+  - Custom domain addition with CNAME record guidance.
+  - Live DNS resolution probe simulation modal (`DnsConfigModal`).
+- [x] **Logs Tab (`LogsTab.tsx`)**:
+  - Streaming edge terminal build logs with timestamps, line wrapping, and search.
+  - Full-screen terminal mode.
+- [x] **History Tab (`HistoryTab.tsx`)**:
+  - Chronological deployment history table with rollbacks and redeploy triggers.
+
+---
+
+## 2. Phase-by-Phase Parity Tracking
+
+| Phase | Planned Updates | New/Fixed Features Added | Regressions Avoided | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **Global Navigation** | Primary Sidebar | **100% Working** | Collapsible (190px ↔ 54px), routes switching, worker status pulse (38ms), badge counters. | Modular `<PrimarySidebar />` in `src/components/navigation/`. |
-| **Workspace Navigation**| Secondary Sidebar | **100% Working** | Repo context, Git branch badge, 6 active sub-tabs, Re-scan trigger button. | Modular `<SecondarySidebar />` in `src/components/navigation/`. |
-| **Viewport Orchestrator**| Layout Shell | **100% Working** | Sticky 100vh viewport, `#161b22` / `#12161d` / `#0d1117` 3-tier brightness stepping. | Actively orchestrating shell via `<DualSidebarLayout />` in `src/layouts/`. |
-| **Brand Identity** | Logo & Wordmark | **100% Working** | 21px expanded logo with 1px precision glow, 28px collapsed morphing toggle, SVG fallback. | Standalone `<YGitLogo />` & `<BetaPill />` extracted. Verified against `LOGO.md`. |
-| **Dashboard** | `dashboard` route | **100% Working** | 6-metric telemetry strip, 4-step rapid pipeline preview, quick deploy URL input, live edge clock. | Dynamic deployment counts & connected providers state in `<DashboardView />`. |
-| **Projects Directory**| `projects` route | **100% Working** | Search input, filter by provider/status, project cards with commit SHAs, direct links to workspace. | `<StatusBadge />` integrated for authentic live status in `<ProjectsView />`. |
-| **Global Deployments**| `deployments` route | **100% Working** | 4-metric summary strip, search & environment/status filters, high-density table with commit evidence, log viewer, live preview, redeploy. | Standalone `<DeploymentsView />` in `src/features/deployments/`. |
-| **Accounts & Integrations**| `accounts` route | **100% Working** | GitHub OAuth & Cloudflare Pages integration cards, scopes tag chips, sync spinners, disconnect buttons, enclave guarantee. | Standalone `<AccountsView />` in `src/features/accounts/`. |
-| **Templates Directory**| `templates` route | **100% Working** | 8 production starters, Wix/Shopify-style theme cards, hover action overlay (Details & Live Demo), category filters with counts. | Standalone `<TemplatesView />` in `src/features/templates/`. |
-| **User Settings** | `settings` route | **100% Working** | Developer workspace settings (UI Preferences, Git Defaults, Personal Access Tokens, Alerts), zero server-owner fluff, profile update/control removed, compact high-density layout. | Standalone `<SettingsView />` in `src/features/settings/`. Zero hardcoded values. |
-| **Template Preview** | Details Modal | **100% Working** | 4-metric quick specs bar, architecture breakdown, interactive feature tags, "Use Template" CTA. | Modular `<TemplateModal />` in `src/components/modals/`. |
-| **Intake Pipeline** | `project-blank` route | **100% Working** | 4 intake channels (Public Git Clone, GitHub Import, Bundle Upload, Starter Template), progress fill, Big [Scan Repository ->] trigger. | Canonical Brand Blues (`#1d6cf6` / `#2f7af8`) restored per `COLORS.md`. |
-| **14-Stage Scanner** | `project-scan` route | **100% Working** | 14 invariant checkpoints with live passing badges, live terminal log streaming, post-scan report tabs (Report, Checkpoints, JSON). | Standalone `<ScanConsole />` in `src/features/scanner/`. |
-| **Overview Tab** | Workspace Sub-View | **100% Working** | 6-card intelligence grid, commit SHA verification, 14-checkpoints matrix, instant deploy action. | Instant Deploy action button integrated into header banner in `<OverviewTab />`. |
-| **Variables Tab** | Workspace Sub-View | **100% Working** | Environment variables table, encrypted secret masking toggle (`••••••••`), AST detected variables, .env import/export. | Standalone `<VariablesTab />` in `src/features/workspace/tabs/`. |
-| **Cloudflare Tab** | Workspace Sub-View | **100% Working** | Pages build configuration, framework preset detection, worker bindings (KV, D1, R2, AI), webhooks, live `wrangler.toml` generator. | Standalone `<CloudflareTab />` in `src/features/workspace/tabs/`. |
-| **Domains Tab** | Workspace Sub-View | **100% Working** | Free subdomain claim engine (`*.ygit.net`, `*.pages.dev`, `*.ygit.app`), active subdomains roster, custom domain DNS suite & live probe. | Standalone `<DomainsTab />` in `src/features/workspace/tabs/`. |
-| **Logs Tab** | Workspace Sub-View | **100% Working** | Real-time edge terminal logs stream, search in logs, timestamp toggle, line wrapping, auto-scroll, fullscreen expansion, copy logs. | Standalone `<LogsTab />` in `src/features/workspace/tabs/`. |
-| **History Tab** | Workspace Sub-View | **100% Working** | Chronological deployment table with commit messages, branch, duration, status pills, and re-deploy triggers. | Full parity implemented with commit messages, StatusBadge, duration & redeploy triggers. |
+| **Phase 1** | Replace invalid `py-0.2` class across 35 files | Standardized vertical padding on badges, counters, and sidebar pills | Zero visual distortion on high-DPI screens | ✅ `COMPLETED` |
+| **Phase 2** | Wire `FrameworkBadge` & centralize badges | Active framework chips on template cards; unified `StatusBadge` & `MetricPill` usage | Eliminates duplicate badge CSS | ✅ `COMPLETED` |
+| **Phase 3** | Atomic buttons in Global Views | `<PrimaryButton>`, `<SecondaryButton>`, `<IconButton>` in Dashboard, Projects, Deployments, Accounts, Templates | Unified active scale, hover, and loading states | ✅ `COMPLETED` |
+| **Phase 4** | Atomic buttons in Scanner & Workspace | Unified button components in Intake, Scan Console, and all 6 workspace tabs | Standardized form triggers & CTAs | ✅ `COMPLETED` |
+| **Phase 5** | Modal standardization & `App.tsx` de-bloat | Extracted `CreateProjectModal`, `PasteEnvModal`, `EditEnvModal`, wrapped `AccountsModal` | Modular, maintainable modal system | ✅ `COMPLETED` |
+| **Phase 6** | End-to-end integration audit | Full compile, lint, and runtime verification | 100% verified baseline parity | ✅ `COMPLETED` |
 
 ---
 
-## 2. Feature Transition by Phase
+## 3. Invariant Preservation Guarantee
 
-```
-                                  FEATURE MATURATION PIPELINE
-                                  
-   [Baseline State]        [Phase 1.1]            [Phase 1.2]            [Phase 1.3]            [Phase 1.4]                  [Phase 1.5 - 1.6: Complete]
-   • 8,692-Line Monolith   • Types & Mocks        • Reusable Components  • Modular Dual-Sidebar • 5 Standalone Main Views    • Scanner & Workspace Sub-Tabs
-   • Monolithic in App.tsx • 12 Support Files     • Logo, Buttons, Badges• Sidebars & Layout    • Dashboard, Projects, etc.  • 14-Stage Scanner + 6 Sub-Tabs
-   • Redundant State Logic • 744 Lines Extracted  • 718 Lines Extracted  • 242 Lines Extracted  • 1,068 Lines Extracted      • Forensic Audit & Scope Lock Fixed
-   • 100% Working Features • 0 Errors Compile/Lint• 0 Errors Compile/Lint• 0 Errors Compile/Lint• 0 Errors Compile/Lint     • 0 Errors Compile/Lint
-```
-
-### Feature Additions Scheduled in Phased Refactoring:
-- [x] **Phase 1.1**: Type safety formalization for all 15 active features; zero feature loss; mocks cleanly decoupled.
-- [x] **Phase 1.2**: Standardized UI components (Buttons, Badges, Modals); consistent micro-interactions.
-- [x] **Phase 1.3**: Clean layout separation between Global Platform and Project Workspace.
-- [x] **Phase 1.4**: Independent feature loading for Dashboard, Projects, Templates, Deployments, and Accounts.
-- [x] **Phase 1.5**: Isolated 14-stage scanner engine and 6-tab workspace; slim root orchestrator.
-- [x] **Phase 1.6**: Forensic production parity audit; verified and eliminated all hardcoded demo placeholders; enforced canonical design system tokens.
-- [x] **Phase 1.7**: Added comprehensive, dynamic `<SettingsView />` with 5 high-density subtabs (General, Build, Security, Notifications, Advanced), full state reactivity, token generator, JSON spec inspection and export. Zero hardcoded design values.
+Every single feature, click handler, simulated API delay, and state transition listed above **MUST and WILL remain 100% working** through all phases. Any refactoring must only replace underlying HTML elements and class strings with their equivalent standardized components, with zero changes to data flow or user experience.

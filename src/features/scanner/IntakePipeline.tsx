@@ -34,6 +34,7 @@ import {
   Search,
   ArrowRight,
 } from 'lucide-react';
+import { PrimaryButton, SecondaryButton } from '../../components/buttons';
 
 export interface IntakePipelineProps {
   currentProject: { name: string; repo: string };
@@ -118,17 +119,16 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
           <div className="text-[12px] text-[#8b949e] mb-4.5 max-w-sm">
             Connect a repository or source code to begin automated deployments.
           </div>
-          <button
-            type="button"
+          <PrimaryButton
+            size="md"
+            icon={<Plus className="w-3.5 h-3.5" />}
             onClick={() => {
               onSetIsResourcePickerOpen(true);
               onSetResourceSelected('clone');
             }}
-            className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3.5 py-1.5 rounded flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Repo</span>
-          </button>
+            Add Repo
+          </PrimaryButton>
         </div>
       )}
 
@@ -141,17 +141,16 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <Layers className="w-3.5 h-3.5 text-[#1d6cf6]" />
                 <span>Choose a resource</span>
               </div>
-              <button
-                type="button"
+              <SecondaryButton
+                size="sm"
                 onClick={() => {
                   onSetIsResourcePickerOpen(false);
                   onSetIsIntakePipelineActive(false);
                   onSetIntakeCompleted(false);
                 }}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#8b949e] hover:text-[#f0f6fc] px-2 py-0.5 rounded text-[11px] cursor-pointer border border-[#30363d] transition-colors"
               >
                 Back
-              </button>
+              </SecondaryButton>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
@@ -291,13 +290,12 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                   value={cloneBranch}
                   onChange={(e) => onSetCloneBranch(e.target.value)}
                 />
-                <button
-                  type="button"
+                <PrimaryButton
+                  size="md"
                   onClick={() => onRunIntakePipeline('Public Git Clone', cloneInputUrl || 'vibtools/vib-agent')}
-                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3.5 py-1.5 rounded cursor-pointer whitespace-nowrap transition-colors"
                 >
                   Clone & Analyze
-                </button>
+                </PrimaryButton>
               </div>
 
               <div className="flex items-center justify-between bg-[#090d13] border border-[#21262d] rounded p-2 px-2.5 text-[11px]">
@@ -356,7 +354,7 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                         <GitBranch className="w-3.5 h-3.5 text-[#7d8590]" />
                         <span className="font-semibold text-xs text-[#f0f6fc]">{repo.name}</span>
                         <span
-                          className={`text-[9.5px] font-semibold uppercase px-1.5 py-0.2 rounded border ${
+                          className={`text-[9.5px] font-semibold uppercase px-1.5 py-0.5 rounded border ${
                             repo.type === 'Public' ? 'bg-[#21262d] text-[#8b949e] border-[#30363d]' : 'bg-[#21262d] text-[#7d8590] border-[#30363d]'
                           }`}
                         >
@@ -364,13 +362,12 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                         </span>
                         <span className="font-mono text-[10px] text-[#7d8590]">★ {repo.stars}</span>
                       </div>
-                      <button
-                        type="button"
+                      <PrimaryButton
+                        size="sm"
                         onClick={() => onRunIntakePipeline('GitHub Direct Import', repo.name)}
-                        className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-[11px] font-medium px-2.5 py-0.5 rounded cursor-pointer transition-colors"
                       >
                         Import
-                      </button>
+                      </PrimaryButton>
                     </div>
                   ))}
               </div>
@@ -425,13 +422,12 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                   value={distFolder}
                   onChange={(e) => onSetDistFolder(e.target.value)}
                 />
-                <button
-                  type="button"
+                <PrimaryButton
+                  size="md"
                   onClick={() => onRunIntakePipeline('Upload Bundle', uploadedFileName || 'bundle.zip')}
-                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3.5 py-1.5 rounded cursor-pointer transition-colors"
                 >
                   Deploy Bundle
-                </button>
+                </PrimaryButton>
               </div>
             </div>
           )}
@@ -469,13 +465,13 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                         <div className="text-[10px] text-[#7d8590]">{tmpl.desc}</div>
                       </div>
                     </div>
-                    <button
-                      type="button"
+                    <PrimaryButton
+                      fullWidth
+                      size="sm"
                       onClick={() => onRunIntakePipeline('Template', tmpl.name)}
-                      className="w-full bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-[10.5px] font-medium py-1 rounded cursor-pointer transition-colors text-center"
                     >
                       Clone Template
-                    </button>
+                    </PrimaryButton>
                   </div>
                 ))}
               </div>
@@ -507,15 +503,16 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
 
               {/* Big Scan Button upon Completion */}
               {intakeCompleted && (
-                <button
-                  type="button"
+                <PrimaryButton
+                  fullWidth
+                  size="cta"
+                  icon={<Search className="w-4 h-4" />}
                   onClick={onStartDeepScan}
-                  className="w-full py-2.5 bg-[#1d6cf6] hover:bg-[#2f7af8] text-white font-bold text-xs rounded-md flex items-center justify-center gap-2 cursor-pointer mt-1 shadow-md transition-all active:scale-[0.99]"
+                  className="mt-1 shadow-md"
                 >
-                  <Search className="w-4 h-4" />
                   <span>Scan Repository</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </PrimaryButton>
               )}
             </div>
           )}

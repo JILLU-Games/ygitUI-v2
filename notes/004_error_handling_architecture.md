@@ -1,103 +1,82 @@
-# ERROR HANDLING & RESILIENCE ARCHITECTURE
-**Document ID:** `YGIT-DOC-004`  
+# YGIT PLATFORM UI — ERROR HANDLING ARCHITECTURE
+**Document ID:** `YGIT-DOC-004-ERROR-HANDLING`  
 **Date:** November 8, 2026  
-**Status:** `ACTIVE ARCHITECTURAL SPECIFICATION`  
-**Scope:** Client-Side Error Boundaries, Form Validations, Network Resilience, Empty States
+**Status:** `AUDITED & ARCHITECTED`  
 
 ---
 
-## 1. Overview & Current Error Handling State
+## 1. Current Error Handling Mechanisms (Baseline Audit)
 
-In the current baseline version, error prevention and handling exists across multiple levels:
-1. **TypeScript Strict Mode:** Catches missing props, invalid route types, and payload schema violations at compile time (`tsc --noEmit`).
-2. **Interactive Toast Notifications:** Contextual feedback for async operations (e.g., `"GitHub account disconnected"`, `"✨ Cloudflare API credentials verified"`, `"Copied to clipboard"`).
-3. **Form Validations:** Required HTML5 inputs (`required`, regex pattern checking for domain names, input lengths).
-4. **Destructive Action Safeguards:** The "Delete Project" modal requires explicit typing of the project slug before enabling the delete action (`deleteConfirmText === currentProject.name`).
-5. **Subdomain Availability Probe:** The free subdomain registrar validates availability against reserved words (`admin`, `api`, `auth`, `root`, `billing`, `cloud`, `system`, `ygit`) and checks duplicate registrations.
+The current application contains several existing error handling layers across runtime rendering, network simulation, and user feedback:
+
+### 1.1 Global React Error Boundary (`AppErrorBoundary.tsx`)
+- **Location**: `src/components/errors/AppErrorBoundary.tsx`
+- **Wrapping Point**: `src/main.tsx` wraps the entire `<App />` within `<AppErrorBoundary>`.
+- **Implementation**: Class component implementing `componentDidCatch(error, errorInfo)`.
+- **UI Fallback**:
+  - Catches unhandled React lifecycle rendering crashes.
+  - Displays a clean error screen with an alert triangle icon (`AlertTriangle className="text-[#f85149]"`).
+  - Shows error message in a dark monospace block (`bg-[#090d13] border border-[#21262d] font-mono text-[11px]`).
+  - Provides a "Reload Application" recovery button (`window.location.reload()`) and "Reset App State" option.
+
+### 1.2 Form Validation Safeguards
+- **Delete Project Confirmation**:
+  - `DeleteProjectModal.tsx`: Requires the user to type the exact project name before the destructive action button enables (`disabled={confirmText !== projectName}`).
+- **Environment Variables Import**:
+  - `VariablesTab.tsx` / `App.tsx`: Validates pasted `.env` text, ensuring lines contain `=` and are not comments before enabling the import button.
+- **Custom Domain Validation**:
+  - `DomainsTab.tsx`: Validates non-empty domain name, rejects spaces, and normalizes casing to lowercase.
+
+### 1.3 Asynchronous Simulation Failure States & Fallbacks
+- **DNS Resolution Probe**:
+  - `DnsConfigModal.tsx`: Simulates DNS resolution probe across global Cloudflare edge POPs; logs failures if CNAME target does not resolve to `*.ygit.net` or `*.pages.dev`.
+- **Subdomain Search Availability**:
+  - `DomainsTab.tsx`: Checks subdomain availability; triggers conflict error warning if the subdomain is already registered or reserved.
+- **Toast Alert System**:
+  - Real-time user feedback notifications triggered on errors, copy events, and action commits.
 
 ---
 
-## 2. Identified Error Handling Gaps & Vulnerabilities
+## 2. Forensic Gaps & Vulnerabilities in Current Error Handling
 
-| Area | Current Behavior | Potential Failure Mode | Proposed Enhancement (Phase 5) |
+The forensic audit revealed the following potential failure modes:
+
+| ID | Location | Potential Failure Mode | Risk Level |
 | :--- | :--- | :--- | :--- |
-| **Component Crashes** | Uncaught React error causes entire screen to go blank (white-screen of death) | If a sub-tab throws an unexpected null-pointer, the entire dashboard breaks | Introduce `AppErrorBoundary` with a friendly "Reload View" button and error report log. |
-| **Empty Search Results** | If `projectSearch` returns 0 items, screen is completely blank | User may think app is frozen or broken | Add unified `EmptyState` component with clear CTA (`"No projects found matching query"` + Clear search button). |
-| **Network & Backend Disconnect** | Simulated in accounts view, but lacks offline indicator | If user goes offline during a scan or deployment | Implement browser `navigator.onLine` connectivity toast / badge. |
-| **Invalid .env File Upload** | Handles file reading but does not catch malformed syntax | User uploading corrupt or binary file causes parsing error | Add robust line-by-line .env AST validator with clear error modal line highlights. |
-| **Invalid Domain DNS CNAME** | DNS modal shows records, but verification is simulated | User tries to verify without adding records | Add inline DNS query error state (`"NXDOMAIN: CNAME record not detected on edge"`). |
+| **ERR-GAP-01** | Global View Level | A crash inside a single sub-tab (e.g. malformed DNS record in `DomainsTab` or invalid JSON in `SettingsView`) crashes the **entire application viewport**, because there is only one root-level error boundary. | HIGH |
+| **ERR-GAP-02** | File Upload Handling | `VariablesTab.tsx` file input reads files using `FileReader.readAsText()`. If a user uploads an invalid binary file, an exception could throw without user-friendly feedback. | MEDIUM |
+| **ERR-GAP-03** | LocalStorage / State Persistence | If mock state persistence is added in the future without `try / catch`, corrupted storage data could prevent the app from booting. | MEDIUM |
+| **ERR-GAP-04** | Input Boundary Validation | URL input fields in `DashboardView` and `IntakePipeline` lack proactive regex validation for valid Git/HTTPS URLs before triggering the intake pipeline. | LOW |
 
 ---
 
-## 3. Implementation Blueprint for Enhancements
+## 3. Planned Error Handling Enhancements (Recommended)
 
-### 3.1 AppErrorBoundary Specification (`src/components/errors/AppErrorBoundary.tsx`)
+### 3.1 Tab-Level Granular Error Boundaries
+Introduce a lightweight `TabErrorBoundary` or reuse `AppErrorBoundary` around the individual workspace tabs:
 ```tsx
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle, RotateCcw } from 'lucide-react';
+<TabErrorBoundary tabName="Domains">
+  <DomainsTab {...domainsProps} />
+</TabErrorBoundary>
+```
+*Benefit*: If an error occurs in the DNS probe table, the user can still access `Overview`, `Variables`, `Logs`, and `History` without a full page crash.
 
-interface Props {
-  children: ReactNode;
-}
-
-interface State {
-  hasError: boolean;
-  error: Error | null;
-}
-
-export class AppErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false,
-    error: null,
-  };
-
-  public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+### 3.2 Safe File Reader Utility with MIME Validation
+In `VariablesTab.tsx`, wrap `.env` file imports in a robust validation helper:
+```typescript
+const handleSafeFileImport = (file: File) => {
+  if (file.size > 500 * 1024) { // 500KB safeguard
+    showToast('File too large (limit 500KB)');
+    return;
   }
-
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('YGIT Application Uncaught Error:', error, errorInfo);
-  }
-
-  public render() {
-    if (this.state.hasError) {
-      return (
-        <div className="min-h-screen bg-[#0d1117] text-[#f0f6fc] flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-[#161b22] border border-[#f85149]/30 rounded-lg p-6 text-center shadow-2xl">
-            <div className="w-12 h-12 rounded-full bg-[#f85149]/15 border border-[#f85149]/30 flex items-center justify-center mx-auto mb-4 text-[#f85149]">
-              <AlertTriangle className="w-6 h-6" />
-            </div>
-            <h2 className="text-base font-semibold text-[#f0f6fc] mb-1">Application Workspace Error</h2>
-            <p className="text-xs text-[#8b949e] mb-4">
-              An unexpected render error occurred in this view. Your configuration and state remain secure.
-            </p>
-            <div className="bg-[#090d13] border border-[#21262d] rounded p-2.5 text-left font-mono text-[11px] text-[#f85149] mb-4 max-h-24 overflow-y-auto">
-              {this.state.error?.message || 'Unknown runtime exception'}
-            </div>
-            <button
-              onClick={() => window.location.reload()}
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-4 py-2 rounded flex items-center justify-center gap-2 mx-auto cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reload Workspace</span>
-            </button>
-          </div>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
+  const reader = new FileReader();
+  reader.onerror = () => showToast('Failed to read .env file');
+  reader.onload = (e) => { ... };
+  reader.readAsText(file);
+};
 ```
 
-### 3.2 Form Validation Standards
-1. **Input Lengths:** Project names must be 3–48 characters, lowercase alphanumeric with dashes.
-2. **Environment Variable Keys:** Must match regex `/^[A-Z_][A-Z0-9_]*$/`. Invalid characters show an instant red validation ring before submit.
-3. **Secret Masking Invariant:** Secret values must never be logged to console or persisted unmasked in DOM attributes.
-
----
-
-## 4. Verification & Testing Procedure
-1. Trigger artificial error using a throw statement in test harness.
-2. Confirm error boundary isolates the crash to the specific view without crashing entire page.
-3. Verify "Reload Workspace" returns user to a clean, working state.
+### 3.3 Strict Git URL Validator
+Enhance the intake URL input with a lightweight validation hint:
+- Validates formats: `https://github.com/org/repo` or `git@github.com:...`
+- Displays an inline warning if protocol or repository name is malformed.

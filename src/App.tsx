@@ -132,6 +132,10 @@ import {
   TemplateThumbnailGraphic,
   TemplateModal,
   ModalShell,
+  CreateProjectModal,
+  PasteEnvModal,
+  EditEnvModal,
+  AccountsModal,
   DnsConfigModal,
   EditCustomDomainModal,
   AddKvModal,
@@ -1344,9 +1348,7 @@ binding = "AI"
                 </button>
                 <span className="text-[#7d8590]">/</span>
                 <span className="text-[#f0f6fc] font-medium font-mono">{currentProject.name}</span>
-                <span className="text-[9.5px] font-normal px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30">
-                  Ready
-                </span>
+                <StatusBadge status="verified" label="Ready" />
               </div>
             ) : (
               <div className="relative">
@@ -1876,228 +1878,41 @@ binding = "AI"
       </DualSidebarLayout>
 
       {/* POPUP MODAL: CREATE PROJECT */}
-      <ModalShell
+      <CreateProjectModal
         isOpen={isModalOpen}
+        projectName={newProjectName}
+        onProjectNameChange={setNewProjectName}
         onClose={() => setIsModalOpen(false)}
-        title="Create Project"
-        maxWidth="xs"
-      >
-        <form onSubmit={handleCreateProjectSubmit}>
-          <div className="p-3">
-            <input
-              type="text"
-              required
-              autoFocus
-              placeholder="Project Name"
-              value={newProjectName}
-              onChange={(e) => setNewProjectName(e.target.value)}
-              className="w-full bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-            />
-          </div>
-
-          <div className="px-3 py-2 border-t border-[#21262d] bg-[#090d13] flex justify-end gap-1.5">
-            <button
-              type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="bg-[#21262d] hover:bg-[#30363d] text-[#f0f6fc] px-2.5 py-1 text-xs rounded cursor-pointer transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3 py-1 text-xs font-semibold rounded cursor-pointer transition-colors"
-            >
-              Create
-            </button>
-          </div>
-        </form>
-      </ModalShell>
+        onSubmit={handleCreateProjectSubmit}
+      />
 
       {/* POPUP MODAL: PASTE .ENV RAW VARIABLES */}
-      <ModalShell
+      <PasteEnvModal
         isOpen={isPasteEnvModalOpen}
         onClose={() => {
           setIsPasteEnvModalOpen(false);
           setPasteEnvText('');
         }}
-        title="Paste .env Variables"
-        icon={<Clipboard className="w-3.5 h-3.5 text-[#e3b341]" />}
-        maxWidth="lg"
-      >
-        <div className="p-3.5 flex flex-col gap-2.5">
-          <p className="text-[11px] text-[#8b949e]">
-            Paste raw <code className="text-[#f0f6fc] bg-[#090d13] px-1 py-0.5 rounded font-mono">KEY=VALUE</code> or <code className="text-[#f0f6fc] bg-[#090d13] px-1 py-0.5 rounded font-mono">export KEY="VALUE"</code> declarations. Comments (<code className="text-[#7d8590]">#</code>) and empty lines are automatically ignored.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-[#090d13] p-2 rounded border border-[#21262d]">
-            <div className="flex items-center gap-2">
-              <span className="text-[10.5px] text-[#7d8590] uppercase font-mono">Target Environment:</span>
-              <select
-                value={pasteEnvTarget}
-                onChange={(e) => setPasteEnvTarget(e.target.value as any)}
-                className="bg-[#161b22] border border-[#21262d] rounded px-2 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-              >
-                <option value="All">All Environments</option>
-                <option value="Production">Production</option>
-                <option value="Preview">Preview</option>
-                <option value="Development">Development</option>
-              </select>
-            </div>
-
-            <label className="flex items-center gap-1.5 text-xs text-[#8b949e] cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={pasteEnvIsSecret}
-                onChange={(e) => setPasteEnvIsSecret(e.target.checked)}
-                className="rounded bg-[#161b22] border-[#21262d] text-[#1d6cf6] focus:ring-0 cursor-pointer"
-              />
-              <span className="flex items-center gap-1 text-[11px]">
-                <Lock className="w-3 h-3 text-[#8957e5]" />
-                Encrypt as Secrets
-              </span>
-            </label>
-          </div>
-
-          <div className="relative">
-            <textarea
-              rows={7}
-              value={pasteEnvText}
-              onChange={(e) => setPasteEnvText(e.target.value)}
-              placeholder={`# Example .env configuration\nVITE_API_URL="https://api.example.com/v1"\nDATABASE_URL="postgres://user:pass@host:5432/db"\nSUPABASE_ANON_KEY="eyJhbGciOi..."\nCF_PAGES_BRANCH="main"`}
-              className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded p-2.5 text-xs text-[#f0f6fc] font-mono leading-relaxed resize-y placeholder:text-[#484f58]"
-            />
-            <div className="text-[10px] font-mono text-[#7d8590] mt-1 flex justify-between">
-              <span>
-                Detected:{' '}
-                <strong className="text-[#3fb950] font-medium">
-                  {
-                    pasteEnvText
-                      .split('\n')
-                      .filter((l) => l.trim() && !l.trim().startsWith('#') && l.includes('=')).length
-                  }{' '}
-                  valid pairs
-                </strong>
-              </span>
-              <span>UTF-8 Plaintext</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-between">
-          <span className="text-[10px] text-[#7d8590]">Existing matching keys will be overwritten.</span>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                setIsPasteEnvModalOpen(false);
-                setPasteEnvText('');
-              }}
-              className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handlePasteEnvSubmit}
-              disabled={
-                pasteEnvText
-                  .split('\n')
-                  .filter((l) => l.trim() && !l.trim().startsWith('#') && l.includes('=')).length === 0
-              }
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3.5 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-            >
-              Import Variables
-            </button>
-          </div>
-        </div>
-      </ModalShell>
+        pasteEnvText={pasteEnvText}
+        onPasteEnvTextChange={setPasteEnvText}
+        pasteEnvTarget={pasteEnvTarget}
+        onPasteEnvTargetChange={setPasteEnvTarget}
+        pasteEnvIsSecret={pasteEnvIsSecret}
+        onPasteEnvIsSecretChange={setPasteEnvIsSecret}
+        onSubmit={handlePasteEnvSubmit}
+      />
 
       {/* POPUP MODAL: EDIT VARIABLE */}
-      {editingEnvVar && (
-        <ModalShell
-          isOpen={isEditEnvModalOpen}
-          onClose={() => {
-            setIsEditEnvModalOpen(false);
-            setEditingEnvVar(null);
-          }}
-          title={`Edit Variable: ${editingEnvVar.key}`}
-          icon={<Edit3 className="w-3.5 h-3.5 text-[#1d6cf6]" />}
-          maxWidth="md"
-        >
-          <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Key</label>
-              <input
-                type="text"
-                value={editingEnvVar.key}
-                onChange={(e) => setEditingEnvVar({ ...editingEnvVar, key: e.target.value })}
-                className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono uppercase"
-              />
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-mono uppercase text-[#7d8590]">Variable Value</label>
-              <input
-                type="text"
-                value={editingEnvVar.value}
-                onChange={(e) => setEditingEnvVar({ ...editingEnvVar, value: e.target.value })}
-                className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 pt-0.5">
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-mono uppercase text-[#7d8590]">Environment</label>
-                <select
-                  value={editingEnvVar.environment}
-                  onChange={(e) => setEditingEnvVar({ ...editingEnvVar, environment: e.target.value as any })}
-                  className="bg-[#090d13] border border-[#21262d] rounded px-2 py-1 text-xs text-[#f0f6fc] focus:outline-none focus:border-[#1d6cf6]"
-                >
-                  <option value="All">All Environments</option>
-                  <option value="Production">Production</option>
-                  <option value="Preview">Preview</option>
-                  <option value="Development">Development</option>
-                </select>
-              </div>
-
-              <div className="flex flex-col justify-end">
-                <label className="flex items-center gap-1.5 text-xs text-[#8b949e] cursor-pointer select-none bg-[#090d13] p-1.5 rounded border border-[#21262d]">
-                  <input
-                    type="checkbox"
-                    checked={editingEnvVar.isSecret}
-                    onChange={(e) => setEditingEnvVar({ ...editingEnvVar, isSecret: e.target.checked })}
-                    className="rounded bg-[#161b22] border-[#21262d] text-[#1d6cf6] focus:ring-0 cursor-pointer"
-                  />
-                  <span className="flex items-center gap-1 text-[11px]">
-                    <Lock className="w-3 h-3 text-[#8957e5]" />
-                    Secret Encrypted
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                setIsEditEnvModalOpen(false);
-                setEditingEnvVar(null);
-              }}
-              className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSaveEditedEnvVar}
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3.5 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-            >
-              Save Changes
-            </button>
-          </div>
-        </ModalShell>
-      )}
+      <EditEnvModal
+        isOpen={isEditEnvModalOpen}
+        editingEnvVar={editingEnvVar}
+        onEditingEnvVarChange={setEditingEnvVar}
+        onClose={() => {
+          setIsEditEnvModalOpen(false);
+          setEditingEnvVar(null);
+        }}
+        onSave={handleSaveEditedEnvVar}
+      />
 
       {/* POPUP MODAL: DNS CONFIGURATION & RESOLUTION PROBE */}
       <DnsConfigModal
@@ -2208,89 +2023,13 @@ binding = "AI"
         }}
       />
 
-      {/* 
-        ====================================================================
-        POPUP MODAL: CONNECTED ACCOUNTS & PROVIDERS
-        ====================================================================
-      */}
-      {isAccountsModalOpen && (
-        <div className="fixed inset-0 bg-[#05080d]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="w-full max-w-md bg-[#161b22] border border-[#21262d] rounded-lg shadow-2xl overflow-hidden animate-in fade-in duration-150">
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13]">
-              <div className="flex items-center gap-2">
-                <Github className="w-3.5 h-3.5 text-[#58a6ff]" />
-                <h3 className="text-xs font-medium text-[#f0f6fc]">Connected Accounts & Providers</h3>
-              </div>
-              <button
-                onClick={() => setIsAccountsModalOpen(false)}
-                className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded cursor-pointer"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
-              {/* GitHub Account Card */}
-              <div className="bg-[#090d13] border border-[#21262d] rounded-md p-2.5 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#161b22] border border-[#30363d] flex items-center justify-center text-white">
-                    <Github className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-medium text-[#f0f6fc] flex items-center gap-1.5">
-                      <span>GitHub: @vibtools</span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30">
-                        Connected
-                      </span>
-                    </div>
-                    <div className="text-[10.5px] text-[#7d8590]">12 Repositories linked · Webhooks active</div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => showToast('GitHub OAuth tokens refreshed')}
-                  className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] px-2.5 py-1 rounded text-[11px] border border-[#30363d] cursor-pointer transition-colors"
-                >
-                  Re-sync
-                </button>
-              </div>
-
-              {/* Cloudflare Account Card */}
-              <div className="bg-[#090d13] border border-[#21262d] rounded-md p-2.5 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-[#161b22] border border-[#30363d] flex items-center justify-center text-[#f38020]">
-                    <Cloud className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-medium text-[#f0f6fc] flex items-center gap-1.5">
-                      <span>Cloudflare Pages</span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30">
-                        Verified
-                      </span>
-                    </div>
-                    <div className="text-[10.5px] text-[#7d8590]">API Token Active · 310+ Edge POPs</div>
-                  </div>
-                </div>
-                <SecondaryButton
-                  size="sm"
-                  onClick={() => showToast('Cloudflare edge credentials verified')}
-                >
-                  Verify
-                </SecondaryButton>
-              </div>
-            </div>
-
-            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end">
-              <PrimaryButton
-                size="sm"
-                onClick={() => setIsAccountsModalOpen(false)}
-              >
-                Done
-              </PrimaryButton>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* POPUP MODAL: CONNECTED ACCOUNTS & PROVIDERS */}
+      <AccountsModal
+        isOpen={isAccountsModalOpen}
+        onClose={() => setIsAccountsModalOpen(false)}
+        onRefreshGithub={() => showToast('GitHub OAuth tokens refreshed')}
+        onVerifyCloudflare={() => showToast('Cloudflare edge credentials verified')}
+      />
 
       {/* 
         ====================================================================

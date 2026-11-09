@@ -38,7 +38,7 @@ export const DnsConfigModal: React.FC<DnsConfigModalProps> = ({
         <div className="flex items-center gap-2">
           <span>DNS Records: {domainItem.domain}</span>
           <span
-            className={`text-[9.5px] font-mono px-1.5 py-0.2 rounded font-normal ${
+            className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded font-normal ${
               domainItem.dnsStatus === 'verified'
                 ? 'bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30'
                 : 'bg-[#d29922]/15 text-[#e3b341] border border-[#d29922]/30'
@@ -94,7 +94,7 @@ export const DnsConfigModal: React.FC<DnsConfigModalProps> = ({
               {/* Record 1: Primary Routing */}
               <tr className="hover:bg-[#161b22]/50 transition-colors">
                 <td className="p-2 align-middle">
-                  <span className="px-1.5 py-0.2 rounded bg-[#1d6cf6]/15 text-[#58a6ff] font-normal text-[10px]">
+                  <span className="px-1.5 py-0.5 rounded bg-[#1d6cf6]/15 text-[#58a6ff] font-normal text-[10px]">
                     {domainItem.isApex ? 'A' : 'CNAME'}
                   </span>
                 </td>
@@ -119,7 +119,7 @@ export const DnsConfigModal: React.FC<DnsConfigModalProps> = ({
               {/* Record 2: Ownership Verification TXT */}
               <tr className="hover:bg-[#161b22]/50 transition-colors">
                 <td className="p-2 align-middle">
-                  <span className="px-1.5 py-0.2 rounded bg-[#8957e5]/15 text-[#a371f7] font-normal text-[10px]">
+                  <span className="px-1.5 py-0.5 rounded bg-[#8957e5]/15 text-[#a371f7] font-normal text-[10px]">
                     TXT
                   </span>
                 </td>

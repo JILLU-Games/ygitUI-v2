@@ -20,7 +20,7 @@ export interface MetricPillProps {
 /**
  * Standard YGIT Metric & Metadata Pill
  * Reference: CARDS.md & SPACING.md
- * Invariants: font-mono or font-normal precision, high-density padding (px-1.5 py-0.2)
+ * Invariants: font-mono or font-normal precision, high-density padding (px-1.5 py-0.5)
  */
 export const MetricPill: React.FC<MetricPillProps> = ({
   children,
@@ -40,7 +40,7 @@ export const MetricPill: React.FC<MetricPillProps> = ({
   };
 
   const sizeStyles = {
-    xs: 'text-[9.5px] px-1.5 py-0.2',
+    xs: 'text-[9.5px] px-1.5 py-0.5',
     sm: 'text-[10.5px] px-2 py-0.5',
   }[size];
 

@@ -1,136 +1,139 @@
-# STEP-BY-STEP PRODUCTION REFACTOR ROADMAP & SCOPE LOCK PLAN
-**Document ID:** `YGIT-DOC-002`  
+# YGIT PLATFORM UI — MASTER PRODUCTION UPDATE ROADMAP
+**Document ID:** `YGIT-DOC-002-ROADMAP`  
 **Date:** November 8, 2026  
-**Status:** `READY FOR REVIEW & EXECUTION`  
-**Execution Mode:** Sequential, Scope-Locked, Zero-Regression Phases
+**Status:** `READY FOR IMPLEMENTATION (PENDING USER APPROVAL)`  
+**Methodology:** Incremental Step-by-Step Phased Execution with Strict Scope Locking  
+**Guiding Policy:** Rule 03 Zero Unprompted Redesigns & Full Invariant Preservation  
 
 ---
 
-## 1. Roadmap Architecture & Execution Principles
+## 1. Roadmap Architecture & Execution Philosophy
 
-To ensure zero risk of breaking working features, all bug fixes and improvements are broken down into **5 strictly scope-locked Phases**. 
+To prevent regressions, maintain continuous build passing (`npm run lint` && `npm run build`), and ensure zero unintended alterations across working features, all bug fixes and improvements are organized into **6 sequential, self-contained phases**.
 
-### Rules of Engagement:
-1. **Never combine phases:** Each phase must be initiated, validated via `tsc --noEmit` + `vite build`, and signed off in `notes/003_phase_execution_logs.md` before advancing.
-2. **Scope Lock Guarantee:** Edits during a phase must be constrained strictly to the targeted files. Any file not listed in a phase's Scope Lock boundary is immutable.
-3. **Rollback Safety:** If any phase introduces unexpected visual drift, the previous phase commit/state can be restored immediately without collateral damage.
-
----
-
-## 2. Phase Breakdown & Scope-Lock Specifications
+Each Phase is **Strictly Scope-Locked**:
+- An engineer or agent working on Phase X must ONLY touch files designated for Phase X.
+- No redesigns, restyling, or unprompted layout modifications may occur.
+- Every phase concludes with a mandatory verification checkpoint: `npm run lint` + `npm run build`.
 
 ```
-  ┌──────────────────────────────────────────────────────────────┐
-  │ PHASE 1: Design System Tokenization (Tailwind v4 Theme)       │
-  └──────────────────────────────┬───────────────────────────────┘
-                                 │
-                                 ▼
-  ┌──────────────────────────────────────────────────────────────┐
-  │ PHASE 2: Shared Component Harmonization (Badges & Buttons)    │
-  └──────────────────────────────┬───────────────────────────────┘
-                                 │
-                                 ▼
-  ┌──────────────────────────────────────────────────────────────┐
-  │ PHASE 3: Modal Architecture Consolidation (`ModalShell`)     │
-  └──────────────────────────────┬───────────────────────────────┘
-                                 │
-                                 ▼
-  ┌──────────────────────────────────────────────────────────────┐
-  │ PHASE 4: App.tsx Slimming & Modal Registry Extraction         │
-  └──────────────────────────────┬───────────────────────────────┘
-                                 │
-                                 ▼
-  ┌──────────────────────────────────────────────────────────────┐
-  │ PHASE 5: Error Boundary & Resilience Hardening               │
-  └──────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────┐
+│ PHASE 1: Spacing & Broken Utility Fix (py-0.2 Elimination)            │
+│ Target: Fix 35 instances of broken Tailwind py-0.2 across all files.   │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 2: Dead Component Wiring & Badge Centralization                  │
+│ Target: Wire FrameworkBadge, clean raw spans in MetricPill/StatusBadge.│
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 3: Atomic Button Centralization across Global Views              │
+│ Target: Replace raw buttons in Dashboard, Projects, Deployments.      │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 4: Atomic Button Centralization across Scanner & Workspace Views │
+│ Target: Replace raw buttons in IntakePipeline, ScanConsole, Tabs.      │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 5: Modal Architecture Standardization & App.tsx De-bloat        │
+│ Target: Standardize AccountsModal into ModalShell; extract 3 modals.   │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 6: End-to-End System Integration & Forensic Parity Audit         │
+│ Target: Full lint, build, runtime verification, and log freeze.        │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-### PHASE 1: Design System Tokenization (Tailwind v4 `@theme`)
-- **Objective:** Centralize all hardcoded arbitrary hex codes into official Tailwind v4 design tokens inside `src/index.css`.
-- **Target Deliverables:**
-  1. Map existing CSS variables into Tailwind `@theme` directives in `src/index.css`:
-     - `--color-canvas-default: #0d1117;`
-     - `--color-canvas-subtle: #161b22;`
-     - `--color-canvas-inset: #090d13;`
-     - `--color-border-default: #30363d;`
-     - `--color-border-muted: #21262d;`
-     - `--color-brand-primary: #1d6cf6;`
-     - `--color-brand-hover: #2f7af8;`
-     - `--color-fg-default: #f0f6fc;`
-     - `--color-fg-muted: #8b949e;`
-     - `--color-fg-subtle: #7d8590;`
-  2. Verify that Tailwind v4 generates utility classes (`bg-canvas-default`, `border-border-muted`, etc.) without altering any runtime HTML.
-- **Strict Scope Lock:**
-  - **Permitted File:** `src/index.css` ONLY.
-  - **Forbidden Files:** All TSX components (`src/App.tsx`, `src/features/*`, `src/components/*`).
-- **Success Criteria:** Zero visual changes in dev preview; zero compile errors.
+## 2. Phase-by-Phase Detailed Specifications
+
+### 🎯 PHASE 1: Spacing & Broken CSS Utility Fix (`py-0.2` Elimination)
+- **Primary Goal**: Eradicate all 35 occurrences of the invalid `py-0.2` Tailwind class, replacing them with standard, valid micro-padding `py-0.5` (or `py-[1px]` where ultra-compact density is essential).
+- **Scope-Locked Target Files**:
+  1. `src/components/badges/MetricPill.tsx`
+  2. `src/components/navigation/PrimarySidebar.tsx`
+  3. `src/components/modals/TemplateModal.tsx`
+  4. `src/components/modals/DnsConfigModal.tsx`
+  5. `src/components/brand/BetaPill.tsx`
+  6. `src/features/workspace/tabs/CloudflareTab.tsx`
+  7. `src/features/workspace/tabs/OverviewTab.tsx`
+  8. `src/features/templates/TemplatesView.tsx`
+  9. `src/features/accounts/AccountsView.tsx`
+  10. `src/features/settings/SettingsView.tsx`
+  11. `src/features/scanner/IntakePipeline.tsx`
+  12. `src/App.tsx`
+- **Verification Criteria**:
+  - `grep -rn "py-0.2" src` returns **0 results**.
+  - All badges, counters, and tags render with clean, unclipt vertical padding.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### PHASE 2: Shared Component Harmonization (Badges & Buttons)
-- **Objective:** Replace inconsistent inline status spans and raw `<button>` elements with unified `StatusBadge`, `MetricPill`, and `PrimaryButton`/`SecondaryButton` instances.
-- **Target Deliverables:**
-  1. Create `src/components/badges/MetricPill.tsx` for general-purpose metadata pills (e.g., `2 Linked`, `Pro`, `pnpm`, `main`, `Ready`).
-  2. Audit and replace scattered inline badge classes across `VariablesTab.tsx`, `CloudflareTab.tsx`, `OverviewTab.tsx`, and `App.tsx` header.
-  3. Standardize raw action buttons in `App.tsx` and workspace tabs to use `PrimaryButton` and `SecondaryButton`.
-- **Strict Scope Lock:**
-  - **Permitted Files:**
-    - `src/components/badges/MetricPill.tsx` (New)
-    - `src/components/badges/index.ts`
-    - `src/components/index.ts`
-    - Targeted badge replacements in `src/features/workspace/tabs/VariablesTab.tsx` and `src/App.tsx` (header badge only).
-  - **Forbidden Files:** Business logic, state hooks, scanner engine, backend mocks.
-- **Success Criteria:** Pixel-perfect visual alignment; reduction of 50+ lines of arbitrary badge boilerplate.
+### 🎯 PHASE 2: Dead Component Wiring & Badge Centralization
+- **Primary Goal**: Wire the unused `FrameworkBadge.tsx` component into template cards and workspace summaries; replace raw `<span>` badges with `<StatusBadge>` and `<MetricPill>`.
+- **Scope-Locked Target Files**:
+  1. `src/components/badges/FrameworkBadge.tsx` (ensure clean props and exports).
+  2. `src/features/templates/TemplatesView.tsx` (replace raw framework tag with `<FrameworkBadge framework={tmpl.framework} />`).
+  3. `src/features/dashboard/DashboardView.tsx` (replace hardcoded provider and status spans with `<MetricPill>`).
+  4. `src/features/workspace/tabs/OverviewTab.tsx` (replace raw status pill with `<StatusBadge>`).
+  5. `src/App.tsx` (replace header status tag with `<StatusBadge status="live" />`).
+- **Verification Criteria**:
+  - `FrameworkBadge` is actively utilized in production cards.
+  - No visual regression in card dimensions or text alignment.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### PHASE 3: Modal Architecture Consolidation (`ModalShell.tsx`)
-- **Objective:** Eliminate repetitive modal backdrop, container, title bar, and close button boilerplate.
-- **Target Deliverables:**
-  1. Create `src/components/modals/ModalShell.tsx` featuring:
-     - Backdrop blur and click-outside dismissal option.
-     - ESC key listener.
-     - Clean header with title, subtitle, and close button.
-     - Flexible max-width sizing (`xs`, `sm`, `md`, `lg`, `xl`).
-  2. Export `ModalShell` from `src/components/modals/index.ts`.
-  3. Refactor 3 highest-frequency modals (Create Project, Paste .env, Edit Variable) to use `ModalShell`.
-- **Strict Scope Lock:**
-  - **Permitted Files:**
-    - `src/components/modals/ModalShell.tsx` (New)
-    - `src/components/modals/index.ts`
-    - Modal render sections in `src/App.tsx` (lines 1874 to 2050).
-  - **Forbidden Files:** Form inputs, submission handlers, validation logic.
-- **Success Criteria:** Identical visual dialog appearance with improved keyboard accessibility and code readability.
+### 🎯 PHASE 3: Atomic Button Centralization across Global Views
+- **Primary Goal**: Replace raw `<button>` elements in the primary top-level views with `<PrimaryButton>`, `<SecondaryButton>`, and `<IconButton>` from `src/components/buttons/`.
+- **Scope-Locked Target Files**:
+  1. `src/features/dashboard/DashboardView.tsx` (Pipeline start button, Deploy button).
+  2. `src/features/projects/ProjectsView.tsx` (Create Project CTA, Manage buttons).
+  3. `src/features/deployments/DeploymentsView.tsx` (Connect Accounts, Create Project, Terminal Logs icon button, Redeploy icon button).
+  4. `src/features/accounts/AccountsView.tsx` (Re-sync, Disconnect, Connect buttons).
+  5. `src/features/templates/TemplatesView.tsx` (Details button, Use Template CTA with spinner).
+- **Verification Criteria**:
+  - All buttons retain exact click callbacks, disabled states, and tooltips.
+  - Buttons gain standardized `active:scale-95` tactile click feedback.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### PHASE 4: App.tsx Slimming & Modal Registry Extraction
-- **Objective:** Reduce `src/App.tsx` from 3,025 lines down to a clean orchestration shell (~1,200 lines) by extracting Cloudflare & DNS modal dialogs into dedicated modal components.
-- **Target Deliverables:**
-  1. Create `src/components/modals/DnsConfigModal.tsx`.
-  2. Create `src/components/modals/CloudflareBindingsModals.tsx` (KV, D1, R2, Webhooks).
-  3. Create `src/components/modals/PurgeCacheModal.tsx` and `DeleteProjectModal.tsx`.
-  4. Wire modal state props cleanly from `App.tsx`.
-- **Strict Scope Lock:**
-  - **Permitted Files:**
-    - `src/components/modals/*`
-    - Modal invocation blocks in `src/App.tsx`.
-  - **Forbidden Files:** Feature tabs (`src/features/*`), Navigation layout (`src/layouts/*`).
-- **Success Criteria:** `App.tsx` file size reduced by > 50%; zero state regressions.
+### 🎯 PHASE 4: Atomic Button Centralization across Scanner & Workspace Views
+- **Primary Goal**: Replace raw `<button>` elements in the deep scanner engine and workspace sub-tabs with atomic button components.
+- **Scope-Locked Target Files**:
+  1. `src/features/scanner/IntakePipeline.tsx` (Add Repo button, Back button, Channel CTA buttons, Big Scan Repository CTA).
+  2. `src/features/scanner/ScanConsole.tsx` (Re-scan button, Open Workspace CTA).
+  3. `src/features/workspace/tabs/OverviewTab.tsx` (Instant Deploy CTA, Re-scan button).
+  4. `src/features/workspace/tabs/VariablesTab.tsx` (Import .env, Export .env, Paste .env, Add Variable, Reveal All secrets).
+  5. `src/features/workspace/tabs/CloudflareTab.tsx` (Save Cloudflare Settings, Purge Cache trigger, Binding action triggers).
+  6. `src/features/workspace/tabs/DomainsTab.tsx` (Claim Subdomain, Check Subdomain, Add Custom Domain, Verify DNS).
+- **Verification Criteria**:
+  - Deep scan engine and intake pipeline transitions execute without any event interruption.
+  - Variables management, DNS probes, and Cloudflare configuration forms work identically.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### PHASE 5: Error Boundary & Resilience Hardening
-- **Objective:** Implement comprehensive client-side error protection and graceful fallback states.
-- **Target Deliverables:**
-  1. Create `src/components/errors/AppErrorBoundary.tsx` catching React render exceptions.
-  2. Implement empty state views for Projects (0 projects found), Deployments (no deployment history), and Variables (no env vars configured).
-  3. Document all error handling strategies in `notes/004_error_handling_architecture.md`.
-- **Strict Scope Lock:**
-  - **Permitted Files:**
-    - `src/components/errors/AppErrorBoundary.tsx` (New)
-    - Root wrapping in `src/main.tsx` or `src/App.tsx`.
-  - **Forbidden Files:** Core business logic and scanner state machines.
-- **Success Criteria:** 100% crash resilience with clear recovery affordances for end users.
+### 🎯 PHASE 5: Modal Architecture Standardization & `App.tsx` De-bloat
+- **Primary Goal**: Standardize the raw `Connected Accounts & Providers` dialog into `<ModalShell>` and extract inline modals (`CreateProjectModal`, `PasteEnvModal`, `EditEnvModal`) from `App.tsx` into clean, testable component files in `src/components/modals/`.
+- **Scope-Locked Target Files**:
+  1. `src/components/modals/CreateProjectModal.tsx` (new extraction).
+  2. `src/components/modals/PasteEnvModal.tsx` (new extraction).
+  3. `src/components/modals/EditEnvModal.tsx` (new extraction).
+  4. `src/components/modals/AccountsModal.tsx` (wrap in `ModalShell`).
+  5. `src/components/modals/index.ts` (export newly created modals).
+  6. `src/App.tsx` (replace inline modal blocks with extracted components, reducing line count by ~400 lines).
+- **Verification Criteria**:
+  - Modal opening, form submission, validation, and dismissal via ESC key or overlay click work smoothly.
+  - `App.tsx` becomes significantly cleaner and modular.
+  - `npm run lint` passes with 0 errors.
+
+---
+
+### 🎯 PHASE 6: End-to-End System Integration & Forensic Parity Audit
+- **Primary Goal**: Final verification and documentation of the entire platform.
+- **Scope-Locked Target Files**:
+  1. Full project lint (`tsc --noEmit`).
+  2. Full project production build (`vite build`).
+  3. Update `notes/003_phase_execution_logs.md` with final metrics.
+  4. Update `notes/005_feature_parity_matrix.md` with 100% verified status.
+- **Verification Criteria**:
+  - Zero TypeScript compiler errors.
+  - Zero build warnings or bundling errors.
+  - 100% feature parity verified against baseline.

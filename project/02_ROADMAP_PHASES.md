@@ -1,137 +1,139 @@
-# YGIT Platform UI — A-Z Phased Roadmap & Execution Protocol
-
-> **Document**: 02_ROADMAP_PHASES.md  
-> **Architecture Target**: Pure UI Modular Refactoring (Phase 1 Broken Down into 5 Sub-Phases)  
-> **Guiding Principle**: Step-by-step verified execution with zero regression and live UI checkpoints.
+# YGIT PLATFORM UI — MASTER PRODUCTION UPDATE ROADMAP
+**Document ID:** `YGIT-DOC-002-ROADMAP`  
+**Date:** November 8, 2026  
+**Status:** `READY FOR IMPLEMENTATION (PENDING USER APPROVAL)`  
+**Methodology:** Incremental Step-by-Step Phased Execution with Strict Scope Locking  
+**Guiding Policy:** Rule 03 Zero Unprompted Redesigns & Full Invariant Preservation  
 
 ---
 
-## 🗺️ Master Phased Roadmap Overview
+## 1. Roadmap Architecture & Execution Philosophy
+
+To prevent regressions, maintain continuous build passing (`npm run lint` && `npm run build`), and ensure zero unintended alterations across working features, all bug fixes and improvements are organized into **6 sequential, self-contained phases**.
+
+Each Phase is **Strictly Scope-Locked**:
+- An engineer or agent working on Phase X must ONLY touch files designated for Phase X.
+- No redesigns, restyling, or unprompted layout modifications may occur.
+- Every phase concludes with a mandatory verification checkpoint: `npm run lint` + `npm run build`.
 
 ```
-Phase 1.1 ────────► Phase 1.2 ────────► Phase 1.3 ────────► Phase 1.4 ────────► Phase 1.5
-Foundation & Mocks  Atomic Components   Sidebar Layout      Main Standalone     Scanner Engine &
-(Types & Data)      (Design System)     (Dual-Sidebar)      Views (5 Screens)   Workspace Tabs
+┌────────────────────────────────────────────────────────────────────────┐
+│ PHASE 1: Spacing & Broken Utility Fix (py-0.2 Elimination)            │
+│ Target: Fix 35 instances of broken Tailwind py-0.2 across all files.   │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 2: Dead Component Wiring & Badge Centralization                  │
+│ Target: Wire FrameworkBadge, clean raw spans in MetricPill/StatusBadge.│
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 3: Atomic Button Centralization across Global Views              │
+│ Target: Replace raw buttons in Dashboard, Projects, Deployments.      │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 4: Atomic Button Centralization across Scanner & Workspace Views │
+│ Target: Replace raw buttons in IntakePipeline, ScanConsole, Tabs.      │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 5: Modal Architecture Standardization & App.tsx De-bloat        │
+│ Target: Standardize AccountsModal into ModalShell; extract 3 modals.   │
+├────────────────────────────────────────────────────────────────────────┤
+│ PHASE 6: End-to-End System Integration & Forensic Parity Audit         │
+│ Target: Full lint, build, runtime verification, and log freeze.        │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📋 Phase-by-Phase Execution Details
+## 2. Phase-by-Phase Detailed Specifications
 
-### 🔹 Phase 1.1: Foundation, Types & Isolated Mocks
-* **Primary Objective**: Decouple data definitions and sample mock state from `App.tsx` into typed files.
-* **Input State**: `src/App.tsx` (8,692 lines containing embedded data structures).
-* **Deliverables**:
-  1. `src/types/project.ts`: `Project`, `FrameworkInfo`, `BuildSettings`, `GitCommit`
-  2. `src/types/template.ts`: `ReadyTemplate`, `TemplateMetricSpec`, `TemplateFeature`
-  3. `src/types/deployment.ts`: `DeploymentRecord`, `DeploymentStatus`, `DeploymentLogEntry`
-  4. `src/types/scanner.ts`: `ScanCheckpoint`, `14Invariants`, `DiagnosticMetric`
-  5. `src/mocks/mockProjects.ts`: `INITIAL_PROJECTS` array
-  6. `src/mocks/mockTemplates.ts`: `READY_TEMPLATES` array (8 full themes)
-  7. `src/mocks/mockCheckpoints.ts`: 14 deep scan pipeline stages
-  8. `src/mocks/mockDeployments.ts`: Global deployments feed
-  9. `src/mocks/mockEnvVars.ts`: Sample encrypted environment variables
-* **Verification & Acceptance Criteria**:
-  - `src/App.tsx` imports from `src/types/` and `src/mocks/`.
-  - Line count of `App.tsx` reduced by ~1,200 lines.
-  - `npm run build` & `tsc --noEmit` exit with 0 errors.
-  - UI visual and functional test confirms 100% parity.
-
----
-
-### 🔹 Phase 1.2: Design System & Atomic Components
-* **Primary Objective**: Extract shared, repetitive UI controls into typed design system components per canonical specs (`BUTTON.md`, `CARDS.md`, `LOGO.md`).
-* **Deliverables**:
-  1. `src/components/brand/YGitLogo.tsx`: 21px expanded logo with 1px precision aura & 28px collapsed morphing toggle.
-  2. `src/components/brand/BetaPill.tsx`: 8.5px monospace `beta` tag.
-  3. `src/components/buttons/PrimaryButton.tsx`: Electric blue action button (`bg-[#1d6cf6]`).
-  4. `src/components/buttons/SecondaryButton.tsx`: Dark charcoal button (`bg-[#21262d]`).
-  5. `src/components/buttons/IconButton.tsx`: Compact icon action button.
-  6. `src/components/badges/StatusBadge.tsx`: Standardized status pills (Ready, Running, Error).
-  7. `src/components/badges/FrameworkBadge.tsx`: Framework tag chips (React, Vite, Next.js, Astro).
-  8. `src/components/modals/TemplateModal.tsx`: Extracted 400-line theme preview modal.
-* **Verification & Acceptance Criteria**:
-  - Brand header and buttons across views consume atomic components.
-  - Modal open/close behavior, thumbnail previews, and specs display remain identical.
-  - Zero CSS drift across all button states.
-  - Build and lint pass cleanly.
+### 🎯 PHASE 1: Spacing & Broken CSS Utility Fix (`py-0.2` Elimination)
+- **Primary Goal**: Eradicate all 35 occurrences of the invalid `py-0.2` Tailwind class, replacing them with standard, valid micro-padding `py-0.5` (or `py-[1px]` where ultra-compact density is essential).
+- **Scope-Locked Target Files**:
+  1. `src/components/badges/MetricPill.tsx`
+  2. `src/components/navigation/PrimarySidebar.tsx`
+  3. `src/components/modals/TemplateModal.tsx`
+  4. `src/components/modals/DnsConfigModal.tsx`
+  5. `src/components/brand/BetaPill.tsx`
+  6. `src/features/workspace/tabs/CloudflareTab.tsx`
+  7. `src/features/workspace/tabs/OverviewTab.tsx`
+  8. `src/features/templates/TemplatesView.tsx`
+  9. `src/features/accounts/AccountsView.tsx`
+  10. `src/features/settings/SettingsView.tsx`
+  11. `src/features/scanner/IntakePipeline.tsx`
+  12. `src/App.tsx`
+- **Verification Criteria**:
+  - `grep -rn "py-0.2" src` returns **0 results**.
+  - All badges, counters, and tags render with clean, unclipt vertical padding.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### 🔹 Phase 1.3: Navigation & Dual-Sidebar Layout Shell
-* **Primary Objective**: Encapsulate the global and project-scoped sidebars into a modular dual-sidebar layout per `SIDEBAR.md`.
-* **Deliverables**:
-  1. `src/components/navigation/PrimarySidebar.tsx`:
-     - 190px expanded state, 54px collapsed state
-     - 5 Platform routes with active states and badge counters
-     - Worker status ping footer (38ms, animated pulse)
-  2. `src/components/navigation/SecondarySidebar.tsx`:
-     - 195px workspace sidebar with `#12161d` visual inset
-     - Active project repository header & branch tag
-     - 6 workspace sub-tabs with active blue indicator icons
-     - Re-scan trigger button
-  3. `src/layouts/DualSidebarLayout.tsx`:
-     - Sticky viewport orchestration (`h-screen`, `sticky top-0`)
-     - Fluid content canvas container (`max-w-[1600px]`)
-* **Verification & Acceptance Criteria**:
-  - Collapse / expand toggle functions smoothly.
-  - Route switching between global views and workspace views works seamlessly.
-  - Background contrast hierarchy (`#161b22` vs `#12161d` vs `#0d1117`) preserved.
+### 🎯 PHASE 2: Dead Component Wiring & Badge Centralization
+- **Primary Goal**: Wire the unused `FrameworkBadge.tsx` component into template cards and workspace summaries; replace raw `<span>` badges with `<StatusBadge>` and `<MetricPill>`.
+- **Scope-Locked Target Files**:
+  1. `src/components/badges/FrameworkBadge.tsx` (ensure clean props and exports).
+  2. `src/features/templates/TemplatesView.tsx` (replace raw framework tag with `<FrameworkBadge framework={tmpl.framework} />`).
+  3. `src/features/dashboard/DashboardView.tsx` (replace hardcoded provider and status spans with `<MetricPill>`).
+  4. `src/features/workspace/tabs/OverviewTab.tsx` (replace raw status pill with `<StatusBadge>`).
+  5. `src/App.tsx` (replace header status tag with `<StatusBadge status="live" />`).
+- **Verification Criteria**:
+  - `FrameworkBadge` is actively utilized in production cards.
+  - No visual regression in card dimensions or text alignment.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### 🔹 Phase 1.4: Standalone Main Views
-* **Primary Objective**: Modularize the self-contained platform views from `App.tsx` into `src/features/`.
-* **Deliverables**:
-  1. `src/features/dashboard/DashboardView.tsx`: Telemetry grid, stats cards, and recent deployments.
-  2. `src/features/projects/ProjectsView.tsx`: Project card grid, search bar, and filter pills.
-  3. `src/features/templates/TemplatesView.tsx`: Shopify/Wix-style theme card grid, thumbnail graphic, category filters with real-time item counts.
-  4. `src/features/deployments/DeploymentsView.tsx`: Global chronological deployment history feed.
-  5. `src/features/accounts/AccountsView.tsx`: Connected Git providers and Cloudflare settings.
-* **Verification & Acceptance Criteria**:
-  - All 5 routes render their respective view components.
-  - Instant filtering, searching, and badge updates operate identically.
-  - `App.tsx` contains zero embedded markup for these 5 screens.
+### 🎯 PHASE 3: Atomic Button Centralization across Global Views
+- **Primary Goal**: Replace raw `<button>` elements in the primary top-level views with `<PrimaryButton>`, `<SecondaryButton>`, and `<IconButton>` from `src/components/buttons/`.
+- **Scope-Locked Target Files**:
+  1. `src/features/dashboard/DashboardView.tsx` (Pipeline start button, Deploy button).
+  2. `src/features/projects/ProjectsView.tsx` (Create Project CTA, Manage buttons).
+  3. `src/features/deployments/DeploymentsView.tsx` (Connect Accounts, Create Project, Terminal Logs icon button, Redeploy icon button).
+  4. `src/features/accounts/AccountsView.tsx` (Re-sync, Disconnect, Connect buttons).
+  5. `src/features/templates/TemplatesView.tsx` (Details button, Use Template CTA with spinner).
+- **Verification Criteria**:
+  - All buttons retain exact click callbacks, disabled states, and tooltips.
+  - Buttons gain standardized `active:scale-95` tactile click feedback.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### 🔹 Phase 1.5: Scanner Engine & Post-Scan Workspace Tabs
-* **Primary Objective**: Modularize the core intellectual property—the 14-stage deep scan engine and post-scan project workspace.
-* **Deliverables**:
-  1. `src/features/scanner/IntakePipeline.tsx`: Git repository URL input, protocol validation, and progress fill.
-  2. `src/features/scanner/ScanView.tsx`: 14-stage deep AST analyzer console, live simulated logs stream, and progress metrics.
-  3. `src/features/workspace/WorkspaceView.tsx`: Workspace container shell with tab dispatcher.
-  4. `src/features/workspace/tabs/OverviewTab.tsx`: Codebase architecture card, commit evidence, and instant deploy button.
-  5. `src/features/workspace/tabs/VariablesTab.tsx`: Encrypted environment variables table with toggle visibility.
-  6. `src/features/workspace/tabs/CloudflareTab.tsx`: Pages build presets, output directory, and wrangler config.
-  7. `src/features/workspace/tabs/DomainsTab.tsx`: Pages default URL, YGIT gateway, and custom domain DNS probe.
-  8. `src/features/workspace/tabs/LogsTab.tsx`: Edge terminal build logs stream with copy affordance.
-  9. `src/features/workspace/tabs/HistoryTab.tsx`: Chronological deployment history table.
-  10. `src/App.tsx` Final Cleanup: Slim orchestrator (~120 lines).
-* **Verification & Acceptance Criteria**:
-  - Full end-to-end user journey works flawlessly:
-    `Dashboard` ➡️ `New Project` ➡️ `Scan 14 Invariants` ➡️ `Workspace (6 Tabs)` ➡️ `Deploy`.
-  - Zero visual or behavioral regression.
-  - Complete code compilation without any warnings or type errors.
+### 🎯 PHASE 4: Atomic Button Centralization across Scanner & Workspace Views
+- **Primary Goal**: Replace raw `<button>` elements in the deep scanner engine and workspace sub-tabs with atomic button components.
+- **Scope-Locked Target Files**:
+  1. `src/features/scanner/IntakePipeline.tsx` (Add Repo button, Back button, Channel CTA buttons, Big Scan Repository CTA).
+  2. `src/features/scanner/ScanConsole.tsx` (Re-scan button, Open Workspace CTA).
+  3. `src/features/workspace/tabs/OverviewTab.tsx` (Instant Deploy CTA, Re-scan button).
+  4. `src/features/workspace/tabs/VariablesTab.tsx` (Import .env, Export .env, Paste .env, Add Variable, Reveal All secrets).
+  5. `src/features/workspace/tabs/CloudflareTab.tsx` (Save Cloudflare Settings, Purge Cache trigger, Binding action triggers).
+  6. `src/features/workspace/tabs/DomainsTab.tsx` (Claim Subdomain, Check Subdomain, Add Custom Domain, Verify DNS).
+- **Verification Criteria**:
+  - Deep scan engine and intake pipeline transitions execute without any event interruption.
+  - Variables management, DNS probes, and Cloudflare configuration forms work identically.
+  - `npm run lint` passes with 0 errors.
 
 ---
 
-### 🔹 Phase 1.7: Platform Settings Engine & Advanced Configurations (Completed)
-* **Primary Objective**: Build a stateful, high-density Platform Settings page (`<SettingsView />`) adhering strictly to the YGIT Design System (`AGENTS.md`, `COLORS.md`, `BUTTON.md`, `CARDS.md`) without any hardcoded mock values.
-* **Deliverables**:
-  1. `src/types/settings.ts`: Typed data models for `PlatformSettings`, `SettingsTab`, `ApiTokenItem`.
-  2. `src/mocks/mockSettings.ts`: Baseline defaults for orchestration, runtime, security, webhooks, and telemetry.
-  3. `src/features/settings/SettingsView.tsx`: 5 high-density subtabs:
-     - General (Platform Brand Name, Custom Domain Gateway, Edge PoP Region, Default Branch, Build Concurrency, Auto-Deploy on Push).
-     - Build & Edge Engine (Package Manager Priority, AST Sensitivity Mode, Edge Cache Toggle, Cache TTL Slider, Static Asset Compression, Worker Lease Timeout).
-     - Security & API Keys (Zero-Trust Secret Scrubbing, Strict Branch Protection, Signed Commits, CI/CD API Token Generator Modal, Token Revocation).
-     - Webhooks & Alerts (Deploy Events Webhook, Discord/Slack Incoming Webhook, Alert Triggers, DevOps Recipient Email, Digest Frequency).
-     - Advanced Diagnostics (Terminal Log Verbosity, Enclave Telemetry Mode, Health Check Heartbeat, Purge Global Edge Cache, Factory Reset Defaults, and Live JSON Spec Inspector Modal with Copy & Download).
-  4. `src/components/navigation/PrimarySidebar.tsx`: Global navigation integration with active highlights, icon, and collapsed tooltip.
-  5. `src/App.tsx`: Header breadcrumb sync (`Platform / Settings / Global Configuration`), reactive state management, and toast notifications.
-* **Verification & Acceptance Criteria**:
-  - 100% interactive controls with live state management (inputs, selects, sliders, toggles, modals).
-  - Dirty state tracking (`Synchronized` vs `Unsaved Changes`), Save Changes feedback, and JSON export.
-  - TypeScript strict check (`npm run lint`) passes with 0 errors.
-  - Production build (`npm run build`) passes with 0 errors.
+### 🎯 PHASE 5: Modal Architecture Standardization & `App.tsx` De-bloat
+- **Primary Goal**: Standardize the raw `Connected Accounts & Providers` dialog into `<ModalShell>` and extract inline modals (`CreateProjectModal`, `PasteEnvModal`, `EditEnvModal`) from `App.tsx` into clean, testable component files in `src/components/modals/`.
+- **Scope-Locked Target Files**:
+  1. `src/components/modals/CreateProjectModal.tsx` (new extraction).
+  2. `src/components/modals/PasteEnvModal.tsx` (new extraction).
+  3. `src/components/modals/EditEnvModal.tsx` (new extraction).
+  4. `src/components/modals/AccountsModal.tsx` (wrap in `ModalShell`).
+  5. `src/components/modals/index.ts` (export newly created modals).
+  6. `src/App.tsx` (replace inline modal blocks with extracted components, reducing line count by ~400 lines).
+- **Verification Criteria**:
+  - Modal opening, form submission, validation, and dismissal via ESC key or overlay click work smoothly.
+  - `App.tsx` becomes significantly cleaner and modular.
+  - `npm run lint` passes with 0 errors.
 
+---
+
+### 🎯 PHASE 6: End-to-End System Integration & Forensic Parity Audit
+- **Primary Goal**: Final verification and documentation of the entire platform.
+- **Scope-Locked Target Files**:
+  1. Full project lint (`tsc --noEmit`).
+  2. Full project production build (`vite build`).
+  3. Update `notes/003_phase_execution_logs.md` with final metrics.
+  4. Update `notes/005_feature_parity_matrix.md` with 100% verified status.
+- **Verification Criteria**:
+  - Zero TypeScript compiler errors.
+  - Zero build warnings or bundling errors.
+  - 100% feature parity verified against baseline.

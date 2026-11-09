@@ -11,7 +11,7 @@ export interface BetaPillProps {
 export const BetaPill: React.FC<BetaPillProps> = ({ className = '' }) => {
   return (
     <span
-      className={`text-[8.5px] font-mono font-medium lowercase px-1.5 py-0.2 rounded-full bg-[#1d6cf6]/15 text-[#58a6ff] border border-[#1d6cf6]/30 leading-none select-none ${className}`}
+      className={`text-[8.5px] font-mono font-medium lowercase px-1.5 py-0.5 rounded-full bg-[#1d6cf6]/15 text-[#58a6ff] border border-[#1d6cf6]/30 leading-none select-none ${className}`}
     >
       beta
     </span>

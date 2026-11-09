@@ -35,6 +35,7 @@ import {
   FileCheck,
   ArrowRight,
 } from 'lucide-react';
+import { PrimaryButton, SecondaryButton } from '../../components/buttons';
 
 export interface ScanConsoleProps {
   currentProject: { name: string; repo: string };
@@ -440,21 +441,20 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
               <span>14/14 Invariants Verified · Ready for Edge Deployment</span>
             </div>
             <div className="flex gap-2">
-              <button
-                type="button"
+              <SecondaryButton
+                size="md"
                 onClick={onStartDeepScan}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#8b949e] hover:text-[#f0f6fc] text-xs font-semibold px-3 py-1.5 rounded cursor-pointer transition-colors"
               >
                 Re-scan
-              </button>
-              <button
-                type="button"
+              </SecondaryButton>
+              <PrimaryButton
+                size="md"
+                icon={<ArrowRight className="w-3.5 h-3.5" />}
+                iconPosition="right"
                 onClick={onOpenWorkspace}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-bold px-4 py-1.5 rounded flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-[0.98]"
               >
-                <span>Open Workspace</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+                Open Workspace
+              </PrimaryButton>
             </div>
           </div>
         </div>

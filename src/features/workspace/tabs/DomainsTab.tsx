@@ -30,6 +30,7 @@ import {
   Edit3,
 } from 'lucide-react';
 import { FreeSubdomainItem, CustomDomainItem } from '../../../types';
+import { PrimaryButton, SecondaryButton, IconButton } from '../../../components/buttons';
 
 export interface DomainsTabProps {
   freeSubdomains: FreeSubdomainItem[];
@@ -157,23 +158,17 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
               <option value=".ygit.app">.ygit.app (Fastly CDN)</option>
             </select>
 
-            <button
+            <PrimaryButton
               type="submit"
+              size="md"
               disabled={!subdomainSearchInput.trim() || isSearchingSubdomain}
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-40 text-white text-xs font-normal px-3.5 py-1.5 rounded-md cursor-pointer transition-colors shadow-sm flex items-center gap-1.5 shrink-0"
+              isLoading={isSearchingSubdomain}
+              loadingText="Checking..."
+              icon={<Search className="w-3 h-3" />}
+              className="shrink-0"
             >
-              {isSearchingSubdomain ? (
-                <>
-                  <RefreshCw className="w-3 h-3 animate-spin" />
-                  <span>Checking...</span>
-                </>
-              ) : (
-                <>
-                  <Search className="w-3 h-3" />
-                  <span>Check</span>
-                </>
-              )}
-            </button>
+              Check
+            </PrimaryButton>
           </div>
         </form>
 
@@ -389,14 +384,15 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
               </select>
             </div>
 
-            <button
+            <PrimaryButton
               type="submit"
+              size="md"
               disabled={!newCustomDomainInput.trim()}
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-40 text-white text-xs font-normal px-3.5 py-1.5 rounded-md cursor-pointer transition-colors shadow-sm flex items-center justify-center gap-1.5 shrink-0"
+              icon={<Plus className="w-3.5 h-3.5" />}
+              className="shrink-0"
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add Domain</span>
-            </button>
+              Add Domain
+            </PrimaryButton>
           </div>
         </form>
 
@@ -514,26 +510,25 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                         </button>
 
                         {/* Verify DNS Resolver Action */}
-                        <button
-                          type="button"
+                        <SecondaryButton
+                          size="sm"
                           onClick={() => onVerifyCustomDomain(dom.id)}
                           disabled={isVerifying}
+                          isLoading={isVerifying}
+                          loadingText="Verifying"
                           title="Verify DNS"
-                          className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] text-[10.5px] px-2 py-0.5 rounded cursor-pointer transition-colors border border-[#30363d] flex items-center gap-1 font-normal"
                         >
-                          <RefreshCw className={`w-3 h-3 ${isVerifying ? 'animate-spin text-[#1d6cf6]' : ''}`} />
                           <span className="hidden sm:inline">Verify</span>
-                        </button>
+                        </SecondaryButton>
 
                         {/* Edit Domain Action */}
-                        <button
-                          type="button"
-                          onClick={() => onEditCustomDomain(dom)}
+                        <IconButton
+                          size="sm"
+                          icon={<Edit3 className="w-3.5 h-3.5" />}
                           title="Edit Domain"
-                          className="p-1 text-[#8b949e] hover:text-[#58a6ff] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
+                          onClick={() => onEditCustomDomain(dom)}
+                          className="hover:text-[#58a6ff]"
+                        />
 
                         {/* External Link */}
                         <a
@@ -547,14 +542,13 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                         </a>
 
                         {/* Delete Domain */}
-                        <button
-                          type="button"
-                          onClick={() => onDeleteCustomDomain(dom.id)}
+                        <IconButton
+                          size="sm"
+                          icon={<Trash2 className="w-3.5 h-3.5" />}
                           title="Delete Domain"
-                          className="p-1 text-[#8b949e] hover:text-[#f85149] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                          onClick={() => onDeleteCustomDomain(dom.id)}
+                          className="hover:text-[#f85149]"
+                        />
                       </div>
                     </td>
                   </tr>

@@ -34,6 +34,8 @@ import {
   CheckCheck,
 } from 'lucide-react';
 import { EnvVar } from '../../../types';
+import { StatusBadge } from '../../../components/badges/StatusBadge';
+import { PrimaryButton, SecondaryButton } from '../../../components/buttons';
 
 export interface OverviewTabProps {
   currentProject: { name: string; repo: string };
@@ -61,9 +63,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xs font-medium text-[#f0f6fc] font-mono">{currentProject.name}</h2>
-              <span className="text-[9.5px] font-normal px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30">
-                Ready
-              </span>
+              <StatusBadge status="verified" label="Ready" />
             </div>
             <div className="text-[10.5px] font-mono text-[#8b949e]">
               {currentProject.repo} · <span className="text-[#c9d1d9]">7f3b891</span>
@@ -74,34 +74,31 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         {/* Overview Action Buttons */}
         <div className="flex items-center gap-1.5 self-end sm:self-auto">
           {onDeploy && (
-            <button
-              type="button"
-              onClick={onDeploy}
+            <PrimaryButton
+              size="sm"
+              icon={<Play className="w-3 h-3 fill-current" />}
               title="Instant Deploy to Cloudflare Pages"
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-semibold px-3 py-1 rounded flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-[0.98]"
+              onClick={onDeploy}
             >
-              <Play className="w-3 h-3 fill-current" />
-              <span>Deploy</span>
-            </button>
+              Deploy
+            </PrimaryButton>
           )}
-          <button
-            type="button"
-            onClick={() => onCopyToClipboard(JSON.stringify(currentProject))}
+          <SecondaryButton
+            size="sm"
+            icon={<Copy className="w-3 h-3 text-[#8b949e]" />}
             title="Copy Project Specification JSON"
-            className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1.5 cursor-pointer transition-colors border border-[#21262d]"
+            onClick={() => onCopyToClipboard(JSON.stringify(currentProject))}
           >
-            <Copy className="w-3 h-3 text-[#8b949e]" />
-            <span>Copy Spec</span>
-          </button>
-          <button
-            type="button"
-            onClick={onStartDeepScan}
+            Copy Spec
+          </SecondaryButton>
+          <SecondaryButton
+            size="sm"
+            icon={<RotateCcw className="w-3 h-3 text-[#8b949e]" />}
             title="Re-run 14-Stage Deep Codebase Scan"
-            className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1.5 cursor-pointer transition-colors border border-[#21262d]"
+            onClick={onStartDeepScan}
           >
-            <RotateCcw className="w-3 h-3 text-[#8b949e]" />
-            <span>Re-scan</span>
-          </button>
+            Re-scan
+          </SecondaryButton>
         </div>
       </div>
 

@@ -1,65 +1,77 @@
 # YGIT PLATFORM BASELINE AUDIT & FREEZE MANIFEST
-**Document ID:** `YGIT-DOC-000`  
+**Document ID:** `YGIT-DOC-000-FREEZE`  
 **Date:** November 8, 2026  
-**Status:** `BASELINE FROZEN`  
+**Status:** `BASELINE FROZEN (PRE-REFACTORING)`  
 **Branch / Target:** `main`  
-**Environment:** React 19 + TypeScript + Vite 8 + Tailwind CSS v4
+**Framework Stack:** React 19 + TypeScript + Vite 8.3 + Tailwind CSS v4.3.3 + Motion 12.23  
+**Verified Commands:** `npm run lint` (`tsc --noEmit`) ✅ PASSED | `npm run build` (`vite build`) ✅ PASSED  
 
 ---
 
 ## 1. Executive Summary & Freeze Declaration
 
-This document establishes the official **Baseline Freeze** for the **YGIT Platform Web Application**. Before any production refactoring, token centralization, or component extraction begins, all current capabilities, routes, invariants, and styling architecture are frozen as the baseline reference point.
+This document formally establishes the **Production Baseline Freeze** for the **YGIT Platform Web Application**. Before any production refactoring, token centralization, button standardization, or component extraction commences, all current capabilities, routes, invariants, components, and layout structures are frozen as the inviolable baseline reference point.
 
-### Baseline Health Status
-- **TypeScript Strict Validation (`tsc --noEmit`):** ✅ 0 Errors
-- **Vite Production Bundler (`vite build`):** ✅ Succeeded (Bundle Size: ~340kB gzip)
-- **Runtime Environment:** Pure client SPA running on Port 3000 with Express dev proxy readiness.
-- **Rule Compliance:** Full adherence to `AGENTS.md` (Rule 01: Clean & Compact, Rule 02: In-Code JSX Documentation, Rule 03: Strict Scope Lock).
-
----
-
-## 2. Inventory of Frozen Views & Components
-
-### 2.1 Navigation & Global Views (`src/features/`)
-| View Key | File Path | Functional State | Lines of Code | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| `dashboard` | `src/features/dashboard/DashboardView.tsx` | Telemetry stats, live deployment metrics, quick deploy trigger | 277 | FROZEN |
-| `projects` | `src/features/projects/ProjectsView.tsx` | Project catalog, search, provider filters (GitHub/Cloudflare), status pills | 154 | FROZEN |
-| `deployments`| `src/features/deployments/DeploymentsView.tsx` | Chronological deployment pipeline, duration, commit SHA, instant redeploy | 419 | FROZEN |
-| `accounts` | `src/features/accounts/AccountsView.tsx` | GitHub & Cloudflare live connect/disconnect, sync triggers, token scopes | 405 | FROZEN |
-| `templates` | `src/features/templates/TemplatesView.tsx` | 4 production Jamstack templates, live preview graphics, 1-click clone | 359 | FROZEN |
-| `settings` | `src/features/settings/SettingsView.tsx` | Clean developer settings (Preferences, Git Defaults, PAT Tokens, Alerts) | 854 | FROZEN |
-
-### 2.2 Scanner & Intake Pipeline (`src/features/scanner/`)
-| Component | File Path | Invariant / Lifecycle Step | Lines of Code | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| `IntakePipeline` | `src/features/scanner/IntakePipeline.tsx` | Source selection (Clone, Import, Upload, Template), repo creation, progress fill | 526 | FROZEN |
-| `ScanConsole` | `src/features/scanner/ScanConsole.tsx` | **14-Stage Deep Scan Engine** with deterministic SHA, AST parser, Jamstack validator | 464 | FROZEN |
-
-### 2.3 Post-Scan Dual-Sidebar Workspace (`src/features/workspace/`)
-| Tab Key | File Path | Domain Scope | Lines of Code | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| `overview` | `src/features/workspace/tabs/OverviewTab.tsx` | Project commit digest, target platform readiness (`100% READY`), quick actions | 352 | FROZEN |
-| `env` | `src/features/workspace/tabs/VariablesTab.tsx` | Key-value table, bulk .env paste/import/export, secret masking (`••••••••`) | 457 | FROZEN |
-| `cloudflare` | `src/features/workspace/tabs/CloudflareTab.tsx` | Cloudflare Pages presets, edge caching, WAF/SSL, KV, D1, R2 storage bindings | 1,283 | FROZEN |
-| `domains` | `src/features/workspace/tabs/DomainsTab.tsx` | Free gateway subdomains (`*.ygit.net`), custom domains with DNS CNAME records | 583 | FROZEN |
-| `logs` | `src/features/workspace/tabs/LogsTab.tsx` | Streaming edge build logs, category filtering, search, full-screen terminal | 346 | FROZEN |
-| `history` | `src/features/workspace/tabs/HistoryTab.tsx` | Commit history, branch tracking, deployment run duration, rollback/redeploy | 132 | FROZEN |
-
-### 2.4 Navigation & Shared Components (`src/components/`, `src/layouts/`)
-- `PrimarySidebar.tsx` (190px / 54px collapsible platform-scoped sidebar)
-- `SecondarySidebar.tsx` (Project-scoped contextual sidebar)
-- `DualSidebarLayout.tsx` (3-tier background stepping: `#161b22` → `#12161d` → `#0d1117`)
-- `YGitLogo.tsx` (Deterministic branding SVG with morphing collapse behavior)
-- `TemplateModal.tsx` (Template deep architecture & specifications inspector)
-- `PrimaryButton.tsx`, `SecondaryButton.tsx`, `IconButton.tsx`
-- `FrameworkBadge.tsx`, `StatusBadge.tsx`, `BetaPill.tsx`
+### Strict Governance Constraints (as defined in `AGENTS.md` Rule 03):
+- **Zero Unprompted Redesigns / Modifications**: Under NO circumstance should any existing page, UI component, layout structure, color palette, or styling outside the explicitly requested scope be altered, refactored, restyled, or redesigned.
+- **Preserve Existing State & Invariants**: Everything outside the exact targeted delta must remain 100% untouched, intact, and unchanged.
+- **Scope Locked Phases**: Every phase of the upcoming refactoring roadmap must only modify its assigned files.
 
 ---
 
-## 3. Freeze Safeguards & Invariants
+## 2. Complete Codebase Inventory & Line Count Baseline
 
-1. **Zero UI Regression:** No visual appearance, layout hierarchy, or component alignment may degrade during tokenization or refactoring.
-2. **Deterministic State Preservation:** All mock data arrays (`src/mocks/`), event handlers, and callback signatures must retain exact structural compatibility.
-3. **Strict Scope Lock:** Edits in Phase N may not touch components reserved for Phase N+1 without an explicit scope override in the roadmap.
+| Path / Module | Purpose | Lines of Code | Baseline Status |
+| :--- | :--- | :--- | :--- |
+| **`/src/App.tsx`** | Global application shell, navigation state, routes, modals, toasts | 2,318 | `FROZEN` |
+| **`/src/index.css`** | Tailwind CSS v4 entry point, `@theme` token definitions, scrollbar styles | 88 | `FROZEN` |
+| **`/src/main.tsx`** | Application bootstrap with `StrictMode` and `AppErrorBoundary` | 15 | `FROZEN` |
+| **`/src/layouts/DualSidebarLayout.tsx`** | Dual-sidebar viewport layout shell orchestrator | 89 | `FROZEN` |
+| **`src/components/navigation/PrimarySidebar.tsx`** | Primary global navigation sidebar (collapsed / expanded modes) | 265 | `FROZEN` |
+| **`src/components/navigation/SecondarySidebar.tsx`** | Secondary project-scoped navigation sidebar (Workspace tabs) | 188 | `FROZEN` |
+| **`src/components/brand/YGitLogo.tsx`** | Authentic SVG vector brand logo with precision ambient glow | 110 | `FROZEN` |
+| **`src/components/brand/BetaPill.tsx`** | Micro beta badge component | 22 | `FROZEN` |
+| **`src/components/buttons/PrimaryButton.tsx`** | Standard YGIT Electric Blue Primary Action Button (Archetype 1) | 63 | `FROZEN` (Underutilized) |
+| **`src/components/buttons/SecondaryButton.tsx`** | Standard YGIT Neutral Slate Secondary Action Button (Archetype 2) | 62 | `FROZEN` (Underutilized) |
+| **`src/components/buttons/IconButton.tsx`** | Standard Square Micro Icon Action Button (Archetype 7) | 35 | `FROZEN` (Zero Usage) |
+| **`src/components/badges/StatusBadge.tsx`** | Semantic status indicator (`live`, `passed`, `building`, `failed`) | 89 | `FROZEN` |
+| **`src/components/badges/MetricPill.tsx`** | Monospace telemetry pill (`blue`, `green`, `amber`, `red`, `purple`) | 59 | `FROZEN` |
+| **`src/components/badges/FrameworkBadge.tsx`** | Monospace framework classification chip | 26 | `FROZEN` (Zero Usage) |
+| **`src/components/templates/TemplateThumbnailGraphic.tsx`** | macOS window frame browser graphic generator for templates | 215 | `FROZEN` |
+| **`src/components/modals/ModalShell.tsx`** | Standardized accessible dialog window shell with backdrop | 115 | `FROZEN` |
+| **`src/components/modals/TemplateModal.tsx`** | Deep template specifications, live routes, and architecture dialog | 499 | `FROZEN` |
+| **`src/components/modals/DnsConfigModal.tsx`** | Custom domain DNS verification & live probe console modal | 219 | `FROZEN` |
+| **`src/components/modals/EditCustomDomainModal.tsx`** | Custom domain branch routing & SSL settings modal | 106 | `FROZEN` |
+| **`src/components/modals/PurgeCacheModal.tsx`** | Cloudflare Edge cache purge trigger modal | 117 | `FROZEN` |
+| **`src/components/modals/DeleteProjectModal.tsx`** | Destructive safeguard confirmation modal | 76 | `FROZEN` |
+| **`src/components/modals/CloudflareBindingsModals.tsx`** | KV, D1 SQL, R2, and Webhook binding creation modals | 354 | `FROZEN` |
+| **`src/components/errors/AppErrorBoundary.tsx`** | React class-based runtime crash interceptor & recovery screen | 65 | `FROZEN` |
+| **`src/features/dashboard/DashboardView.tsx`** | High-density telemetry strip, 4-step pipeline preview, quick deploy | 278 | `FROZEN` |
+| **`src/features/projects/ProjectsView.tsx`** | Project catalog, search filter, provider selector, status cards | 155 | `FROZEN` |
+| **`src/features/deployments/DeploymentsView.tsx`** | Chronological deployment pipeline table, telemetry, redeploy action | 420 | `FROZEN` |
+| **`src/features/accounts/AccountsView.tsx`** | GitHub OAuth & Cloudflare Pages edge integration management | 406 | `FROZEN` |
+| **`src/features/templates/TemplatesView.tsx`** | Curated Jamstack theme marketplace with browser-framed cards | 360 | `FROZEN` |
+| **`src/features/settings/SettingsView.tsx`** | User workspace settings (Preferences, Git Defaults, PAT Tokens, Alerts) | 855 | `FROZEN` |
+| **`src/features/scanner/IntakePipeline.tsx`** | 4-channel repository intake pipeline (Clone, Import, Upload, Template) | 527 | `FROZEN` |
+| **`src/features/scanner/ScanConsole.tsx`** | 14-Stage Deep Codebase AST Analyzer & inspection terminal stream | 465 | `FROZEN` |
+| **`src/features/workspace/WorkspaceView.tsx`** | Workspace sub-view router orchestrator | 64 | `FROZEN` |
+| **`src/features/workspace/tabs/OverviewTab.tsx`** | Codebase analysis summary, commit verification, instant deploy | 352 | `FROZEN` |
+| **`src/features/workspace/tabs/VariablesTab.tsx`** | Key-value environment variables, encrypted secrets, bulk paste/export | 460 | `FROZEN` |
+| **`src/features/workspace/tabs/CloudflareTab.tsx`** | Cloudflare Pages presets, WAF/SSL, KV, D1, R2 storage bindings | 1,283 | `FROZEN` |
+| **`src/features/workspace/tabs/DomainsTab.tsx`** | Free gateway subdomains (`*.ygit.net`), custom domain DNS verification | 583 | `FROZEN` |
+| **`src/features/workspace/tabs/LogsTab.tsx`** | Real-time streaming edge terminal build logs with full-screen viewer | 346 | `FROZEN` |
+| **`src/features/workspace/tabs/HistoryTab.tsx`** | Chronological deployment run history, commit SHAs, rollbacks | 132 | `FROZEN` |
+
+---
+
+## 3. Operational State Verification
+
+1. **Compilation Check**:
+   - `tsc --noEmit`: Exited with code 0.
+   - `vite build`: Successfully bundled client assets into `dist/`.
+2. **Dev Server Verification**:
+   - Listening on `0.0.0.0:3000` with `allowedHosts: true`.
+3. **Current Invariants**:
+   - All 14 scan engine checkpoints operational.
+   - Dual-sidebar navigation switching between all 9 routes operational.
+   - State mutations (add/edit/delete variables, bindings, domains) working in mock memory.

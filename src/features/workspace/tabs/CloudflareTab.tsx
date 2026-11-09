@@ -47,6 +47,7 @@ import {
   CfDeployHook,
   CfWorkerRoute,
 } from '../../../types';
+import { PrimaryButton, SecondaryButton, IconButton } from '../../../components/buttons';
 
 export interface CloudflareTabProps {
   cfActiveSection: 'build' | 'functions' | 'performance' | 'security' | 'bindings' | 'webhooks' | 'wrangler' | 'danger';
@@ -248,11 +249,11 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                         <h3 className="text-xs font-semibold text-[#f0f6fc]">
                           Cloudflare Pages & Workers
                         </h3>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30 flex items-center gap-1">
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30 flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#3fb950] inline-block"></span>
                           310+ Global PoPs
                         </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#1d6cf6]/15 text-[#58a6ff] border border-[#1d6cf6]/30">
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#1d6cf6]/15 text-[#58a6ff] border border-[#1d6cf6]/30">
                           V8 Isolates
                         </span>
                       </div>
@@ -261,22 +262,20 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
 
                   {/* Header Action Buttons */}
                   <div className="flex items-center gap-1.5 self-end sm:self-auto shrink-0">
-                    <button
-                      type="button"
+                    <SecondaryButton
+                      size="sm"
+                      icon={<Flame className="w-3.5 h-3.5 text-[#e3b341]" />}
                       onClick={() => setIsPurgeModalOpen(true)}
-                      className="bg-[#21262d] hover:bg-[#282e36] text-[#e3b341] hover:text-[#f2cc60] border border-[#30363d] text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
-                      <Flame className="w-3.5 h-3.5" />
-                      <span>Purge Cache</span>
-                    </button>
-                    <button
-                      type="button"
+                      Purge Cache
+                    </SecondaryButton>
+                    <PrimaryButton
+                      size="sm"
+                      icon={<Check className="w-3.5 h-3.5" />}
                       onClick={handleSaveCfSettings}
-                      className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3 py-1 rounded flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
                     >
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Save</span>
-                    </button>
+                      Save
+                    </PrimaryButton>
                   </div>
                 </div>
 
@@ -309,7 +308,7 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                         <span className="hidden sm:inline">{tab.label}</span>
                         <span className="sm:hidden">{tab.shortLabel}</span>
                         {tab.badge && (
-                          <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-[#090d13] text-[#8b949e] border border-[#21262d]">
+                          <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[#090d13] text-[#8b949e] border border-[#21262d]">
                             {tab.badge}
                           </span>
                         )}
@@ -952,14 +951,14 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                           <Database className="w-3.5 h-3.5 text-[#1d6cf6]" />
                           <span>KV Namespaces</span>
                         </div>
-                        <button
-                          type="button"
+                        <SecondaryButton
+                          size="sm"
+                          icon={<Plus className="w-3 h-3" />}
                           onClick={() => setIsAddKvModalOpen(true)}
-                          className="bg-[#21262d] hover:bg-[#282e36] text-[#58a6ff] hover:text-[#79c0ff] border border-[#30363d] text-[11px] font-normal px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors"
+                          className="text-[#58a6ff] hover:text-[#79c0ff]"
                         >
-                          <Plus className="w-3 h-3" />
-                          <span>Add KV</span>
-                        </button>
+                          Add KV
+                        </SecondaryButton>
                       </div>
 
                       <div className="border border-[#21262d] rounded overflow-hidden text-xs bg-[#090d13]">
@@ -978,18 +977,17 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                                 <td className="p-2 font-mono text-[#58a6ff]">{kv.name}</td>
                                 <td className="p-2 font-mono text-[#c9d1d9] truncate max-w-[200px]">{kv.namespaceId}</td>
                                 <td className="p-2">
-                                  <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#21262d] text-[#8b949e]">
+                                  <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#21262d] text-[#8b949e]">
                                     {kv.environment}
                                   </span>
                                 </td>
                                 <td className="p-2 text-right">
-                                  <button
-                                    type="button"
+                                  <IconButton
+                                    size="sm"
+                                    icon={<Trash2 className="w-3.5 h-3.5" />}
                                     onClick={() => handleDeleteKvBinding(kv.id)}
-                                    className="p-1 text-[#8b949e] hover:text-[#f85149] rounded cursor-pointer transition-colors"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
+                                    className="hover:text-[#f85149]"
+                                  />
                                 </td>
                               </tr>
                             ))}
@@ -1005,14 +1003,14 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                           <HardDrive className="w-3.5 h-3.5 text-[#3fb950]" />
                           <span>D1 SQL Databases</span>
                         </div>
-                        <button
-                          type="button"
+                        <SecondaryButton
+                          size="sm"
+                          icon={<Plus className="w-3 h-3" />}
                           onClick={() => setIsAddD1ModalOpen(true)}
-                          className="bg-[#21262d] hover:bg-[#282e36] text-[#3fb950] hover:text-[#56d364] border border-[#30363d] text-[11px] font-normal px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors"
+                          className="text-[#3fb950] hover:text-[#56d364]"
                         >
-                          <Plus className="w-3 h-3" />
-                          <span>Add D1</span>
-                        </button>
+                          Add D1
+                        </SecondaryButton>
                       </div>
 
                       <div className="border border-[#21262d] rounded overflow-hidden text-xs bg-[#090d13]">
@@ -1031,18 +1029,17 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                                 <td className="p-2 font-mono text-[#3fb950]">{d1.name}</td>
                                 <td className="p-2 font-mono text-[#c9d1d9] truncate max-w-[200px]">{d1.databaseId}</td>
                                 <td className="p-2">
-                                  <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#21262d] text-[#8b949e]">
+                                  <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#21262d] text-[#8b949e]">
                                     {d1.environment}
                                   </span>
                                 </td>
                                 <td className="p-2 text-right">
-                                  <button
-                                    type="button"
+                                  <IconButton
+                                    size="sm"
+                                    icon={<Trash2 className="w-3.5 h-3.5" />}
                                     onClick={() => handleDeleteD1Binding(d1.id)}
-                                    className="p-1 text-[#8b949e] hover:text-[#f85149] rounded cursor-pointer transition-colors"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
+                                    className="hover:text-[#f85149]"
+                                  />
                                 </td>
                               </tr>
                             ))}
@@ -1058,14 +1055,14 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                           <Boxes className="w-3.5 h-3.5 text-[#e3b341]" />
                           <span>R2 Storage Buckets</span>
                         </div>
-                        <button
-                          type="button"
+                        <SecondaryButton
+                          size="sm"
+                          icon={<Plus className="w-3 h-3" />}
                           onClick={() => setIsAddR2ModalOpen(true)}
-                          className="bg-[#21262d] hover:bg-[#282e36] text-[#e3b341] hover:text-[#f2cc60] border border-[#30363d] text-[11px] font-normal px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors"
+                          className="text-[#e3b341] hover:text-[#f2cc60]"
                         >
-                          <Plus className="w-3 h-3" />
-                          <span>Add R2</span>
-                        </button>
+                          Add R2
+                        </SecondaryButton>
                       </div>
 
                       <div className="border border-[#21262d] rounded overflow-hidden text-xs bg-[#090d13]">
@@ -1084,18 +1081,17 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                                 <td className="p-2 font-mono text-[#e3b341]">{r2.name}</td>
                                 <td className="p-2 font-mono text-[#c9d1d9] truncate max-w-[200px]">{r2.bucketName}</td>
                                 <td className="p-2">
-                                  <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#21262d] text-[#8b949e]">
+                                  <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#21262d] text-[#8b949e]">
                                     {r2.environment}
                                   </span>
                                 </td>
                                 <td className="p-2 text-right">
-                                  <button
-                                    type="button"
+                                  <IconButton
+                                    size="sm"
+                                    icon={<Trash2 className="w-3.5 h-3.5" />}
                                     onClick={() => handleDeleteR2Binding(r2.id)}
-                                    className="p-1 text-[#8b949e] hover:text-[#f85149] rounded cursor-pointer transition-colors"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
+                                    className="hover:text-[#f85149]"
+                                  />
                                 </td>
                               </tr>
                             ))}

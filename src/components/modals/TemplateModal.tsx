@@ -61,7 +61,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
                 <div className="flex items-center gap-1.5 text-xs truncate">
                   <span className="text-[#7d8590] hidden sm:inline font-mono">Templates / {template.category} /</span>
                   <span className="font-semibold text-[#f0f6fc] truncate">{template.name}</span>
-                  <span className="text-[9.5px] font-mono px-1.5 py-0.2 rounded bg-[#21262d] text-[#58a6ff] border border-[#30363d] shrink-0">
+                  <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#21262d] text-[#58a6ff] border border-[#30363d] shrink-0">
                     {template.frameworkBadge}
                   </span>
                 </div>
@@ -243,7 +243,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
                               {route.name}
                             </td>
                             <td className="py-2 px-3 whitespace-nowrap">
-                              <span className={`text-[9.5px] font-mono px-1.5 py-0.2 rounded border ${
+                              <span className={`text-[9.5px] font-mono px-1.5 py-0.5 rounded border ${
                                 route.type === 'Edge SSR'
                                   ? 'bg-[#1d6cf6]/10 text-[#58a6ff] border-[#1d6cf6]/30'
                                   : route.type === 'Static SSG'
@@ -429,7 +429,7 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
                               {env.desc}
                             </td>
                             <td className="py-2 px-3 text-right whitespace-nowrap">
-                              <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded border ${
+                              <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded border ${
                                 env.required
                                   ? 'bg-[#da3633]/15 text-[#f85149] border-[#da3633]/30'
                                   : 'bg-[#21262d] text-[#8b949e] border-[#30363d]'
