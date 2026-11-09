@@ -27,6 +27,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { DeployLogEntry } from '../../../types';
+import { IconButton } from '../../../components/buttons';
 
 export interface LogsTabProps {
   activeDeploymentStatus: 'running' | 'finished' | 'idle';
@@ -113,18 +114,18 @@ export const LogsTab: React.FC<LogsTabProps> = ({
         <div className="flex items-center gap-2 text-[10.5px] text-[#7d8590] font-mono">
           <span>1-3 of 18</span>
           <div className="flex items-center gap-1">
-            <button
-              type="button"
-              className="p-1 rounded bg-[#090d13] border border-[#21262d] hover:bg-[#21262d] text-[#8b949e] hover:text-[#f0f6fc] cursor-pointer"
-            >
-              <ArrowLeft className="w-3 h-3" />
-            </button>
-            <button
-              type="button"
-              className="p-1 rounded bg-[#090d13] border border-[#21262d] hover:bg-[#21262d] text-[#8b949e] hover:text-[#f0f6fc] cursor-pointer"
-            >
-              <ArrowRight className="w-3 h-3" />
-            </button>
+            <IconButton
+              size="xs"
+              variant="outline"
+              aria-label="Previous page"
+              icon={<ArrowLeft className="w-3 h-3" />}
+            />
+            <IconButton
+              size="xs"
+              variant="outline"
+              aria-label="Next page"
+              icon={<ArrowRight className="w-3 h-3" />}
+            />
           </div>
         </div>
       </div>
@@ -140,78 +141,73 @@ export const LogsTab: React.FC<LogsTabProps> = ({
           {/* Left Icon Controls Group */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {/* Timestamp Toggle */}
-            <button
-              type="button"
+            <IconButton
+              size="sm"
+              variant="outline"
+              isActive={showLogTimestamps}
               onClick={() => onSetShowLogTimestamps(!showLogTimestamps)}
-              className={`p-1.5 rounded flex items-center justify-center cursor-pointer transition-colors ${
-                showLogTimestamps
-                  ? 'bg-[#21262d] text-[#58a6ff] border border-[#30363d]'
-                  : 'bg-[#090d13] border border-[#21262d] text-[#8b949e] hover:text-[#f0f6fc]'
-              }`}
+              aria-label="Toggle Timestamps"
               title="Toggle Timestamps"
-            >
-              <Clock className="w-3.5 h-3.5" />
-            </button>
+              icon={<Clock className="w-3.5 h-3.5" />}
+            />
 
             {/* Scroll To Bottom */}
-            <button
-              type="button"
+            <IconButton
+              size="sm"
+              variant="outline"
+              isActive={logAutoScroll}
               onClick={() => {
                 onSetLogAutoScroll(true);
                 logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`p-1.5 rounded bg-[#090d13] border border-[#21262d] hover:bg-[#21262d] cursor-pointer text-[#8b949e] hover:text-[#f0f6fc] ${
-                logAutoScroll ? 'text-[#58a6ff] border-[#1d6cf6]' : ''
-              }`}
+              aria-label="Scroll to bottom"
               title="Scroll to bottom"
-            >
-              <ArrowDown className="w-3.5 h-3.5" />
-            </button>
+              icon={<ArrowDown className="w-3.5 h-3.5" />}
+            />
 
             {/* Line Wrap Toggle */}
-            <button
-              type="button"
+            <IconButton
+              size="sm"
+              variant="outline"
+              isActive={logWrapLines}
               onClick={() => onSetLogWrapLines(!logWrapLines)}
-              className={`p-1.5 rounded bg-[#090d13] border border-[#21262d] hover:bg-[#21262d] cursor-pointer ${
-                logWrapLines ? 'text-[#58a6ff] border-[#1d6cf6]' : 'text-[#8b949e] hover:text-[#f0f6fc]'
-              }`}
+              aria-label="Toggle line wrapping"
               title="Toggle line wrapping"
-            >
-              <AlignLeft className="w-3.5 h-3.5" />
-            </button>
+              icon={<AlignLeft className="w-3.5 h-3.5" />}
+            />
 
             {/* Expand / Fullscreen */}
-            <button
-              type="button"
+            <IconButton
+              size="sm"
+              variant="outline"
               onClick={() => onSetLogFullScreen(!logFullScreen)}
-              className="p-1.5 rounded bg-[#090d13] border border-[#21262d] hover:bg-[#21262d] cursor-pointer text-[#8b949e] hover:text-[#f0f6fc]"
+              aria-label={logFullScreen ? 'Exit Fullscreen' : 'Fullscreen'}
               title={logFullScreen ? 'Exit Fullscreen' : 'Fullscreen'}
-            >
-              {logFullScreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-            </button>
+              icon={logFullScreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+            />
 
             {/* Copy Logs */}
-            <button
-              type="button"
+            <IconButton
+              size="sm"
+              variant="outline"
               onClick={() => {
                 const allText = deployLogsList.map((l) => `${l.time}  ${l.text}`).join('\n');
                 onCopyToClipboard(allText);
               }}
-              className="p-1.5 rounded bg-[#090d13] border border-[#21262d] hover:bg-[#21262d] cursor-pointer text-[#8b949e] hover:text-[#f0f6fc]"
+              aria-label="Copy logs"
               title="Copy logs"
-            >
-              <Copy className="w-3.5 h-3.5" />
-            </button>
+              icon={<Copy className="w-3.5 h-3.5" />}
+            />
 
             {/* Download Logs */}
-            <button
-              type="button"
+            <IconButton
+              size="sm"
+              variant="outline"
               onClick={() => onShowToast('Downloading deployment.log')}
-              className="p-1.5 rounded bg-[#090d13] border border-[#21262d] hover:bg-[#21262d] cursor-pointer text-[#8b949e] hover:text-[#f0f6fc]"
+              aria-label="Download .log file"
               title="Download .log file"
-            >
-              <Download className="w-3.5 h-3.5" />
-            </button>
+              icon={<Download className="w-3.5 h-3.5" />}
+            />
 
             {/* Status Finished / Running Pill */}
             <span

@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { ModalShell } from './ModalShell';
+import { SecondaryButton, DangerButton } from '../buttons';
 
 export interface DeleteProjectModalProps {
   isOpen: boolean;
@@ -52,21 +53,16 @@ export const DeleteProjectModal: React.FC<DeleteProjectModalProps> = ({
       </div>
 
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-        >
+        <SecondaryButton size="sm" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
+        </SecondaryButton>
+        <DangerButton
+          size="sm"
           disabled={confirmText.trim() !== projectName}
           onClick={onDelete}
-          className="bg-[#da3633] hover:bg-[#f85149] disabled:opacity-40 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
         >
           Delete Permanently
-        </button>
+        </DangerButton>
       </div>
     </ModalShell>
   );

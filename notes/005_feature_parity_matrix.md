@@ -1,13 +1,13 @@
 # YGIT PLATFORM UI — FEATURE PARITY & IMPLEMENTATION MATRIX
 **Document ID:** `YGIT-DOC-005-FEATURE-PARITY`  
 **Date:** November 8, 2026  
-**Status:** `BASELINE LIVE (100% WORKING)`  
+**Status:** `BASELINE LIVE (100% WORKING PRE-REFACTORING)`  
 
 ---
 
 ## 1. Current Working Features (Baseline Inventory)
 
-All features below are verified active, navigable, and functioning in the current baseline:
+All features below are verified active, navigable, and fully working in the current baseline:
 
 ### 1.1 Global Platform Navigation & Shell
 - [x] **Dual-Sidebar Layout**:
@@ -58,49 +58,52 @@ All features below are verified active, navigable, and functioning in the curren
   - Big "Scan Repository →" CTA upon pipeline completion.
 - [x] **14-Stage Deep Codebase AST Analyzer (`ScanConsole.tsx`)**:
   - Live scanning animation with glowing progress bar and 14 passing checkpoints.
-  - Terminal output stream with AST and engine logs.
-  - Post-scan Deep Analysis report, 14 Invariants checklist, and raw JSON spec.
+  - View switcher (Deep Report, 14 Invariants, Raw JSON Spec).
+  - Post-scan CTA: "Open Project Workspace →".
 
-### 1.4 Post-Scan Dual-Sidebar Workspace
+### 1.4 Project Workspace & Sub-Views
 - [x] **Overview Tab (`OverviewTab.tsx`)**:
-  - Codebase analysis summary, commit SHA verification, instant deploy action.
-- [x] **Variables & Secrets Tab (`VariablesTab.tsx`)**:
-  - Key-value table with environment targets (Production, Preview, Development).
-  - Encrypted secrets masking toggle (`••••••••`).
-  - Import / Export `.env` files.
-  - Bulk raw `.env` paste modal with valid pairs counter.
-- [x] **Cloudflare Pages Configuration Tab (`CloudflareTab.tsx`)**:
-  - Build settings (Framework preset, build command, root dir, output dir).
-  - KV, D1 SQL, and R2 bucket storage bindings modals.
-  - Worker routes configuration.
-  - Edge cache purge modal with URL purging.
-  - Destructive project deletion safeguard modal.
-- [x] **Domains & Networking Tab (`DomainsTab.tsx`)**:
-  - Free default domain (`*.pages.dev`) and free YGIT gateway (`*.ygit.net`).
-  - Subdomain search and claim workflow.
-  - Custom domain addition with CNAME record guidance.
-  - Live DNS resolution probe simulation modal (`DnsConfigModal`).
+  - Commit evidence SHA digest, repository target, branch, output path.
+  - Instant deploy action button with active build timer.
+- [x] **Variables Tab (`VariablesTab.tsx`)**:
+  - Environment variables table with encrypted secret toggle (`••••••••`).
+  - Add Variable, Paste `.env`, Export `.env`, and Delete Variable affordances.
+- [x] **Cloudflare Tab (`CloudflareTab.tsx`)**:
+  - Build & output directory configuration.
+  - KV, D1 SQL, and R2 database binding tables with creation modals.
+  - Deploy hooks management table.
+  - Live `wrangler.toml` auto-generator with copy affordance.
+  - Danger zone (Pause Deployments, Delete Project).
+- [x] **Domains Tab (`DomainsTab.tsx`)**:
+  - Instant claim engine for free `*.ygit.net` and `*.pages.dev` subdomains.
+  - Custom domain binding with DNS CNAME records and live probe modal (`DnsConfigModal`).
+  - Automatic Edge TLS badge.
 - [x] **Logs Tab (`LogsTab.tsx`)**:
-  - Streaming edge terminal build logs with timestamps, line wrapping, and search.
-  - Full-screen terminal mode.
+  - Live streaming terminal log viewer.
+  - Controls: Timestamps toggle, auto-scroll, line-wrap, fullscreen, copy logs, download `.log`.
 - [x] **History Tab (`HistoryTab.tsx`)**:
-  - Chronological deployment history table with rollbacks and redeploy triggers.
+  - Chronological deployment history table with commit messages, branch, duration, and status pills.
+  - 1-Click re-deploy trigger.
 
 ---
 
-## 2. Phase-by-Phase Parity Tracking
+## 2. Feature Additions / Updates per Implementation Phase
 
-| Phase | Planned Updates | New/Fixed Features Added | Regressions Avoided | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **Phase 1** | Replace invalid `py-0.2` class across 35 files | Standardized vertical padding on badges, counters, and sidebar pills | Zero visual distortion on high-DPI screens | ✅ `COMPLETED` |
-| **Phase 2** | Wire `FrameworkBadge` & centralize badges | Active framework chips on template cards; unified `StatusBadge` & `MetricPill` usage | Eliminates duplicate badge CSS | ✅ `COMPLETED` |
-| **Phase 3** | Atomic buttons in Global Views | `<PrimaryButton>`, `<SecondaryButton>`, `<IconButton>` in Dashboard, Projects, Deployments, Accounts, Templates | Unified active scale, hover, and loading states | ✅ `COMPLETED` |
-| **Phase 4** | Atomic buttons in Scanner & Workspace | Unified button components in Intake, Scan Console, and all 6 workspace tabs | Standardized form triggers & CTAs | ✅ `COMPLETED` |
-| **Phase 5** | Modal standardization & `App.tsx` de-bloat | Extracted `CreateProjectModal`, `PasteEnvModal`, `EditEnvModal`, wrapped `AccountsModal` | Modular, maintainable modal system | ✅ `COMPLETED` |
-| **Phase 6** | End-to-end integration audit | Full compile, lint, and runtime verification | 100% verified baseline parity | ✅ `COMPLETED` |
+| Phase ID | Feature / Component Delta | Status |
+| :--- | :--- | :--- |
+| **Phase 1** | Register missing colors in `index.css` (`#58a6ff`, `#c9d1d9`, `#e3b341`, `#da3633`, `#282e36`, `#05080d`, `#484f58`) | ✅ `COMPLETED` |
+| **Phase 2** | Universal Button Architecture: Add `danger`, `warning`, `success` variants with active scaling (`active:scale-95`) | ✅ `COMPLETED` |
+| **Phase 3** | Reusable `Card` primitive (`Card`, `CardHeader`, `CardBody`, `CardFooter`, `CardTelemetryEnclave`) | ✅ `COMPLETED` |
+| **Phase 4** | Standardize all dialogs onto `ModalShell.tsx` (`TemplateModal`, `SettingsView` PAT & JSON modals, bindings footers) | ✅ `COMPLETED` |
+| **Phase 5** | Harmonize raw `<button>` elements across views with design system components | ✅ `COMPLETED` |
 
 ---
 
-## 3. Invariant Preservation Guarantee
+## 3. Pending Features / Technical Debt to be Resolved
 
-Every single feature, click handler, simulated API delay, and state transition listed above **MUST and WILL remain 100% working** through all phases. Any refactoring must only replace underlying HTML elements and class strings with their equivalent standardized components, with zero changes to data flow or user experience.
+- [ ] **Token Harmonization**: Eliminate arbitrary hex values in favor of design tokens.
+- [ ] **Card Radius Normalization**: Enforce uniform `rounded-lg` (8px) across all card containers.
+- [x] **Button Variant Standardization**: Replace raw danger/warning/success `<button>` elements with typed component props (100% complete).
+- [x] **Modal Backdrop Normalization**: Replace raw fixed overlay divs with `ModalShell` (100% complete across all modals).
+- [x] **Terminal Controls Componentization**: Wire `IconButton` across all 7 controls in `LogsTab.tsx` (100% complete).
+- [ ] **Tab-Level Error Boundary**: Add scoped error recovery for workspace tabs.

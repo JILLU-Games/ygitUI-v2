@@ -30,7 +30,7 @@ import {
   Edit3,
 } from 'lucide-react';
 import { FreeSubdomainItem, CustomDomainItem } from '../../../types';
-import { PrimaryButton, SecondaryButton, IconButton } from '../../../components/buttons';
+import { PrimaryButton, SecondaryButton, IconButton, SuccessButton } from '../../../components/buttons';
 
 export interface DomainsTabProps {
   freeSubdomains: FreeSubdomainItem[];
@@ -205,14 +205,13 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
             </div>
 
             {subdomainSearchResult.isAvailable ? (
-              <button
-                type="button"
+              <SuccessButton
+                size="sm"
+                icon={<Plus className="w-3.5 h-3.5" />}
                 onClick={() => onClaimFreeSubdomain(subdomainSearchResult.query, subdomainSearchResult.zone)}
-                className="bg-[#238636] hover:bg-[#2ea043] text-white text-xs font-normal px-3 py-1 rounded-md cursor-pointer transition-colors shrink-0 shadow-sm flex items-center gap-1.5"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Claim Subdomain</span>
-              </button>
+                Claim Subdomain
+              </SuccessButton>
             ) : (
               <div className="flex flex-wrap items-center gap-1.5">
                 <span className="text-[10.5px] text-[#8b949e]">Suggestions:</span>
@@ -274,17 +273,17 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                       </button>
                     )}
 
-                    <button
-                      type="button"
+                    <IconButton
+                      size="xs"
+                      variant="ghost"
                       onClick={() => {
                         onCopyToClipboard(`https://${fullDomain}`);
                         onShowToast(`Copied https://${fullDomain}`);
                       }}
+                      aria-label="Copy URL"
                       title="Copy URL"
-                      className="p-1 text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#161b22] rounded cursor-pointer transition-colors"
-                    >
-                      <Copy className="w-3.5 h-3.5" />
-                    </button>
+                      icon={<Copy className="w-3.5 h-3.5" />}
+                    />
 
                     <a
                       href={`https://${fullDomain}`}
@@ -297,14 +296,14 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                     </a>
 
                     {freeSubdomains.length > 1 && (
-                      <button
-                        type="button"
+                      <IconButton
+                        size="xs"
+                        variant="ghost"
                         onClick={() => onDeleteFreeSubdomain(fs.id)}
+                        aria-label="Unbind Subdomain"
                         title="Unbind Subdomain"
-                        className="p-1 text-[#8b949e] hover:text-[#f85149] hover:bg-[#161b22] rounded cursor-pointer transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                        icon={<Trash2 className="w-3.5 h-3.5 text-[#8b949e] hover:text-[#f85149]" />}
+                      />
                     )}
                   </div>
                 </div>
@@ -499,15 +498,14 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                     <td className="p-2.5 px-3 align-middle text-right">
                       <div className="flex items-center justify-end gap-1.5 flex-wrap">
                         {/* DNS BUTTON (OPENS POPUP WITH DNS RECORDS) */}
-                        <button
-                          type="button"
+                        <SecondaryButton
+                          size="sm"
+                          icon={<FileText className="w-3 h-3 text-[#58a6ff]" />}
                           onClick={() => onOpenDnsModal(dom)}
                           title="View DNS Records"
-                          className="bg-[#1d6cf6]/15 hover:bg-[#1d6cf6]/25 text-[#58a6ff] border border-[#1d6cf6]/30 text-[10.5px] font-normal px-2 py-0.5 rounded cursor-pointer transition-colors flex items-center gap-1"
                         >
-                          <FileText className="w-3 h-3" />
-                          <span>DNS</span>
-                        </button>
+                          DNS
+                        </SecondaryButton>
 
                         {/* Verify DNS Resolver Action */}
                         <SecondaryButton

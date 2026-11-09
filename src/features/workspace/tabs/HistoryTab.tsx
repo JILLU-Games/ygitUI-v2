@@ -18,6 +18,7 @@ import React from 'react';
 import { GitBranch, RotateCcw, Clock } from 'lucide-react';
 import { GlobalDeployment } from '../../../types';
 import { StatusBadge } from '../../../components/badges/StatusBadge';
+import { SecondaryButton } from '../../../components/buttons';
 import { INITIAL_DEPLOYMENTS } from '../../../mocks/mockDeployments';
 
 export interface HistoryTabProps {
@@ -109,15 +110,14 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
                 <td className="p-2.5 align-middle text-right">
                   <div className="flex items-center justify-end gap-1.5">
                     {onRedeploy && (
-                      <button
-                        type="button"
+                      <SecondaryButton
+                        size="compact"
+                        icon={<RotateCcw className="w-2.5 h-2.5" />}
                         onClick={() => onRedeploy(currentProject)}
                         title="Re-deploy this commit"
-                        className="bg-[#21262d] hover:bg-[#282e36] text-[#c9d1d9] hover:text-[#f0f6fc] px-2 py-0.5 rounded text-[11px] font-mono border border-[#30363d] cursor-pointer transition-colors flex items-center gap-1"
                       >
-                        <RotateCcw className="w-2.5 h-2.5" />
-                        <span>Redeploy</span>
-                      </button>
+                        Redeploy
+                      </SecondaryButton>
                     )}
                   </div>
                 </td>

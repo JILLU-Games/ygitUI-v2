@@ -39,6 +39,8 @@ import {
   Code2,
 } from 'lucide-react';
 import { UserSettings, SettingsTab, UserPersonalToken } from '../../types';
+import { ModalShell } from '../../components/modals/ModalShell';
+import { PrimaryButton, SecondaryButton, IconButton } from '../../components/buttons';
 
 export interface SettingsViewProps {
   settings: UserSettings;
@@ -209,57 +211,42 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </span>
           )}
 
-          <button
-            type="button"
+          <SecondaryButton
+            size="compact"
+            icon={<Code2 className="w-3 h-3 text-[#58a6ff]" />}
             onClick={() => setShowJsonInspector(true)}
-            className="h-6 px-2 rounded bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] text-[#c9d1d9] text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <Code2 className="w-3 h-3 text-[#58a6ff]" />
-            <span>JSON</span>
-          </button>
+            JSON
+          </SecondaryButton>
 
-          <button
-            type="button"
+          <SecondaryButton
+            size="compact"
+            icon={<Download className="w-3 h-3 text-[#8b949e]" />}
             onClick={handleExportJson}
-            className="h-6 px-2 rounded bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] text-[#c9d1d9] text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
           >
-            <Download className="w-3 h-3 text-[#8b949e]" />
-            <span>Export</span>
-          </button>
+            Export
+          </SecondaryButton>
 
           {isDirty && (
-            <button
-              type="button"
+            <SecondaryButton
+              size="compact"
+              icon={<RotateCcw className="w-3 h-3" />}
               onClick={handleReset}
-              className="h-6 px-2 rounded bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] text-[#8b949e] hover:text-[#f0f6fc] text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
             >
-              <RotateCcw className="w-3 h-3" />
-              <span>Discard</span>
-            </button>
+              Discard
+            </SecondaryButton>
           )}
 
-          <button
-            type="button"
-            onClick={handleSave}
+          <PrimaryButton
+            size="compact"
+            icon={<Save className="w-3 h-3" />}
             disabled={isSaving || !isDirty}
-            className={`h-6 px-2.5 rounded text-[11px] font-medium flex items-center gap-1 transition-all cursor-pointer ${
-              isDirty
-                ? 'bg-[#1d6cf6] hover:bg-[#2f7af8] text-white active:scale-95'
-                : 'bg-[#21262d] text-[#7d8590] border border-[#30363d] cursor-not-allowed opacity-70'
-            }`}
+            isLoading={isSaving}
+            loadingText="Saving..."
+            onClick={handleSave}
           >
-            {isSaving ? (
-              <>
-                <RefreshCw className="w-3 h-3 animate-spin" />
-                <span>Saving...</span>
-              </>
-            ) : (
-              <>
-                <Save className="w-3 h-3" />
-                <span>Save Changes</span>
-              </>
-            )}
-          </button>
+            Save Changes
+          </PrimaryButton>
         </div>
       </div>
 
@@ -517,14 +504,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 </span>
               </div>
 
-              <button
-                type="button"
+              <PrimaryButton
+                size="compact"
+                icon={<Plus className="w-3 h-3" />}
                 onClick={() => setShowAddTokenModal(true)}
-                className="h-5 px-2 rounded bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
               >
-                <Plus className="w-3 h-3" />
-                <span>New Token</span>
-              </button>
+                New Token
+              </PrimaryButton>
             </div>
 
             {/* Generated Token Banner */}
@@ -537,8 +523,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   </code>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button
-                    type="button"
+                  <PrimaryButton
+                    size="compact"
+                    icon={<Copy className="w-2.5 h-2.5" />}
                     onClick={() => {
                       if (onCopyToClipboard) {
                         onCopyToClipboard(generatedTokenPreview, 'Token');
@@ -546,18 +533,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                         navigator.clipboard.writeText(generatedTokenPreview);
                       }
                     }}
-                    className="h-5 px-2 rounded bg-[#238636] hover:bg-[#2ea043] text-white text-[10px] font-medium flex items-center gap-1 cursor-pointer"
                   >
-                    <Copy className="w-2.5 h-2.5" />
-                    <span>Copy</span>
-                  </button>
-                  <button
-                    type="button"
+                    Copy
+                  </PrimaryButton>
+                  <SecondaryButton
+                    size="compact"
                     onClick={() => setGeneratedTokenPreview(null)}
-                    className="h-5 px-1.5 rounded bg-[#21262d] text-[#8b949e] text-[10px]"
                   >
                     Done
-                  </button>
+                  </SecondaryButton>
                 </div>
               </div>
             )}
@@ -603,14 +587,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                           {token.lastUsed}
                         </td>
                         <td className="py-1.5 px-2.5 text-right">
-                          <button
-                            type="button"
+                          <IconButton
+                            size="xs"
+                            variant="ghost"
                             onClick={() => handleRevokeToken(token.id)}
-                            className="text-[#f85149] hover:text-white hover:bg-[#f85149] p-0.5 rounded transition-colors cursor-pointer"
+                            aria-label="Revoke token"
                             title="Revoke"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
+                            icon={<Trash2 className="w-3 h-3 text-[#f85149]" />}
+                          />
                         </td>
                       </tr>
                     ))
@@ -700,23 +684,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         ========================================================================
       */}
       {showAddTokenModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-3 z-50 animate-in fade-in duration-100">
-          <div className="bg-[#161b22] border border-[#30363d] rounded-md max-w-sm w-full p-3.5 flex flex-col gap-2.5 shadow-xl">
-            <div className="flex items-center justify-between border-b border-[#21262d] pb-1.5">
-              <div className="flex items-center gap-1.5">
-                <Key className="w-3.5 h-3.5 text-[#58a6ff]" />
-                <h3 className="text-xs font-semibold text-[#f0f6fc]">New Access Token</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowAddTokenModal(false)}
-                className="text-[#8b949e] hover:text-white text-xs cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={(e) => { handleCreateToken(e); setShowAddTokenModal(false); }} className="flex flex-col gap-2">
+        <ModalShell
+          isOpen={showAddTokenModal}
+          onClose={() => setShowAddTokenModal(false)}
+          title="New Access Token"
+          icon={<Key className="w-3.5 h-3.5 text-[#58a6ff]" />}
+          maxWidth="sm"
+        >
+          <form onSubmit={(e) => { handleCreateToken(e); setShowAddTokenModal(false); }} className="flex flex-col">
+            <div className="p-3.5 flex flex-col gap-2.5 text-xs">
               <div className="flex flex-col gap-1">
                 <label className="text-[11px] font-medium text-[#c9d1d9]">
                   Token Name
@@ -761,25 +737,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   <option value="Never">Never</option>
                 </select>
               </div>
+            </div>
 
-              <div className="flex items-center justify-end gap-1.5 pt-2 border-t border-[#21262d]">
-                <button
-                  type="button"
-                  onClick={() => setShowAddTokenModal(false)}
-                  className="h-6 px-2.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#c9d1d9] text-[11px]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="h-6 px-2.5 rounded bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-[11px] font-medium cursor-pointer"
-                >
-                  Generate
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+            <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
+              <SecondaryButton
+                size="sm"
+                onClick={() => setShowAddTokenModal(false)}
+              >
+                Cancel
+              </SecondaryButton>
+              <PrimaryButton
+                size="sm"
+                type="submit"
+                disabled={!newTokenName.trim()}
+              >
+                Generate
+              </PrimaryButton>
+            </div>
+          </form>
+        </ModalShell>
       )}
 
       {/* 
@@ -788,64 +764,45 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         ========================================================================
       */}
       {showJsonInspector && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-3 z-50 animate-in fade-in duration-100">
-          <div className="bg-[#161b22] border border-[#30363d] rounded-md max-w-xl w-full p-3.5 flex flex-col gap-2.5 shadow-xl max-h-[85vh]">
-            <div className="flex items-center justify-between border-b border-[#21262d] pb-1.5">
-              <div className="flex items-center gap-1.5">
-                <Code2 className="w-3.5 h-3.5 text-[#58a6ff]" />
-                <h3 className="text-xs font-semibold text-[#f0f6fc]">User Settings JSON</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowJsonInspector(false)}
-                className="text-[#8b949e] hover:text-white text-xs cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
-
+        <ModalShell
+          isOpen={showJsonInspector}
+          onClose={() => setShowJsonInspector(false)}
+          title="User Settings JSON"
+          icon={<Code2 className="w-3.5 h-3.5 text-[#58a6ff]" />}
+          maxWidth="xl"
+        >
+          <div className="p-3.5 flex flex-col gap-2.5">
             <pre className="bg-[#090d13] border border-[#21262d] rounded p-2.5 text-[10.5px] font-mono text-[#58a6ff] overflow-auto max-h-[50vh] select-all leading-snug">
               {JSON.stringify(formState, null, 2)}
             </pre>
-
-            <div className="flex items-center justify-end gap-1.5 pt-2 border-t border-[#21262d]">
-              <button
-                type="button"
-                onClick={() => {
-                  const text = JSON.stringify(formState, null, 2);
-                  if (onCopyToClipboard) {
-                    onCopyToClipboard(text, 'User JSON');
-                  } else {
-                    navigator.clipboard.writeText(text);
-                  }
-                  setCopiedJson(true);
-                  setTimeout(() => setCopiedJson(false), 2000);
-                }}
-                className="h-6 px-2.5 rounded bg-[#21262d] hover:bg-[#30363d] text-[#c9d1d9] text-[11px] font-medium flex items-center gap-1 cursor-pointer"
-              >
-                {copiedJson ? (
-                  <>
-                    <Check className="w-3 h-3 text-[#3fb950]" />
-                    <span>Copied</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3 h-3" />
-                    <span>Copy</span>
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={handleExportJson}
-                className="h-6 px-2.5 rounded bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-[11px] font-medium flex items-center gap-1 cursor-pointer"
-              >
-                <Download className="w-3 h-3" />
-                <span>Download</span>
-              </button>
-            </div>
           </div>
-        </div>
+
+          <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
+            <SecondaryButton
+              size="sm"
+              icon={copiedJson ? <Check className="w-3 h-3 text-[#3fb950]" /> : <Copy className="w-3 h-3" />}
+              onClick={() => {
+                const text = JSON.stringify(formState, null, 2);
+                if (onCopyToClipboard) {
+                  onCopyToClipboard(text, 'User JSON');
+                } else {
+                  navigator.clipboard.writeText(text);
+                }
+                setCopiedJson(true);
+                setTimeout(() => setCopiedJson(false), 2000);
+              }}
+            >
+              {copiedJson ? 'Copied' : 'Copy'}
+            </SecondaryButton>
+            <PrimaryButton
+              size="sm"
+              icon={<Download className="w-3 h-3" />}
+              onClick={handleExportJson}
+            >
+              Download
+            </PrimaryButton>
+          </div>
+        </ModalShell>
       )}
     </div>
   );

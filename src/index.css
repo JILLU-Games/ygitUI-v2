@@ -4,15 +4,23 @@
   --color-canvas-default: #0d1117;
   --color-canvas-subtle: #161b22;
   --color-canvas-inset: #090d13;
+  --color-canvas-inset-secondary: #12161d;
+  --color-canvas-deep: #05080d;
+  --color-canvas-selected: #0e1828;
+  --color-canvas-hover: #0f1622;
   --color-canvas-overlay: rgba(5, 8, 13, 0.75);
+
+  --color-surface-hover: #282e36;
 
   --color-border-default: #30363d;
   --color-border-muted: #21262d;
   --color-border-active: #1d6cf6;
 
   --color-fg-default: #f0f6fc;
+  --color-fg-secondary: #c9d1d9;
   --color-fg-muted: #8b949e;
   --color-fg-subtle: #7d8590;
+  --color-fg-placeholder: #484f58;
 
   --color-brand-primary: #1d6cf6;
   --color-brand-primary-hover: #2f7af8;
@@ -23,6 +31,7 @@
   --color-accent-green-text: #3fb950;
   --color-accent-green-subtle: rgba(35, 134, 54, 0.15);
 
+  --color-accent-red-critical: #da3633;
   --color-accent-red-text: #f85149;
   --color-accent-red-subtle: rgba(218, 54, 51, 0.15);
 
@@ -31,7 +40,10 @@
   --color-accent-purple-subtle: rgba(137, 87, 229, 0.15);
 
   --color-accent-amber: #d29922;
+  --color-accent-amber-telemetry: #e3b341;
   --color-accent-amber-subtle: rgba(210, 153, 34, 0.15);
+
+  --color-accent-blue-light: #58a6ff;
 
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -41,15 +53,23 @@
   --canvas-default: #0d1117;
   --canvas-subtle: #161b22;
   --canvas-inset: #090d13;
+  --canvas-inset-secondary: #12161d;
+  --canvas-deep: #05080d;
+  --canvas-selected: #0e1828;
+  --canvas-hover: #0f1622;
   --canvas-overlay: rgba(5, 8, 13, 0.75);
+
+  --surface-hover: #282e36;
 
   --border-default: #30363d;
   --border-muted: #21262d;
   --border-active: #1d6cf6;
 
   --fg-default: #f0f6fc;
+  --fg-secondary: #c9d1d9;
   --fg-muted: #8b949e;
   --fg-subtle: #7d8590;
+  --fg-placeholder: #484f58;
 
   --brand-primary: #1d6cf6;
   --brand-primary-hover: #2f7af8;
@@ -60,8 +80,19 @@
   --accent-green-text: #3fb950;
   --accent-green-subtle: rgba(35, 134, 54, 0.15);
 
+  --accent-red-critical: #da3633;
   --accent-red-text: #f85149;
   --accent-red-subtle: rgba(218, 54, 51, 0.15);
+
+  --accent-purple: #8957e5;
+  --accent-purple-text: #a371f7;
+  --accent-purple-subtle: rgba(137, 87, 229, 0.15);
+
+  --accent-amber: #d29922;
+  --accent-amber-telemetry: #e3b341;
+  --accent-amber-subtle: rgba(210, 153, 34, 0.15);
+
+  --accent-blue-light: #58a6ff;
 
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }

@@ -46,7 +46,7 @@
 
 import React from 'react';
 import { Key, Github, RefreshCw, Cloud, ShieldCheck } from 'lucide-react';
-import { PrimaryButton, SecondaryButton } from '../../components/buttons';
+import { PrimaryButton, SecondaryButton, DangerOutlineButton } from '../../components/buttons';
 
 export interface AccountsViewProps {
   isGithubConnected: boolean;
@@ -215,13 +215,12 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                   Re-sync Account
                 </SecondaryButton>
 
-                <button
-                  type="button"
+                <DangerOutlineButton
+                  size="sm"
                   onClick={onToggleGithub}
-                  className="text-[#f85149] hover:bg-[#da3633]/15 px-2.5 py-1 rounded text-xs border border-[#da3633]/30 cursor-pointer transition-colors active:scale-95"
                 >
                   Disconnect
-                </button>
+                </DangerOutlineButton>
               </>
             ) : (
               <PrimaryButton
@@ -346,13 +345,12 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                   Verify API Token
                 </SecondaryButton>
 
-                <button
-                  type="button"
+                <DangerOutlineButton
+                  size="sm"
                   onClick={onToggleCloudflare}
-                  className="text-[#f85149] hover:bg-[#da3633]/15 px-2.5 py-1 rounded text-xs border border-[#da3633]/30 cursor-pointer transition-colors active:scale-95"
                 >
                   Disconnect
-                </button>
+                </DangerOutlineButton>
               </>
             ) : (
               <PrimaryButton

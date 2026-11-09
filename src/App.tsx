@@ -1366,22 +1366,22 @@ binding = "AI"
 
           <div className="flex items-center gap-2">
             {activeRoute === 'project-workspace' ? (
-              <button
+              <PrimaryButton
+                size="sm"
+                icon={<Play className="w-3.5 h-3.5 fill-current" />}
                 onClick={() => triggerDeployment(currentProject.name)}
                 title="Deploy to Cloudflare Pages"
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3 py-1 rounded flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-[0.98]"
               >
-                <Play className="w-3.5 h-3.5 fill-current" />
                 <span className="hidden sm:inline">Deploy</span>
-              </button>
+              </PrimaryButton>
             ) : (
-              <button
+              <PrimaryButton
+                size="sm"
+                icon={<Plus className="w-3.5 h-3.5" />}
                 onClick={() => setIsModalOpen(true)}
-                className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer"
               >
-                <Plus className="w-3.5 h-3.5" />
                 <span>New Project</span>
-              </button>
+              </PrimaryButton>
             )}
 
             {/* <!-- ================================================================ -->

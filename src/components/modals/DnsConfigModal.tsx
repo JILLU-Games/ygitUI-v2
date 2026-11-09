@@ -2,6 +2,7 @@ import React from 'react';
 import { FileText, AlertTriangle, Copy, Terminal, RefreshCw, Check } from 'lucide-react';
 import { CustomDomainItem } from '../../types';
 import { ModalShell } from './ModalShell';
+import { SecondaryButton, PrimaryButton } from '../buttons';
 
 export interface DnsConfigModalProps {
   isOpen: boolean;
@@ -191,24 +192,22 @@ export const DnsConfigModal: React.FC<DnsConfigModalProps> = ({
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-between">
         <span className="text-[9.5px] text-[#7d8590]">SSL certificate provisions automatically once DNS resolves.</span>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
+          <SecondaryButton
+            size="sm"
             onClick={onClose}
-            className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-2.5 py-1 text-xs rounded transition-colors cursor-pointer"
           >
             Close
-          </button>
-          <button
-            type="button"
+          </SecondaryButton>
+          <PrimaryButton
+            size="sm"
+            icon={<Check className="w-3.5 h-3.5" />}
             onClick={() => {
               onVerify(domainItem.id);
               onClose();
             }}
-            className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-2.5 py-1 text-xs font-normal rounded cursor-pointer transition-colors shadow-sm flex items-center gap-1"
           >
-            <Check className="w-3.5 h-3.5" />
-            <span>Verify</span>
-          </button>
+            Verify
+          </PrimaryButton>
         </div>
       </div>
     </ModalShell>

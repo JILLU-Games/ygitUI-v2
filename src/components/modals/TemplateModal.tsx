@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Sparkles,
   Star,
-  X,
   Layout,
   Globe,
   Database,
@@ -10,17 +9,14 @@ import {
   ExternalLink,
   CheckCircle2,
   Check,
-  Cpu,
-  Layers,
-  Terminal,
-  Code2,
   Copy,
   Plus,
-  RefreshCw,
   Github,
 } from 'lucide-react';
 import { ReadyTemplate } from '../../types/template';
 import { TemplateThumbnailGraphic } from '../templates/TemplateThumbnailGraphic';
+import { ModalShell } from './ModalShell';
+import { PrimaryButton, SecondaryButton } from '../buttons';
 
 export interface TemplateModalProps {
   template: ReadyTemplate | null;
@@ -49,44 +45,31 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
   if (!template) return null;
 
   return (
-
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xs flex items-center justify-center p-2.5 sm:p-4 z-50 animate-in fade-in duration-150">
-          <div className="bg-[#161b22] border border-[#30363d] rounded-lg max-w-3xl w-full flex flex-col overflow-hidden shadow-2xl max-h-[92vh]">
-            {/* 1. Modal Header (Clean Breadcrumb & Badges) */}
-            <div className="px-3.5 py-2.5 border-b border-[#21262d] flex items-center justify-between bg-[#090d13] shrink-0">
-              <div className="flex items-center gap-2 overflow-hidden">
-                <div className="w-6 h-6 rounded bg-[#1d6cf6]/10 border border-[#1d6cf6]/20 text-[#58a6ff] flex items-center justify-center shrink-0">
-                  <Sparkles className="w-3.5 h-3.5" />
-                </div>
-                <div className="flex items-center gap-1.5 text-xs truncate">
-                  <span className="text-[#7d8590] hidden sm:inline font-mono">Templates / {template.category} /</span>
-                  <span className="font-semibold text-[#f0f6fc] truncate">{template.name}</span>
-                  <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#21262d] text-[#58a6ff] border border-[#30363d] shrink-0">
-                    {template.frameworkBadge}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="hidden sm:flex items-center gap-1 text-[10.5px] font-mono text-[#e3b341] bg-[#090d13] px-2 py-0.5 rounded border border-[#21262d]">
-                  <Star className="w-3 h-3 fill-[#e3b341]" />
-                  <span>{template.stars} ({template.deploys})</span>
-                </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    setTemplateModalTab('overview');
-                  }}
-                  className="text-[#8b949e] hover:text-[#f0f6fc] p-1 rounded hover:bg-[#21262d] cursor-pointer transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* 2. Modal Segmented Navigation Tabs */}
-            <div className="px-3.5 pt-2 pb-0 bg-[#090d13] border-b border-[#21262d] flex items-center gap-1 overflow-x-auto shrink-0">
+    <ModalShell
+      isOpen={Boolean(template)}
+      onClose={() => {
+        onClose();
+        setTemplateModalTab('overview');
+      }}
+      maxWidth="3xl"
+      icon={<Sparkles className="w-3.5 h-3.5" />}
+      title={
+        <div className="flex items-center gap-1.5 text-xs truncate">
+          <span className="text-[#7d8590] hidden sm:inline font-mono">Templates / {template.category} /</span>
+          <span className="font-semibold text-[#f0f6fc] truncate">{template.name}</span>
+          <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#21262d] text-[#58a6ff] border border-[#30363d] shrink-0">
+            {template.frameworkBadge}
+          </span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-[10.5px] font-mono text-[#e3b341] bg-[#090d13] px-2 py-0.5 rounded border border-[#21262d] ml-2">
+            <Star className="w-3 h-3 fill-[#e3b341]" />
+            <span>{template.stars} ({template.deploys})</span>
+          </span>
+        </div>
+      }
+    >
+      <div className="flex flex-col h-full">
+        {/* Segmented Navigation Tabs */}
+        <div className="px-3.5 pt-2 pb-0 bg-[#090d13] border-b border-[#21262d] flex items-center gap-1 overflow-x-auto shrink-0">
               {[
                 { id: 'overview', label: 'Overview & Highlights', icon: Layout },
                 { id: 'routes', label: `Live Routes (${template.routesDetailed.length})`, icon: Globe },
@@ -459,39 +442,29 @@ export const TemplateModal: React.FC<TemplateModalProps> = ({
               </a>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
+                <SecondaryButton
+                  size="sm"
                   onClick={() => {
                     onClose();
                     setTemplateModalTab('overview');
                   }}
-                  className="bg-[#21262d] hover:bg-[#282e36] text-[#8b949e] hover:text-[#f0f6fc] px-3 py-1.5 rounded text-xs font-normal cursor-pointer transition-colors"
                 >
                   Cancel
-                </button>
-                <button
-                  type="button"
+                </SecondaryButton>
+                <PrimaryButton
+                  size="sm"
                   onClick={() => onUseTemplate(template)}
                   disabled={isDeploying}
-                  className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:bg-[#1d6cf6]/50 text-white px-3.5 py-1.5 rounded text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-colors shadow-sm"
+                  isLoading={isDeploying}
+                  loadingText="Cloning Template..."
+                  icon={<Plus className="w-3.5 h-3.5" />}
                 >
-                  {isDeploying ? (
-                    <>
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      <span>Cloning Template...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Use This Template</span>
-                    </>
-                  )}
-                </button>
+                  Use This Template
+                </PrimaryButton>
               </div>
             </div>
           </div>
-        </div>
-      
+        </ModalShell>
   );
 };
 

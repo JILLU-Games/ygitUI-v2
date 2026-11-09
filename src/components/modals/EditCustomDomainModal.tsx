@@ -2,6 +2,7 @@ import React from 'react';
 import { Edit3, ShieldCheck } from 'lucide-react';
 import { CustomDomainItem } from '../../types';
 import { ModalShell } from './ModalShell';
+import { SecondaryButton, PrimaryButton } from '../buttons';
 
 export interface EditCustomDomainModalProps {
   isOpen: boolean;
@@ -83,20 +84,12 @@ export const EditCustomDomainModal: React.FC<EditCustomDomainModalProps> = ({
       </div>
 
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-        >
+        <SecondaryButton size="sm" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
-          onClick={onSave}
-          className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-        >
+        </SecondaryButton>
+        <PrimaryButton size="sm" onClick={onSave}>
           Save
-        </button>
+        </PrimaryButton>
       </div>
     </ModalShell>
   );

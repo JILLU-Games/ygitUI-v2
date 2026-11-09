@@ -406,12 +406,13 @@ export const IntakePipeline: React.FC<IntakePipelineProps> = ({
                 <div className="text-[11px] text-[#8b949e]">
                   Supports .zip, .tar.gz archives or HTML folder dist (Max 100MB)
                 </div>
-                <button
+                <SecondaryButton
+                  size="compact"
                   type="button"
-                  className="mt-1.5 bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] text-[11px] px-2.5 py-1 rounded border border-[#30363d]"
+                  className="mt-1.5"
                 >
                   Browse Local Files
-                </button>
+                </SecondaryButton>
               </label>
 
               <div className="flex items-center justify-between gap-2">

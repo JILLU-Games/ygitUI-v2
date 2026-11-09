@@ -1,6 +1,7 @@
 import React from 'react';
-import { Flame, RefreshCw } from 'lucide-react';
+import { Flame } from 'lucide-react';
 import { ModalShell } from './ModalShell';
+import { SecondaryButton, WarningButton } from '../buttons';
 
 export interface PurgeCacheModalProps {
   isOpen: boolean;
@@ -83,31 +84,19 @@ export const PurgeCacheModal: React.FC<PurgeCacheModalProps> = ({
       </div>
 
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-        >
+        <SecondaryButton size="sm" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
+        </SecondaryButton>
+        <WarningButton
+          size="sm"
           disabled={isPurging}
+          isLoading={isPurging}
+          loadingText="Purging Edge..."
+          icon={<Flame className="w-3.5 h-3.5 fill-current" />}
           onClick={onExecutePurge}
-          className="bg-[#e3b341] hover:bg-[#f2cc60] text-[#090d13] px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm flex items-center gap-1.5"
         >
-          {isPurging ? (
-            <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              <span>Purging Edge...</span>
-            </>
-          ) : (
-            <>
-              <Flame className="w-3.5 h-3.5 fill-current" />
-              <span>Purge Cache</span>
-            </>
-          )}
-        </button>
+          Purge Cache
+        </WarningButton>
       </div>
     </ModalShell>
   );

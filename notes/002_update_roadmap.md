@@ -9,32 +9,29 @@
 
 ## 1. Roadmap Architecture & Execution Philosophy
 
-To prevent regressions, maintain continuous build passing (`npm run lint` && `npm run build`), and ensure zero unintended alterations across working features, all bug fixes and improvements are organized into **6 sequential, self-contained phases**.
-
-Each Phase is **Strictly Scope-Locked**:
-- An engineer or agent working on Phase X must ONLY touch files designated for Phase X.
-- No redesigns, restyling, or unprompted layout modifications may occur.
-- Every phase concludes with a mandatory verification checkpoint: `npm run lint` + `npm run build`.
+To prevent regressions, ensure 100% build stability (`npm run lint` && `npm run build`), and eliminate UI/UX mismatches without collateral damage, all required updates are structured into **5 sequential, scope-locked phases**.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ PHASE 1: Spacing & Broken Utility Fix (py-0.2 Elimination)            │
-│ Target: Fix 35 instances of broken Tailwind py-0.2 across all files.   │
+│ PHASE 1: Theme & Color Token Centralization (`src/index.css`)          │
+│ Scope Lock: src/index.css ONLY.                                        │
+│ Register missing tokens (#58a6ff, #c9d1d9, #e3b341, #da3633, etc.).   │
 ├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 2: Dead Component Wiring & Badge Centralization                  │
-│ Target: Wire FrameworkBadge, clean raw spans in MetricPill/StatusBadge.│
+│ PHASE 2: Universal Button System Expansion                             │
+│ Scope Lock: src/components/buttons/* ONLY.                             │
+│ Add danger, warning, success variants to Button architecture.          │
 ├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 3: Atomic Button Centralization across Global Views              │
-│ Target: Replace raw buttons in Dashboard, Projects, Deployments.      │
+│ PHASE 3: Reusable Card Primitive Extraction (`Card.tsx`)               │
+│ Scope Lock: src/components/cards/* and src/components/index.ts ONLY.   │
+│ Create Container, Header, Body, Footer, TelemetryEnclave primitives.   │
 ├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 4: Atomic Button Centralization across Scanner & Workspace Views │
-│ Target: Replace raw buttons in IntakePipeline, ScanConsole, Tabs.      │
+│ PHASE 4: Modal Architecture & Dialog Standardization                   │
+│ Scope Lock: src/components/modals/* and SettingsView modal dialogs.    │
+│ Standardize all dialogs onto ModalShell and centralized buttons.       │
 ├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 5: Modal Architecture Standardization & App.tsx De-bloat        │
-│ Target: Standardize AccountsModal into ModalShell; extract 3 modals.   │
-├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 6: End-to-End System Integration & Forensic Parity Audit         │
-│ Target: Full lint, build, runtime verification, and log freeze.        │
+│ PHASE 5: Viewport & Page-Level Action Harmonization                    │
+│ Scope Lock: src/features/* and src/App.tsx action buttons.             │
+│ Replace 68 raw <button> tags with standardized components.             │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -42,98 +39,101 @@ Each Phase is **Strictly Scope-Locked**:
 
 ## 2. Phase-by-Phase Detailed Specifications
 
-### 🎯 PHASE 1: Spacing & Broken CSS Utility Fix (`py-0.2` Elimination)
-- **Primary Goal**: Eradicate all 35 occurrences of the invalid `py-0.2` Tailwind class, replacing them with standard, valid micro-padding `py-0.5` (or `py-[1px]` where ultra-compact density is essential).
-- **Scope-Locked Target Files**:
-  1. `src/components/badges/MetricPill.tsx`
-  2. `src/components/navigation/PrimarySidebar.tsx`
-  3. `src/components/modals/TemplateModal.tsx`
-  4. `src/components/modals/DnsConfigModal.tsx`
-  5. `src/components/brand/BetaPill.tsx`
-  6. `src/features/workspace/tabs/CloudflareTab.tsx`
-  7. `src/features/workspace/tabs/OverviewTab.tsx`
-  8. `src/features/templates/TemplatesView.tsx`
-  9. `src/features/accounts/AccountsView.tsx`
-  10. `src/features/settings/SettingsView.tsx`
-  11. `src/features/scanner/IntakePipeline.tsx`
-  12. `src/App.tsx`
-- **Verification Criteria**:
-  - `grep -rn "py-0.2" src` returns **0 results**.
-  - All badges, counters, and tags render with clean, unclipt vertical padding.
-  - `npm run lint` passes with 0 errors.
+### 🎯 PHASE 1: Theme & Color Token Centralization
+- **Primary Goal**: Register all 7 missing, heavily-used color hexes into `@theme` and `:root` custom properties inside `src/index.css`.
+- **Target Invariant**: Ensure every semantic shade defined in `COLORS.md` has an official Tailwind v4 property.
+- **Strict Scope Lock**:
+  - Target File: `src/index.css` ONLY.
+  - FORBIDDEN: Do not modify any TSX, JSX, mock data, or config files.
+- **Tokens to Register**:
+  - `--color-fg-secondary: #c9d1d9;` (High-contrast secondary typography)
+  - `--color-accent-blue-light: #58a6ff;` (Light blue telemetry & branch tags)
+  - `--color-accent-amber-telemetry: #e3b341;` (Telemetry warning & star rating)
+  - `--color-accent-red-critical: #da3633;` (Destructive action background & borders)
+  - `--color-surface-hover: #282e36;` (Secondary button & row hover state)
+  - `--color-canvas-overlay-dark: #05080d;` (Deep backdrop & table headers)
+  - `--color-fg-placeholder: #484f58;` (Monospace input placeholders)
+- **Verification Gate**:
+  - Command: `npm run lint` && `npm run build`
+  - Expected Result: 0 errors, styles compiled cleanly.
 
 ---
 
-### 🎯 PHASE 2: Dead Component Wiring & Badge Centralization
-- **Primary Goal**: Wire the unused `FrameworkBadge.tsx` component into template cards and workspace summaries; replace raw `<span>` badges with `<StatusBadge>` and `<MetricPill>`.
-- **Scope-Locked Target Files**:
-  1. `src/components/badges/FrameworkBadge.tsx` (ensure clean props and exports).
-  2. `src/features/templates/TemplatesView.tsx` (replace raw framework tag with `<FrameworkBadge framework={tmpl.framework} />`).
-  3. `src/features/dashboard/DashboardView.tsx` (replace hardcoded provider and status spans with `<MetricPill>`).
-  4. `src/features/workspace/tabs/OverviewTab.tsx` (replace raw status pill with `<StatusBadge>`).
-  5. `src/App.tsx` (replace header status tag with `<StatusBadge status="live" />`).
-- **Verification Criteria**:
-  - `FrameworkBadge` is actively utilized in production cards.
-  - No visual regression in card dimensions or text alignment.
-  - `npm run lint` passes with 0 errors.
+### 🎯 PHASE 2: Universal Button System Expansion
+- **Primary Goal**: Enhance `PrimaryButton`, `SecondaryButton`, and `IconButton` (or introduce universal `Button.tsx` / `DangerButton.tsx`) to support all 7 archetypes from `BUTTON.md` (Primary, Secondary, Danger, Warning, Success, Ghost, Icon).
+- **Target Invariant**: Eliminate the need for raw `<button>` elements when creating destructive ("Disconnect", "Delete") or telemetry ("Purge Cache", "Pause") actions.
+- **Strict Scope Lock**:
+  - Target Files:
+    - `src/components/buttons/PrimaryButton.tsx`
+    - `src/components/buttons/SecondaryButton.tsx`
+    - `src/components/buttons/IconButton.tsx`
+    - `src/components/buttons/index.ts`
+  - FORBIDDEN: Do not touch any page views or feature folders yet.
+- **Features to Add**:
+  - `variant?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success' | 'ghost'`
+  - Support for `active:scale-95` on clicks.
+  - Standardized loading spinners (`<RefreshCw className="w-3.5 h-3.5 animate-spin" />`).
+  - Standardized sizes: `sm` (24px/26px), `md` (28px), `lg` (34px), `cta` (38px).
+- **Verification Gate**:
+  - Command: `npm run lint` && `npm run build`
+  - Expected Result: 0 TypeScript errors.
 
 ---
 
-### 🎯 PHASE 3: Atomic Button Centralization across Global Views
-- **Primary Goal**: Replace raw `<button>` elements in the primary top-level views with `<PrimaryButton>`, `<SecondaryButton>`, and `<IconButton>` from `src/components/buttons/`.
-- **Scope-Locked Target Files**:
-  1. `src/features/dashboard/DashboardView.tsx` (Pipeline start button, Deploy button).
-  2. `src/features/projects/ProjectsView.tsx` (Create Project CTA, Manage buttons).
-  3. `src/features/deployments/DeploymentsView.tsx` (Connect Accounts, Create Project, Terminal Logs icon button, Redeploy icon button).
-  4. `src/features/accounts/AccountsView.tsx` (Re-sync, Disconnect, Connect buttons).
-  5. `src/features/templates/TemplatesView.tsx` (Details button, Use Template CTA with spinner).
-- **Verification Criteria**:
-  - All buttons retain exact click callbacks, disabled states, and tooltips.
-  - Buttons gain standardized `active:scale-95` tactile click feedback.
-  - `npm run lint` passes with 0 errors.
+### 🎯 PHASE 3: Reusable Card Primitive Extraction (`Card.tsx`)
+- **Primary Goal**: Implement the missing `Card.tsx` primitive defined in `CARDS.md` Section 6.
+- **Target Invariant**: Establish uniform border radius (`rounded-lg`), uniform outer border (`border-[#21262d]`), and standardized nested telemetry enclaves (`bg-[#090d13] border border-[#21262d]`).
+- **Strict Scope Lock**:
+  - Target Files:
+    - `src/components/cards/Card.tsx` (new)
+    - `src/components/cards/index.ts` (new)
+    - `src/components/index.ts` (barrel export)
+  - FORBIDDEN: Do not alter any existing views until the primitive is compiled and tested.
+- **Components to Provide**:
+  - `<Card>`: Outer container (`bg-[#161b22] border border-[#21262d] rounded-lg`)
+  - `<CardHeader>`: Divider header (`border-b border-[#21262d] p-3`)
+  - `<CardBody>`: Padding block (`p-3 sm:p-3.5`)
+  - `<CardFooter>`: Divider footer (`border-t border-[#21262d] bg-[#090d13]/50 p-2.5 px-3`)
+  - `<CardTelemetryEnclave>`: Monospace telemetry block (`bg-[#090d13] border border-[#21262d] rounded-md p-2 font-mono text-[11px]`)
+- **Verification Gate**:
+  - Command: `npm run lint` && `npm run build`
+  - Expected Result: Clean build and clean exports.
 
 ---
 
-### 🎯 PHASE 4: Atomic Button Centralization across Scanner & Workspace Views
-- **Primary Goal**: Replace raw `<button>` elements in the deep scanner engine and workspace sub-tabs with atomic button components.
-- **Scope-Locked Target Files**:
-  1. `src/features/scanner/IntakePipeline.tsx` (Add Repo button, Back button, Channel CTA buttons, Big Scan Repository CTA).
-  2. `src/features/scanner/ScanConsole.tsx` (Re-scan button, Open Workspace CTA).
-  3. `src/features/workspace/tabs/OverviewTab.tsx` (Instant Deploy CTA, Re-scan button).
-  4. `src/features/workspace/tabs/VariablesTab.tsx` (Import .env, Export .env, Paste .env, Add Variable, Reveal All secrets).
-  5. `src/features/workspace/tabs/CloudflareTab.tsx` (Save Cloudflare Settings, Purge Cache trigger, Binding action triggers).
-  6. `src/features/workspace/tabs/DomainsTab.tsx` (Claim Subdomain, Check Subdomain, Add Custom Domain, Verify DNS).
-- **Verification Criteria**:
-  - Deep scan engine and intake pipeline transitions execute without any event interruption.
-  - Variables management, DNS probes, and Cloudflare configuration forms work identically.
-  - `npm run lint` passes with 0 errors.
+### 🎯 PHASE 4: Modal Architecture & Dialog Standardization
+- **Primary Goal**: Standardize all application dialogs to use `ModalShell.tsx` and centralized button components for cancel/submit footers.
+- **Strict Scope Lock**:
+  - Target Files:
+    - `src/components/modals/TemplateModal.tsx`
+    - `src/components/modals/CloudflareBindingsModals.tsx`
+    - `src/components/modals/DeleteProjectModal.tsx`
+    - `src/components/modals/EditCustomDomainModal.tsx`
+    - `src/components/modals/PurgeCacheModal.tsx`
+    - `src/features/settings/SettingsView.tsx` (modals section only: `showAddTokenModal`, `showJsonInspector`)
+  - FORBIDDEN: Do not alter core data state, props, or modal triggers.
+- **Actions**:
+  - Replace raw backdrop divs in `TemplateModal.tsx` and `SettingsView.tsx` with `<ModalShell>`.
+  - Replace raw `<button>` footers with `<PrimaryButton>`, `<SecondaryButton>`, `<DangerButton>`.
+- **Verification Gate**:
+  - Command: `npm run lint` && `npm run build`
+  - Verify: All dialogs open, dismiss on ESC, dismiss on backdrop click, and submit correctly.
 
 ---
 
-### 🎯 PHASE 5: Modal Architecture Standardization & `App.tsx` De-bloat
-- **Primary Goal**: Standardize the raw `Connected Accounts & Providers` dialog into `<ModalShell>` and extract inline modals (`CreateProjectModal`, `PasteEnvModal`, `EditEnvModal`) from `App.tsx` into clean, testable component files in `src/components/modals/`.
-- **Scope-Locked Target Files**:
-  1. `src/components/modals/CreateProjectModal.tsx` (new extraction).
-  2. `src/components/modals/PasteEnvModal.tsx` (new extraction).
-  3. `src/components/modals/EditEnvModal.tsx` (new extraction).
-  4. `src/components/modals/AccountsModal.tsx` (wrap in `ModalShell`).
-  5. `src/components/modals/index.ts` (export newly created modals).
-  6. `src/App.tsx` (replace inline modal blocks with extracted components, reducing line count by ~400 lines).
-- **Verification Criteria**:
-  - Modal opening, form submission, validation, and dismissal via ESC key or overlay click work smoothly.
-  - `App.tsx` becomes significantly cleaner and modular.
-  - `npm run lint` passes with 0 errors.
-
----
-
-### 🎯 PHASE 6: End-to-End System Integration & Forensic Parity Audit
-- **Primary Goal**: Final verification and documentation of the entire platform.
-- **Scope-Locked Target Files**:
-  1. Full project lint (`tsc --noEmit`).
-  2. Full project production build (`vite build`).
-  3. Update `notes/003_phase_execution_logs.md` with final metrics.
-  4. Update `notes/005_feature_parity_matrix.md` with 100% verified status.
-- **Verification Criteria**:
-  - Zero TypeScript compiler errors.
-  - Zero build warnings or bundling errors.
-  - 100% feature parity verified against baseline.
+### 🎯 PHASE 5: Viewport & Page-Level Action Harmonization
+- **Primary Goal**: Replace the remaining raw `<button>` elements in the main views with standardized design system components.
+- **Strict Scope Lock**:
+  - Target Files:
+    - `src/features/accounts/AccountsView.tsx` (Disconnect actions)
+    - `src/features/workspace/tabs/CloudflareTab.tsx` (Create Hook, Delete, Copy, Pause, Delete actions)
+    - `src/features/workspace/tabs/DomainsTab.tsx` (Claim, Suggestion pills, Set Primary, Delete actions)
+    - `src/features/workspace/tabs/LogsTab.tsx` (7 terminal toolbar controls using `IconButton`)
+    - `src/features/workspace/tabs/HistoryTab.tsx` (Redeploy button)
+    - `src/features/settings/SettingsView.tsx` (JSON, Export, Discard, Save Changes)
+    - `src/features/scanner/IntakePipeline.tsx` (Browse Local Files button)
+    - `src/App.tsx` (Header Deploy, New Project, Profile menu items)
+  - FORBIDDEN: Do not alter any component layout geometry, text, or business logic.
+- **Verification Gate**:
+  - Command: `npm run lint` && `npm run build`
+  - Verify: Zero regressions, 100% feature parity.

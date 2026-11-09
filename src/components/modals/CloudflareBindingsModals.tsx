@@ -1,6 +1,7 @@
 import React from 'react';
 import { Database, HardDrive, Boxes, Webhook } from 'lucide-react';
 import { ModalShell } from './ModalShell';
+import { PrimaryButton, SecondaryButton, SuccessButton, WarningButton } from '../buttons';
 
 // ============================================================================
 // 1. KV BINDING MODAL
@@ -74,21 +75,16 @@ export const AddKvModal: React.FC<AddKvModalProps> = ({
       </div>
 
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-        >
+        <SecondaryButton size="sm" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
+        </SecondaryButton>
+        <PrimaryButton
+          size="sm"
           disabled={!name.trim() || !namespaceId.trim()}
           onClick={onAdd}
-          className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
         >
           Add Binding
-        </button>
+        </PrimaryButton>
       </div>
     </ModalShell>
   );
@@ -166,21 +162,16 @@ export const AddD1Modal: React.FC<AddD1ModalProps> = ({
       </div>
 
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-        >
+        <SecondaryButton size="sm" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
+        </SecondaryButton>
+        <SuccessButton
+          size="sm"
           disabled={!name.trim() || !databaseId.trim()}
           onClick={onAdd}
-          className="bg-[#238636] hover:bg-[#2ea043] disabled:opacity-50 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
         >
           Add D1 Database
-        </button>
+        </SuccessButton>
       </div>
     </ModalShell>
   );
@@ -258,21 +249,16 @@ export const AddR2Modal: React.FC<AddR2ModalProps> = ({
       </div>
 
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-        >
+        <SecondaryButton size="sm" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
+        </SecondaryButton>
+        <WarningButton
+          size="sm"
           disabled={!name.trim() || !bucketName.trim()}
           onClick={onAdd}
-          className="bg-[#e3b341] hover:bg-[#f2cc60] disabled:opacity-50 text-[#090d13] px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
         >
           Add R2 Bucket
-        </button>
+        </WarningButton>
       </div>
     </ModalShell>
   );
@@ -332,21 +318,16 @@ export const AddDeployHookModal: React.FC<AddDeployHookModalProps> = ({
       </div>
 
       <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-        >
+        <SecondaryButton size="sm" onClick={onClose}>
           Cancel
-        </button>
-        <button
-          type="button"
+        </SecondaryButton>
+        <PrimaryButton
+          size="sm"
           disabled={!name.trim()}
           onClick={onAdd}
-          className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
         >
           Generate Hook
-        </button>
+        </PrimaryButton>
       </div>
     </ModalShell>
   );

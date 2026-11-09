@@ -7,76 +7,105 @@
 
 ## 1. Current Error Handling Mechanisms (Baseline Audit)
 
-The current application contains several existing error handling layers across runtime rendering, network simulation, and user feedback:
+The current YGIT codebase contains several operational error handling layers across runtime rendering, network simulation, and user validation:
 
 ### 1.1 Global React Error Boundary (`AppErrorBoundary.tsx`)
 - **Location**: `src/components/errors/AppErrorBoundary.tsx`
-- **Wrapping Point**: `src/main.tsx` wraps the entire `<App />` within `<AppErrorBoundary>`.
+- **Mounting Point**: `src/main.tsx` mounts `<AppErrorBoundary>` wrapping the root `<App />`.
 - **Implementation**: Class component implementing `componentDidCatch(error, errorInfo)`.
 - **UI Fallback**:
-  - Catches unhandled React lifecycle rendering crashes.
-  - Displays a clean error screen with an alert triangle icon (`AlertTriangle className="text-[#f85149]"`).
-  - Shows error message in a dark monospace block (`bg-[#090d13] border border-[#21262d] font-mono text-[11px]`).
+  - Intercepts uncaught React lifecycle and render errors.
+  - Displays a clean error screen with an alert icon (`AlertTriangle className="text-[#f85149]"`).
+  - Displays error details in a dark monospace enclave (`bg-[#090d13] border border-[#21262d] font-mono text-[11px]`).
   - Provides a "Reload Application" recovery button (`window.location.reload()`) and "Reset App State" option.
 
-### 1.2 Form Validation Safeguards
-- **Delete Project Confirmation**:
-  - `DeleteProjectModal.tsx`: Requires the user to type the exact project name before the destructive action button enables (`disabled={confirmText !== projectName}`).
-- **Environment Variables Import**:
-  - `VariablesTab.tsx` / `App.tsx`: Validates pasted `.env` text, ensuring lines contain `=` and are not comments before enabling the import button.
-- **Custom Domain Validation**:
-  - `DomainsTab.tsx`: Validates non-empty domain name, rejects spaces, and normalizes casing to lowercase.
+### 1.2 Form Validation & Destructive Action Safeguards
+- **Delete Project Confirmation (`DeleteProjectModal.tsx`)**:
+  - Enforces exact string matching before enabling the destructive deletion button (`disabled={confirmText.trim() !== projectName}`).
+- **Environment Variables Import (`VariablesTab.tsx` / `PasteEnvModal.tsx`)**:
+  - Validates pasted `.env` strings, rejecting malformed lines without `=` delimiters and ignoring comments (`#`).
+- **Custom Domain Validation (`DomainsTab.tsx`)**:
+  - Validates non-empty input, strips whitespace, and rejects invalid characters.
+- **Subdomain Search Availability (`DomainsTab.tsx`)**:
+  - Simulates DNS zone lookups and flags collisions with alternative suggestions if a name is taken.
 
 ### 1.3 Asynchronous Simulation Failure States & Fallbacks
-- **DNS Resolution Probe**:
-  - `DnsConfigModal.tsx`: Simulates DNS resolution probe across global Cloudflare edge POPs; logs failures if CNAME target does not resolve to `*.ygit.net` or `*.pages.dev`.
-- **Subdomain Search Availability**:
-  - `DomainsTab.tsx`: Checks subdomain availability; triggers conflict error warning if the subdomain is already registered or reserved.
-- **Toast Alert System**:
-  - Real-time user feedback notifications triggered on errors, copy events, and action commits.
+- **Brand Logo Image Fallback (`YGitLogo.tsx`)**:
+  - Implements `onError` handler on the official PNG asset; falls back to inline SVG vector if offline or CDN unreachable.
+- **DNS Resolution Probe (`DnsConfigModal.tsx`)**:
+  - Simulates multi-POP DNS propagation probe across global Cloudflare edge nodes with failure indicators.
+- **Toast Feedback Engine**:
+  - Real-time user notification toasts displayed on action successes, validation warnings, and copy events.
 
 ---
 
-## 2. Forensic Gaps & Vulnerabilities in Current Error Handling
+## 2. Potential Failure Modes & Architectural Gaps
 
-The forensic audit revealed the following potential failure modes:
-
-| ID | Location | Potential Failure Mode | Risk Level |
-| :--- | :--- | :--- | :--- |
-| **ERR-GAP-01** | Global View Level | A crash inside a single sub-tab (e.g. malformed DNS record in `DomainsTab` or invalid JSON in `SettingsView`) crashes the **entire application viewport**, because there is only one root-level error boundary. | HIGH |
-| **ERR-GAP-02** | File Upload Handling | `VariablesTab.tsx` file input reads files using `FileReader.readAsText()`. If a user uploads an invalid binary file, an exception could throw without user-friendly feedback. | MEDIUM |
-| **ERR-GAP-03** | LocalStorage / State Persistence | If mock state persistence is added in the future without `try / catch`, corrupted storage data could prevent the app from booting. | MEDIUM |
-| **ERR-GAP-04** | Input Boundary Validation | URL input fields in `DashboardView` and `IntakePipeline` lack proactive regex validation for valid Git/HTTPS URLs before triggering the intake pipeline. | LOW |
+| ID | Location / Component | Potential Failure Mode | Severity | Impact |
+| :--- | :--- | :--- | :--- | :--- |
+| **ERR-GAP-01** | Workspace Tabs | A crash inside one tab (e.g. malformed DNS input in `DomainsTab` or JSON parse failure in `SettingsView`) crashes the **entire application** because only one root-level error boundary exists. | HIGH | Complete viewport blackout |
+| **ERR-GAP-02** | File Upload Handling | In `IntakePipeline.tsx` and `VariablesTab.tsx`, reading files via `FileReader` lacks robust `try/catch` wrapping for corrupt or oversized binary uploads (>100MB). | MEDIUM | Silent freeze or crash |
+| **ERR-GAP-03** | JSON Serialization | In `SettingsView.tsx`, `JSON.stringify(formState)` or future `JSON.parse` imports could throw uncaught SyntaxErrors on malformed custom JSON. | MEDIUM | Modal lockup |
+| **ERR-GAP-04** | Clipboard API Security | Calling `navigator.clipboard.writeText()` without checking permissions or fallback can throw in strict iframe or insecure HTTP environments. | LOW | Failed copy action |
+| **ERR-GAP-05** | URL Protocol Injection | `DashboardView.tsx` and `IntakePipeline.tsx` allow entering repository URLs without enforcing valid `https://github.com/` patterns. | LOW | Broken deployment link |
 
 ---
 
-## 3. Planned Error Handling Enhancements (Recommended)
+## 3. Planned Error Handling Enhancements (Recommended for Implementation)
 
-### 3.1 Tab-Level Granular Error Boundaries
-Introduce a lightweight `TabErrorBoundary` or reuse `AppErrorBoundary` around the individual workspace tabs:
+### 3.1 Tab-Level Granular Error Boundaries (`TabErrorBoundary`)
+Wrap individual workspace tabs inside a scoped error boundary so that an error in one tab keeps the sidebar, navigation, and other tabs fully operational:
 ```tsx
 <TabErrorBoundary tabName="Domains">
   <DomainsTab {...domainsProps} />
 </TabErrorBoundary>
 ```
-*Benefit*: If an error occurs in the DNS probe table, the user can still access `Overview`, `Variables`, `Logs`, and `History` without a full page crash.
 
-### 3.2 Safe File Reader Utility with MIME Validation
-In `VariablesTab.tsx`, wrap `.env` file imports in a robust validation helper:
+### 3.2 Safe Clipboard Helper with ExecCommand Fallback
+Standardize clipboard operations with a safe utility:
 ```typescript
-const handleSafeFileImport = (file: File) => {
-  if (file.size > 500 * 1024) { // 500KB safeguard
-    showToast('File too large (limit 500KB)');
-    return;
+export async function safeCopyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    // Fallback for non-secure contexts
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.select();
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    console.error('Failed to copy text to clipboard', err);
+    return false;
   }
-  const reader = new FileReader();
-  reader.onerror = () => showToast('Failed to read .env file');
-  reader.onload = (e) => { ... };
-  reader.readAsText(file);
-};
+}
 ```
 
-### 3.3 Strict Git URL Validator
-Enhance the intake URL input with a lightweight validation hint:
-- Validates formats: `https://github.com/org/repo` or `git@github.com:...`
-- Displays an inline warning if protocol or repository name is malformed.
+### 3.3 Safe JSON Parser with Fallback
+Wrap all JSON parsing in `SettingsView.tsx` and telemetry logs:
+```typescript
+export function safeJsonParse<T>(jsonString: string, fallback: T): T {
+  try {
+    return JSON.parse(jsonString) as T;
+  } catch (error) {
+    console.warn('[YGIT] JSON Parse Error:', error);
+    return fallback;
+  }
+}
+```
+
+### 3.4 File Size & MIME Type Validation Safeguards
+Enforce maximum 100MB file limit and MIME type validation in `IntakePipeline.tsx`:
+```typescript
+const MAX_UPLOAD_BYTES = 100 * 1024 * 1024; // 100MB
+if (file.size > MAX_UPLOAD_BYTES) {
+  showToast('File exceeds 100MB maximum bundle size.');
+  return;
+}
+```

@@ -47,7 +47,7 @@ import {
   CfDeployHook,
   CfWorkerRoute,
 } from '../../../types';
-import { PrimaryButton, SecondaryButton, IconButton } from '../../../components/buttons';
+import { PrimaryButton, SecondaryButton, IconButton, WarningButton, DangerOutlineButton } from '../../../components/buttons';
 
 export interface CloudflareTabProps {
   cfActiveSection: 'build' | 'functions' | 'performance' | 'security' | 'bindings' | 'webhooks' | 'wrangler' | 'danger';
@@ -624,15 +624,15 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                           />
                         </div>
                         <div className="sm:col-span-2 flex items-center justify-end">
-                          <button
-                            type="button"
+                          <PrimaryButton
+                            size="sm"
+                            fullWidth
                             onClick={handleAddWorkerRoute}
                             disabled={!newRoutePattern.trim() || !newRouteHandler.trim()}
-                            className="w-full bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white text-xs font-medium py-1 rounded cursor-pointer transition-colors flex items-center justify-center gap-1"
+                            icon={<Plus className="w-3 h-3" />}
                           >
-                            <Plus className="w-3 h-3" />
-                            <span>Add</span>
-                          </button>
+                            Add
+                          </PrimaryButton>
                         </div>
                       </div>
 
@@ -654,13 +654,12 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                                 <td className="p-2 font-mono text-[#f0f6fc]">{route.handler}</td>
                                 <td className="p-2 font-mono text-[10.5px] text-[#3fb950]">~0.4ms</td>
                                 <td className="p-2 text-right">
-                                  <button
-                                    type="button"
+                                  <IconButton
+                                    size="sm"
                                     onClick={() => handleDeleteWorkerRoute(route.id)}
-                                    className="p-1 text-[#8b949e] hover:text-[#f85149] rounded cursor-pointer transition-colors"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
+                                    aria-label="Delete worker route"
+                                    icon={<Trash2 className="w-3.5 h-3.5 text-[#8b949e] hover:text-[#f85149]" />}
+                                  />
                                 </td>
                               </tr>
                             ))}
@@ -1134,14 +1133,13 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                           <Webhook className="w-3.5 h-3.5 text-[#1d6cf6]" />
                           <span>Deploy Hooks</span>
                         </div>
-                        <button
-                          type="button"
+                        <PrimaryButton
+                          size="sm"
+                          icon={<Plus className="w-3 h-3" />}
                           onClick={() => setIsAddDeployHookModalOpen(true)}
-                          className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer transition-colors shadow-sm"
                         >
-                          <Plus className="w-3 h-3" />
-                          <span>Create Hook</span>
-                        </button>
+                          Create Hook
+                        </PrimaryButton>
                       </div>
 
                       <div className="border border-[#21262d] rounded overflow-hidden text-xs bg-[#090d13]">
@@ -1177,13 +1175,12 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                                 </td>
                                 <td className="p-2 text-[10px] text-[#7d8590]">{hook.createdAt}</td>
                                 <td className="p-2 text-right">
-                                  <button
-                                    type="button"
+                                  <IconButton
+                                    size="sm"
                                     onClick={() => handleDeleteDeployHook(hook.id)}
-                                    className="p-1 text-[#8b949e] hover:text-[#f85149] rounded cursor-pointer transition-colors"
-                                  >
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                  </button>
+                                    aria-label="Delete deploy hook"
+                                    icon={<Trash2 className="w-3.5 h-3.5 text-[#8b949e] hover:text-[#f85149]" />}
+                                  />
                                 </td>
                               </tr>
                             ))}
@@ -1208,17 +1205,16 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                           <span>wrangler.toml</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <button
-                            type="button"
+                          <SecondaryButton
+                            size="sm"
+                            icon={<Copy className="w-3 h-3" />}
                             onClick={() => {
                               copyToClipboard(generateWranglerToml());
                               showToast('Copied configuration');
                             }}
-                            className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] text-xs px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition-colors border border-[#30363d]"
                           >
-                            <Copy className="w-3 h-3" />
-                            <span>Copy</span>
-                          </button>
+                            Copy
+                          </SecondaryButton>
                         </div>
                       </div>
 
@@ -1248,13 +1244,12 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                             <span className="font-medium text-[#f0f6fc]">Pause Deployments</span>
                             <span className="text-[10px] text-[#8b949e]">Stop building new commits pushed to GitHub.</span>
                           </div>
-                          <button
-                            type="button"
+                          <WarningButton
+                            size="sm"
                             onClick={() => showToast('Deployments paused.')}
-                            className="bg-[#21262d] hover:bg-[#282e36] text-[#e3b341] border border-[#30363d] px-2.5 py-1 rounded text-xs cursor-pointer transition-colors"
                           >
                             Pause
-                          </button>
+                          </WarningButton>
                         </div>
 
                         <div className="py-2 flex items-center justify-between gap-2">
@@ -1262,13 +1257,12 @@ export const CloudflareTab: React.FC<CloudflareTabProps> = ({
                             <span className="font-medium text-[#f85149]">Delete Project</span>
                             <span className="text-[10px] text-[#8b949e]">Permanently delete this project and custom domain bindings.</span>
                           </div>
-                          <button
-                            type="button"
+                          <DangerOutlineButton
+                            size="sm"
                             onClick={() => setIsDeleteProjectModalOpen(true)}
-                            className="bg-[#da3633]/20 hover:bg-[#da3633]/30 text-[#f85149] border border-[#da3633]/40 px-2.5 py-1 rounded text-xs cursor-pointer transition-colors"
                           >
                             Delete
-                          </button>
+                          </DangerOutlineButton>
                         </div>
                       </div>
                     </div>
