@@ -219,13 +219,13 @@ export const LogsTab: React.FC<LogsTabProps> = ({
             <span
               className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none text-[10.5px] font-normal font-mono border ${
                 activeDeploymentStatus === 'running'
-                  ? 'bg-purple-500/15 text-purple-400 border-purple-500/30'
-                  : 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30'
+                  ? 'bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30'
+                  : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
               }`}
             >
               <span
                 className={`w-1.5 h-1.5 rounded-none ${
-                  activeDeploymentStatus === 'running' ? 'bg-purple-400 animate-pulse' : 'bg-emerald-500'
+                  activeDeploymentStatus === 'running' ? 'bg-purple-500 animate-pulse' : 'bg-emerald-500'
                 }`}
               ></span>
               <span>{activeDeploymentStatus === 'running' ? 'Running' : 'Finished'}</span>

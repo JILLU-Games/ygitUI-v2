@@ -30,23 +30,23 @@ export const IconButton: React.FC<IconButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    xs: 'p-0.5 text-[11px] rounded',
-    sm: 'p-1 text-xs rounded',
-    md: 'p-1.5 text-xs rounded',
+    xs: 'p-0.5 text-[11px] rounded-none',
+    sm: 'p-1 text-xs rounded-none',
+    md: 'p-1.5 text-xs rounded-none',
   }[size];
 
   let variantClass = '';
   if (isActive) {
-    variantClass = 'bg-[#21262d] text-[#58a6ff] border border-[#30363d] shadow-xs';
+    variantClass = 'bg-accent-primary/15 text-accent-primary border border-accent-primary/30 shadow-none';
   } else if (variant === 'danger') {
-    variantClass = 'text-[#8b949e] hover:text-[#f85149] hover:bg-[#da3633]/15 rounded';
+    variantClass = 'text-fg-muted hover:text-red-500 hover:bg-red-500/10 rounded-none';
   } else if (variant === 'outline') {
-    variantClass = 'bg-[#090d13] border border-[#21262d] text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#21262d]';
+    variantClass = 'bg-canvas-subtle border border-border-default text-fg-muted hover:text-fg-default hover:bg-surface-hover shadow-none';
   } else if (variant === 'ghost') {
-    variantClass = 'bg-transparent text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#21262d]';
+    variantClass = 'bg-transparent text-fg-muted hover:text-fg-default hover:bg-surface-hover shadow-none';
   } else {
     // default
-    variantClass = 'text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#21262d]';
+    variantClass = 'text-fg-muted hover:text-fg-default hover:bg-surface-hover rounded-none shadow-none';
   }
 
   return (

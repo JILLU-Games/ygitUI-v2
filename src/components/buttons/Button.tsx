@@ -74,7 +74,7 @@ export const Button: React.FC<ButtonProps> = ({
     primary:
       'bg-brand-primary hover:opacity-90 disabled:opacity-50 text-white font-medium shadow-none border border-transparent',
     secondary:
-      'bg-canvas-subtle hover:bg-surface-hover disabled:opacity-40 text-fg-default border border-border-default font-normal shadow-none',
+      'bg-canvas-subtle hover:bg-canvas-inset active:bg-surface-hover disabled:opacity-40 text-fg-default border border-border-default font-normal shadow-none',
     intake:
       'bg-brand-primary hover:opacity-90 disabled:opacity-50 text-white font-medium shadow-none border border-transparent',
     success:
