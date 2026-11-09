@@ -293,24 +293,15 @@ Whenever an intake pipeline processes a repository, it executes 14 deterministic
 
 ### Installation
 ```bash
-# Clone the repository
-git clone https://github.com/JILLU-Games/ygitUI-v2.git
-
-# Navigate to project directory
-cd ygitUI-v2
-
 # Install dependencies
 npm install
 ```
 
-### Development Server
+### Development & Build
 ```bash
-# Run local development server on http://localhost:3000
+# Start development server
 npm run dev
-```
 
-### Production Build & Lint
-```bash
 # Type-check and lint codebase
 npm run lint
 
