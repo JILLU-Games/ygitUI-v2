@@ -9,12 +9,11 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Standard YGIT Platform Card Container
- * Reference: CARDS.md (All 14 Forensic Archetypes)
- * Features:
- * - High-density multi-layered surface contrast (bg-[#161b22] subtle outer, border-[#21262d])
- * - Normalized corner radius: rounded-lg (8px) across all card containers
- * - Interactive hover elevation with electric blue highlight (hover:border-[#1d6cf6]/60)
+ * Universal YGIT Platform Card Container (Single Source of Truth)
+ * Characteristics:
+ * - 0rem border radius (rounded-none)
+ * - Zero box-shadow (shadow-none)
+ * - Theme-tokenized (bg-canvas-subtle, border-border-default, text-fg-default)
  */
 export const Card: React.FC<CardProps> = ({
   children,
@@ -23,15 +22,15 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const variantStyles: Record<CardVariant, string> = {
-    default: 'bg-[#161b22] border border-[#21262d] rounded-lg shadow-sm',
+    default: 'bg-canvas-subtle border border-border-default rounded-none shadow-none text-fg-default',
     interactive:
-      'bg-[#161b22] border border-[#21262d] hover:border-[#1d6cf6]/60 rounded-lg transition-all duration-150 hover:shadow-lg hover:shadow-black/30 cursor-pointer',
+      'bg-canvas-subtle border border-border-default hover:border-brand-primary rounded-none shadow-none text-fg-default transition-colors duration-150 cursor-pointer',
     selected:
-      'bg-[#0e1828] border border-[#1d6cf6] rounded-lg shadow-[0_0_0_1px_#1d6cf6]',
+      'bg-canvas-selected border border-brand-primary rounded-none shadow-none text-fg-default',
     telemetry:
-      'bg-[#090d13] border border-[#21262d] rounded-md font-mono text-[11px]',
+      'bg-canvas-inset border border-border-default rounded-none shadow-none font-mono text-[11px] text-fg-default',
     subtle:
-      'bg-[#090d13]/60 border border-[#21262d] rounded-lg',
+      'bg-canvas-subtle/60 border border-border-default rounded-none shadow-none text-fg-default',
   };
 
   return (
@@ -48,7 +47,6 @@ export interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 
 /**
  * Standard YGIT Card Header Strip
- * Distinct structural compartment with bottom border divider
  */
 export const CardHeader: React.FC<CardHeaderProps> = ({
   children,
@@ -56,7 +54,7 @@ export const CardHeader: React.FC<CardHeaderProps> = ({
   ...props
 }) => (
   <div
-    className={`p-3 sm:p-3.5 pb-2.5 border-b border-[#21262d] flex items-center justify-between gap-2 ${className}`}
+    className={`p-3 sm:p-3.5 pb-2.5 border-b border-border-default flex items-center justify-between gap-2 text-fg-default ${className}`}
     {...props}
   >
     {children}
@@ -76,7 +74,7 @@ export const CardBody: React.FC<CardBodyProps> = ({
   className = '',
   ...props
 }) => (
-  <div className={`p-3 sm:p-3.5 flex flex-col gap-2.5 ${className}`} {...props}>
+  <div className={`p-3 sm:p-3.5 flex flex-col gap-2.5 text-fg-default ${className}`} {...props}>
     {children}
   </div>
 );
@@ -88,7 +86,6 @@ export interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 
 /**
  * Standard YGIT Card Footer Strip
- * Subtle darker background with top border divider
  */
 export const CardFooter: React.FC<CardFooterProps> = ({
   children,
@@ -96,7 +93,7 @@ export const CardFooter: React.FC<CardFooterProps> = ({
   ...props
 }) => (
   <div
-    className={`p-2.5 px-3 sm:px-3.5 border-t border-[#21262d] bg-[#090d13]/50 flex items-center justify-between gap-2 text-xs ${className}`}
+    className={`p-2.5 px-3 sm:px-3.5 border-t border-border-default bg-canvas-inset/50 flex items-center justify-between gap-2 text-xs text-fg-secondary ${className}`}
     {...props}
   >
     {children}
@@ -110,9 +107,6 @@ export interface CardTelemetryEnclaveProps extends React.HTMLAttributes<HTMLDivE
 
 /**
  * Standard YGIT Nested Monospace Telemetry Enclave
- * Reference: CARDS.md (Rule 2: Monospace Inset Enclave)
- * Specifications (repo paths, commits, edge domains, digests) are always
- * nested inside this bg-[#090d13] border border-[#21262d] container.
  */
 export const CardTelemetryEnclave: React.FC<CardTelemetryEnclaveProps> = ({
   children,
@@ -120,7 +114,7 @@ export const CardTelemetryEnclave: React.FC<CardTelemetryEnclaveProps> = ({
   ...props
 }) => (
   <div
-    className={`bg-[#090d13] border border-[#21262d] rounded-md p-2 sm:p-2.5 font-mono text-[11px] flex flex-col gap-1.5 ${className}`}
+    className={`bg-canvas-inset border border-border-default rounded-none shadow-none p-2 sm:p-2.5 font-mono text-[11px] text-fg-default flex flex-col gap-1.5 ${className}`}
     {...props}
   >
     {children}

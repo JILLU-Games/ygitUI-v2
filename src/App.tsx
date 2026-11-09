@@ -79,7 +79,9 @@ import {
   User,
   LogOut,
   ChevronDown,
-  UserCheck
+  UserCheck,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import {
   Project,
@@ -169,6 +171,23 @@ export default function App() {
   
   // Primary Sidebar Collapse State
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  // Dual-Theme State ('dark' | 'light')
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Global Platform Settings State (Zero hardcoded values)
   const [platformSettings, setPlatformSettings] = useState<PlatformSettings>(INITIAL_PLATFORM_SETTINGS);
@@ -1302,69 +1321,84 @@ binding = "AI"
         envVarsCount={envVars.length}
         onReScan={startDeepScan}
       >
-        <header className="h-11 border-b border-[#21262d] flex items-center justify-between px-3.5 bg-[#161b22] sticky top-0 z-10">
+        <header className="h-11 border-b border-border-default flex items-center justify-between px-3.5 bg-canvas-subtle sticky top-0 z-10 select-none">
           <div className="flex items-center gap-2">
             {activeRoute === 'deployments' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
-                <span className="text-[#8b949e]">Platform</span>
-                <span className="text-[#7d8590]">/</span>
-                <span className="text-[#f0f6fc] font-medium">Deployments</span>
+                <span className="text-fg-muted">Platform</span>
+                <span className="text-fg-subtle">/</span>
+                <span className="text-fg-default font-medium">Deployments</span>
                 <MetricPill variant="neutral">{deploymentsList.length} Total</MetricPill>
               </div>
             ) : activeRoute === 'accounts' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
-                <span className="text-[#8b949e]">Platform</span>
-                <span className="text-[#7d8590]">/</span>
-                <span className="text-[#f0f6fc] font-medium">Connected Accounts</span>
+                <span className="text-fg-muted">Platform</span>
+                <span className="text-fg-subtle">/</span>
+                <span className="text-fg-default font-medium">Connected Accounts</span>
                 <MetricPill variant="green">
                   {isGithubConnected && isCloudflareConnected ? '2 Linked' : isGithubConnected || isCloudflareConnected ? '1 Linked' : '0 Linked'}
                 </MetricPill>
               </div>
             ) : activeRoute === 'settings' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
-                <span className="text-[#8b949e]">Platform</span>
-                <span className="text-[#7d8590]">/</span>
-                <span className="text-[#f0f6fc] font-medium">Settings</span>
+                <span className="text-fg-muted">Platform</span>
+                <span className="text-fg-subtle">/</span>
+                <span className="text-fg-default font-medium">Settings</span>
                 <MetricPill variant="blue">Account & Preferences</MetricPill>
               </div>
             ) : activeRoute === 'project-blank' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
-                <button onClick={() => setActiveRoute('projects')} className="text-[#8b949e] hover:text-[#f0f6fc]">
+                <button onClick={() => setActiveRoute('projects')} className="text-fg-muted hover:text-fg-default">
                   Projects
                 </button>
-                <span className="text-[#7d8590]">/</span>
-                <span className="text-[#f0f6fc] font-medium font-mono">{currentProject.name}</span>
+                <span className="text-fg-subtle">/</span>
+                <span className="text-fg-default font-medium font-mono">{currentProject.name}</span>
               </div>
             ) : activeRoute === 'project-scan' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
-                <span className="text-[#8b949e]">Scanning</span>
-                <span className="text-[#7d8590]">/</span>
-                <span className="text-[#58a6ff] font-medium font-mono">{currentProject.repo}</span>
+                <span className="text-fg-muted">Scanning</span>
+                <span className="text-fg-subtle">/</span>
+                <span className="text-brand-primary font-medium font-mono">{currentProject.repo}</span>
               </div>
             ) : activeRoute === 'project-workspace' ? (
               <div className="flex items-center gap-1.5 text-xs font-normal">
-                <button onClick={() => setActiveRoute('projects')} className="text-[#8b949e] hover:text-[#f0f6fc]">
+                <button onClick={() => setActiveRoute('projects')} className="text-fg-muted hover:text-fg-default">
                   Projects
                 </button>
-                <span className="text-[#7d8590]">/</span>
-                <span className="text-[#f0f6fc] font-medium font-mono">{currentProject.name}</span>
+                <span className="text-fg-subtle">/</span>
+                <span className="text-fg-default font-medium font-mono">{currentProject.name}</span>
                 <StatusBadge status="verified" label="Ready" />
               </div>
             ) : (
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-[#7d8590] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Search className="w-3.5 h-3.5 text-fg-muted absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={projectSearch}
                   onChange={(e) => setProjectSearch(e.target.value)}
-                  className="bg-[#090d13] border border-[#21262d] rounded text-xs text-[#f0f6fc] pl-8 pr-3 py-1 w-52 focus:outline-none focus:border-[#1d6cf6]"
+                  className="bg-canvas-inset border border-border-default rounded-none shadow-none text-xs text-fg-default pl-8 pr-3 py-1 w-52 focus:outline-none focus:border-brand-primary"
                 />
               </div>
             )}
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Theme Appearance Switcher (Dark / Light) */}
+            <button
+              type="button"
+              onClick={handleToggleTheme}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+              aria-label="Toggle theme appearance"
+              className="p-1.5 text-fg-muted hover:text-fg-default hover:bg-surface-hover rounded-none border border-border-default bg-canvas-inset cursor-pointer transition-colors flex items-center justify-center shrink-0"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-3.5 h-3.5 text-accent-amber" />
+              ) : (
+                <Moon className="w-3.5 h-3.5 text-brand-primary" />
+              )}
+            </button>
+
             {activeRoute === 'project-workspace' ? (
               <PrimaryButton
                 size="sm"
@@ -1384,13 +1418,7 @@ binding = "AI"
               </PrimaryButton>
             )}
 
-            {/* <!-- ================================================================ -->
-                <!-- HEADER USER PROFILE & ACCOUNT CONTROL DROPDOWN -->
-                <!-- Purpose: Replaces legacy vibtools/personal selector with modern -->
-                <!-- user profile avatar button, account management, & session controls -->
-                <!-- Events: Toggle onClick, Dismiss on outside click or ESC key -->
-                <!-- Invariants: Rule 01 (Clean & Compact) & Rule 02 (In-Code Comments) -->
-                <!-- ================================================================ --> */}
+            {/* HEADER USER PROFILE & ACCOUNT CONTROL DROPDOWN */}
             <div className="relative" ref={profileMenuRef}>
               <button
                 type="button"
@@ -1398,21 +1426,21 @@ binding = "AI"
                 title={`User profile: ${platformSettings.profile?.displayName || 'Prince Raj'} (@${platformSettings.profile?.username || 'vibtools'})`}
                 aria-label="User profile and account navigation"
                 aria-expanded={isProfileMenuOpen}
-                className={`flex items-center gap-1.5 px-2 py-1 rounded border text-xs cursor-pointer transition-all ${
+                className={`flex items-center gap-1.5 px-2 py-1 rounded-none border border-border-default text-xs cursor-pointer transition-all ${
                   isProfileMenuOpen
-                    ? 'bg-[#21262d] border-[#388bfd] text-[#f0f6fc]'
-                    : 'bg-[#090d13] hover:bg-[#161b22] border-[#21262d] hover:border-[#30363d] text-[#c9d1d9] hover:text-[#f0f6fc]'
+                    ? 'bg-surface-hover border-brand-primary text-fg-default'
+                    : 'bg-canvas-inset hover:bg-surface-hover text-fg-secondary hover:text-fg-default'
                 }`}
               >
-                <div className="w-5 h-5 rounded-full bg-[#1d6cf6]/20 border border-[#1d6cf6]/50 flex items-center justify-center text-[#58a6ff]">
+                <div className="w-5 h-5 rounded-none bg-brand-primary/10 border border-brand-primary/30 flex items-center justify-center text-brand-primary">
                   <User className="w-3 h-3" />
                 </div>
-                <span className="font-mono text-[11px] text-[#f0f6fc] hidden sm:inline">
+                <span className="font-mono text-[11px] text-fg-default hidden sm:inline">
                   @{platformSettings.profile?.username || 'vibtools'}
                 </span>
                 <ChevronDown
-                  className={`w-3 h-3 text-[#7d8590] transition-transform duration-150 ${
-                    isProfileMenuOpen ? 'rotate-180 text-[#58a6ff]' : ''
+                  className={`w-3 h-3 text-fg-muted transition-transform duration-150 ${
+                    isProfileMenuOpen ? 'rotate-180 text-brand-primary' : ''
                   }`}
                 />
               </button>
@@ -1420,26 +1448,26 @@ binding = "AI"
               {/* Profile Dropdown Menu */}
               {isProfileMenuOpen && (
                 <div
-                  className="absolute right-0 top-full mt-1.5 w-60 bg-[#161b22] border border-[#30363d] rounded-md shadow-2xl py-1 z-50 text-xs animate-in fade-in zoom-in-95 duration-100"
+                  className="absolute right-0 top-full mt-1.5 w-60 bg-canvas-subtle border border-border-default rounded-none shadow-none py-1 z-50 text-xs animate-in fade-in duration-100"
                   role="menu"
                   aria-orientation="vertical"
                 >
                   {/* Account Summary Strip */}
-                  <div className="px-3 py-2 border-b border-[#21262d] bg-[#0d1117]/60">
+                  <div className="px-3 py-2 border-b border-border-default bg-canvas-inset">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#1d6cf6]/30 to-[#6366f1]/30 border border-[#1d6cf6]/40 flex items-center justify-center text-[#58a6ff] text-xs font-semibold shrink-0">
+                      <div className="w-7 h-7 rounded-none bg-brand-primary/15 border border-brand-primary/30 flex items-center justify-center text-brand-primary text-xs font-semibold shrink-0">
                         {platformSettings.profile?.avatarInitial || 'P'}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center justify-between gap-1">
-                          <span className="text-[#f0f6fc] font-medium truncate text-xs">
+                          <span className="text-fg-default font-medium truncate text-xs">
                             {platformSettings.profile?.displayName || 'Prince Raj'}
                           </span>
                           <MetricPill variant="green" size="xs">
                             {platformSettings.profile?.plan || 'Pro'}
                           </MetricPill>
                         </div>
-                        <div className="text-[10px] font-mono text-[#7d8590] truncate">
+                        <div className="text-[10px] font-mono text-fg-muted truncate">
                           {platformSettings.profile?.email || 'princeraj1396@gmail.com'}
                         </div>
                       </div>
@@ -1456,10 +1484,10 @@ binding = "AI"
                         setActiveRoute('accounts');
                         setIsProfileMenuOpen(false);
                       }}
-                      className="w-full flex items-center justify-between px-3 py-1.5 text-left text-[#f0f6fc] hover:bg-[#21262d] transition-colors cursor-pointer group"
+                      className="w-full flex items-center justify-between px-3 py-1.5 text-left text-fg-default hover:bg-surface-hover transition-colors cursor-pointer group"
                     >
                       <div className="flex items-center gap-2">
-                        <UserCheck className="w-3.5 h-3.5 text-[#58a6ff] group-hover:text-[#79c0ff]" />
+                        <UserCheck className="w-3.5 h-3.5 text-brand-primary" />
                         <span className="text-xs">Accounts Control</span>
                       </div>
                       <MetricPill variant="neutral">
@@ -1475,10 +1503,10 @@ binding = "AI"
                         setActiveRoute('settings');
                         setIsProfileMenuOpen(false);
                       }}
-                      className="w-full flex items-center justify-between px-3 py-1.5 text-left text-[#f0f6fc] hover:bg-[#21262d] transition-colors cursor-pointer group"
+                      className="w-full flex items-center justify-between px-3 py-1.5 text-left text-fg-default hover:bg-surface-hover transition-colors cursor-pointer group"
                     >
                       <div className="flex items-center gap-2">
-                        <Settings className="w-3.5 h-3.5 text-[#8b949e] group-hover:text-[#f0f6fc]" />
+                        <Settings className="w-3.5 h-3.5 text-fg-muted group-hover:text-fg-default" />
                         <span className="text-xs">Platform Settings</span>
                       </div>
                       <MetricPill variant="neutral">Pref & Git</MetricPill>
@@ -1486,7 +1514,7 @@ binding = "AI"
                   </div>
 
                   {/* Section Divider */}
-                  <div className="border-t border-[#21262d] my-1" />
+                  <div className="border-t border-border-default my-1" />
 
                   {/* Logout Button */}
                   <div className="py-0.5">
@@ -1494,10 +1522,10 @@ binding = "AI"
                       type="button"
                       role="menuitem"
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[#f85149] hover:bg-[#f85149]/10 transition-colors cursor-pointer group"
+                      className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-accent-red-text hover:bg-accent-red-critical/10 transition-colors cursor-pointer group"
                     >
-                      <LogOut className="w-3.5 h-3.5 text-[#f85149] group-hover:translate-x-0.5 transition-transform" />
-                      <span className="text-xs font-medium">Log Out</span>
+                      <LogOut className="w-3.5 h-3.5 text-accent-red-text group-hover:translate-x-0.5 transition-transform" />
+                      <span className="text-xs font-normal">Log Out</span>
                     </button>
                   </div>
                 </div>
@@ -2046,7 +2074,7 @@ binding = "AI"
 
       {/* Toast */}
       {toastMessage && (
-        <div className="fixed bottom-3 right-3 bg-[#161b22] border border-[#1d6cf6] rounded px-3 py-1.5 flex items-center gap-2 z-50 text-xs text-[#f0f6fc]">
+        <div className="fixed bottom-3 right-3 bg-canvas-inset border border-accent-primary rounded-none shadow-none px-3 py-1.5 flex items-center gap-2 z-50 text-xs text-fg-default">
           <CheckCircle2 className="w-3.5 h-3.5 text-[#3fb950]" />
           <span>{toastMessage}</span>
         </div>

@@ -1,139 +1,136 @@
-# YGIT PLATFORM UI — MASTER PRODUCTION UPDATE ROADMAP
+# YGIT PLATFORM UI — COMPREHENSIVE UPDATE ROADMAP (PHASED EXECUTION)
 **Document ID:** `YGIT-DOC-002-ROADMAP`  
 **Date:** November 8, 2026  
-**Status:** `READY FOR IMPLEMENTATION (PENDING USER APPROVAL)`  
-**Methodology:** Incremental Step-by-Step Phased Execution with Strict Scope Locking  
-**Guiding Policy:** Rule 03 Zero Unprompted Redesigns & Full Invariant Preservation  
+**Status:** `READY FOR SEQUENTIAL EXECUTION`  
+**Governance:** `AGENTS.md` Rule 03 (Strict Scope Lock & Zero Unprompted Redesigns)  
 
 ---
 
-## 1. Roadmap Architecture & Execution Philosophy
-
-To prevent regressions, ensure 100% build stability (`npm run lint` && `npm run build`), and eliminate UI/UX mismatches without collateral damage, all required updates are structured into **5 sequential, scope-locked phases**.
+## 1. Roadmap Architecture & Sequential Progression
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│ PHASE 1: Theme & Color Token Centralization (`src/index.css`)          │
-│ Scope Lock: src/index.css ONLY.                                        │
-│ Register missing tokens (#58a6ff, #c9d1d9, #e3b341, #da3633, etc.).   │
-├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 2: Universal Button System Expansion                             │
-│ Scope Lock: src/components/buttons/* ONLY.                             │
-│ Add danger, warning, success variants to Button architecture.          │
-├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 3: Reusable Card Primitive Extraction (`Card.tsx`)               │
-│ Scope Lock: src/components/cards/* and src/components/index.ts ONLY.   │
-│ Create Container, Header, Body, Footer, TelemetryEnclave primitives.   │
-├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 4: Modal Architecture & Dialog Standardization                   │
-│ Scope Lock: src/components/modals/* and SettingsView modal dialogs.    │
-│ Standardize all dialogs onto ModalShell and centralized buttons.       │
-├────────────────────────────────────────────────────────────────────────┤
-│ PHASE 5: Viewport & Page-Level Action Harmonization                    │
-│ Scope Lock: src/features/* and src/App.tsx action buttons.             │
-│ Replace 68 raw <button> tags with standardized components.             │
-└────────────────────────────────────────────────────────────────────────┘
+[Phase 1: Foundation Tokens & Font Engine]
+                  │
+                  ▼
+[Phase 2: Universal UI Components Primitives]
+                  │
+                  ▼
+[Phase 3: Layout, Navigation & Dual-Theme Switcher]
+                  │
+                  ▼
+[Phase 4: Main Platform Feature Views Refactoring]
+                  │
+                  ▼
+[Phase 5: Scanner & Project Workspace Refactoring]
+                  │
+                  ▼
+[Phase 6: End-to-End Verification & Regression Testing]
 ```
 
 ---
 
-## 2. Phase-by-Phase Detailed Specifications
+## 2. Phase-by-Phase Technical Specifications
 
-### 🎯 PHASE 1: Theme & Color Token Centralization
-- **Primary Goal**: Register all 7 missing, heavily-used color hexes into `@theme` and `:root` custom properties inside `src/index.css`.
-- **Target Invariant**: Ensure every semantic shade defined in `COLORS.md` has an official Tailwind v4 property.
-- **Strict Scope Lock**:
-  - Target File: `src/index.css` ONLY.
-  - FORBIDDEN: Do not modify any TSX, JSX, mock data, or config files.
-- **Tokens to Register**:
-  - `--color-fg-secondary: #c9d1d9;` (High-contrast secondary typography)
-  - `--color-accent-blue-light: #58a6ff;` (Light blue telemetry & branch tags)
-  - `--color-accent-amber-telemetry: #e3b341;` (Telemetry warning & star rating)
-  - `--color-accent-red-critical: #da3633;` (Destructive action background & borders)
-  - `--color-surface-hover: #282e36;` (Secondary button & row hover state)
-  - `--color-canvas-overlay-dark: #05080d;` (Deep backdrop & table headers)
-  - `--color-fg-placeholder: #484f58;` (Monospace input placeholders)
-- **Verification Gate**:
-  - Command: `npm run lint` && `npm run build`
-  - Expected Result: 0 errors, styles compiled cleanly.
-
----
-
-### 🎯 PHASE 2: Universal Button System Expansion
-- **Primary Goal**: Enhance `PrimaryButton`, `SecondaryButton`, and `IconButton` (or introduce universal `Button.tsx` / `DangerButton.tsx`) to support all 7 archetypes from `BUTTON.md` (Primary, Secondary, Danger, Warning, Success, Ghost, Icon).
-- **Target Invariant**: Eliminate the need for raw `<button>` elements when creating destructive ("Disconnect", "Delete") or telemetry ("Purge Cache", "Pause") actions.
-- **Strict Scope Lock**:
-  - Target Files:
-    - `src/components/buttons/PrimaryButton.tsx`
-    - `src/components/buttons/SecondaryButton.tsx`
-    - `src/components/buttons/IconButton.tsx`
-    - `src/components/buttons/index.ts`
-  - FORBIDDEN: Do not touch any page views or feature folders yet.
-- **Features to Add**:
-  - `variant?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success' | 'ghost'`
-  - Support for `active:scale-95` on clicks.
-  - Standardized loading spinners (`<RefreshCw className="w-3.5 h-3.5 animate-spin" />`).
-  - Standardized sizes: `sm` (24px/26px), `md` (28px), `lg` (34px), `cta` (38px).
-- **Verification Gate**:
-  - Command: `npm run lint` && `npm run build`
-  - Expected Result: 0 TypeScript errors.
+### Phase 1: Foundation Tokens & Font Engine
+- **Target Files:**
+  - `/index.html`
+  - `/src/index.css`
+- **Scope Lock Boundary:** Strictly limited to global font definitions, root styles, and CSS theme tokens. Zero modifications to JSX views or business logic.
+- **Tasks:**
+  1. Remove external Google Fonts reference for `Plus Jakarta Sans` in `index.html`.
+  2. Configure native font stack in `src/index.css`:
+     `font-family: "Segoe UI", "Segoe UI Web", system-ui, -apple-system, "Helvetica Neue", sans-serif;`
+  3. Enforce shadcn / universal override:
+     `--radius: 0rem;`
+     `box-shadow: none !important;`
+  4. Define strict dual-theme tokens:
+     - Light Mode: Clean crisp background (`#ffffff` / `#f6f8fa`), subtle border (`#d0d7de`), primary text (`#1f2328`), 2 accent tokens.
+     - Dark Mode: Obsidian background (`#0d1117` / `#161b22`), subtle border (`#30363d`), primary text (`#f0f6fc`), 2 accent tokens.
+- **Verification Gate:** `tsc --noEmit` and dev server preview loads clean Segoe UI font.
 
 ---
 
-### 🎯 PHASE 3: Reusable Card Primitive Extraction (`Card.tsx`)
-- **Primary Goal**: Implement the missing `Card.tsx` primitive defined in `CARDS.md` Section 6.
-- **Target Invariant**: Establish uniform border radius (`rounded-lg`), uniform outer border (`border-[#21262d]`), and standardized nested telemetry enclaves (`bg-[#090d13] border border-[#21262d]`).
-- **Strict Scope Lock**:
-  - Target Files:
-    - `src/components/cards/Card.tsx` (new)
-    - `src/components/cards/index.ts` (new)
-    - `src/components/index.ts` (barrel export)
-  - FORBIDDEN: Do not alter any existing views until the primitive is compiled and tested.
-- **Components to Provide**:
-  - `<Card>`: Outer container (`bg-[#161b22] border border-[#21262d] rounded-lg`)
-  - `<CardHeader>`: Divider header (`border-b border-[#21262d] p-3`)
-  - `<CardBody>`: Padding block (`p-3 sm:p-3.5`)
-  - `<CardFooter>`: Divider footer (`border-t border-[#21262d] bg-[#090d13]/50 p-2.5 px-3`)
-  - `<CardTelemetryEnclave>`: Monospace telemetry block (`bg-[#090d13] border border-[#21262d] rounded-md p-2 font-mono text-[11px]`)
-- **Verification Gate**:
-  - Command: `npm run lint` && `npm run build`
-  - Expected Result: Clean build and clean exports.
+### Phase 2: Universal UI Components Primitives (`components/ui/`)
+- **Target Files:**
+  - `/src/components/ui/Button.tsx` (or standardizing `src/components/buttons/*`)
+  - `/src/components/ui/Card.tsx` (or standardizing `src/components/cards/*`)
+  - `/src/components/ui/Input.tsx` (new unified input primitive)
+  - `/src/components/ui/Select.tsx` (new unified select dropdown primitive)
+  - `/src/components/ui/Table.tsx` (new unified table component suite)
+  - `/src/components/ui/Modal.tsx` & `/src/components/modals/ModalShell.tsx`
+  - `/src/components/badges/StatusBadge.tsx` & `MetricPill.tsx`
+- **Scope Lock Boundary:** Strictly limited to the shared component library. No changes to pages or route state.
+- **Tasks:**
+  1. Remove all `rounded-lg`, `rounded-md`, `rounded-full`, and `rounded` classes (enforce `rounded-none`).
+  2. Remove all `shadow-sm`, `shadow-md`, `shadow-2xl`, and glow classes (`shadow-none`).
+  3. Wire all components to the CSS custom properties (`bg-canvas-default`, `border-border-default`, `text-fg-default`).
+  4. Provide accessible props (`size`, `variant`, `disabled`, `className`).
+- **Verification Gate:** `tsc --noEmit` passes with all component unit tests intact.
 
 ---
 
-### 🎯 PHASE 4: Modal Architecture & Dialog Standardization
-- **Primary Goal**: Standardize all application dialogs to use `ModalShell.tsx` and centralized button components for cancel/submit footers.
-- **Strict Scope Lock**:
-  - Target Files:
-    - `src/components/modals/TemplateModal.tsx`
-    - `src/components/modals/CloudflareBindingsModals.tsx`
-    - `src/components/modals/DeleteProjectModal.tsx`
-    - `src/components/modals/EditCustomDomainModal.tsx`
-    - `src/components/modals/PurgeCacheModal.tsx`
-    - `src/features/settings/SettingsView.tsx` (modals section only: `showAddTokenModal`, `showJsonInspector`)
-  - FORBIDDEN: Do not alter core data state, props, or modal triggers.
-- **Actions**:
-  - Replace raw backdrop divs in `TemplateModal.tsx` and `SettingsView.tsx` with `<ModalShell>`.
-  - Replace raw `<button>` footers with `<PrimaryButton>`, `<SecondaryButton>`, `<DangerButton>`.
-- **Verification Gate**:
-  - Command: `npm run lint` && `npm run build`
-  - Verify: All dialogs open, dismiss on ESC, dismiss on backdrop click, and submit correctly.
+### Phase 3: Layout, Navigation & Dual-Theme Switcher
+- **Target Files:**
+  - `/src/layouts/DualSidebarLayout.tsx`
+  - `/src/components/navigation/PrimarySidebar.tsx`
+  - `/src/components/navigation/SecondarySidebar.tsx`
+  - `/src/App.tsx` (Header bar only)
+- **Scope Lock Boundary:** Navigation frames, sidebars, and top bar theme toggle only.
+- **Tasks:**
+  1. Replace hardcoded `bg-[#0d1117]` in layout root with dynamic theme class / CSS variable.
+  2. Implement an elegant, compact Sun/Moon theme toggle in the header.
+  3. Ensure both Primary Sidebar and Secondary Sidebar adapt smoothly to Light and Dark modes.
+  4. Preserve all 8 navigation routes, counter badges, and collapse states.
+- **Verification Gate:** Theme toggle instantly swaps between dark and light themes across the layout frame without layout shift.
 
 ---
 
-### 🎯 PHASE 5: Viewport & Page-Level Action Harmonization
-- **Primary Goal**: Replace the remaining raw `<button>` elements in the main views with standardized design system components.
-- **Strict Scope Lock**:
-  - Target Files:
-    - `src/features/accounts/AccountsView.tsx` (Disconnect actions)
-    - `src/features/workspace/tabs/CloudflareTab.tsx` (Create Hook, Delete, Copy, Pause, Delete actions)
-    - `src/features/workspace/tabs/DomainsTab.tsx` (Claim, Suggestion pills, Set Primary, Delete actions)
-    - `src/features/workspace/tabs/LogsTab.tsx` (7 terminal toolbar controls using `IconButton`)
-    - `src/features/workspace/tabs/HistoryTab.tsx` (Redeploy button)
-    - `src/features/settings/SettingsView.tsx` (JSON, Export, Discard, Save Changes)
-    - `src/features/scanner/IntakePipeline.tsx` (Browse Local Files button)
-    - `src/App.tsx` (Header Deploy, New Project, Profile menu items)
-  - FORBIDDEN: Do not alter any component layout geometry, text, or business logic.
-- **Verification Gate**:
-  - Command: `npm run lint` && `npm run build`
-  - Verify: Zero regressions, 100% feature parity.
+### Phase 4: Main Platform Feature Views Refactoring
+- **Target Files:**
+  - `/src/features/dashboard/DashboardView.tsx`
+  - `/src/features/projects/ProjectsView.tsx`
+  - `/src/features/deployments/DeploymentsView.tsx`
+  - `/src/features/accounts/AccountsView.tsx`
+  - `/src/features/templates/TemplatesView.tsx`
+  - `/src/features/settings/SettingsView.tsx`
+- **Scope Lock Boundary:** Main platform views only. Feature logic, data calculations, and handlers remain 100% intact.
+- **Tasks:**
+  1. Replace ad-hoc `div` cards with the unified `Card` component.
+  2. Replace raw `<input>` and `<select>` with unified `Input` and `Select` components.
+  3. Replace the raw deployments `<table>` in `DeploymentsView` with the unified `Table` component.
+  4. Strip all inline `rounded-*` and `shadow-*` classes.
+  5. Replace hardcoded hex colors with semantic token classes.
+- **Verification Gate:** All 6 primary views render flawlessly in both Light and Dark modes with zero inline design divergence.
+
+---
+
+### Phase 5: Scanner & Project Workspace Refactoring
+- **Target Files:**
+  - `/src/features/scanner/IntakePipeline.tsx`
+  - `/src/features/scanner/ScanConsole.tsx`
+  - `/src/features/workspace/WorkspaceView.tsx`
+  - `/src/features/workspace/tabs/OverviewTab.tsx`
+  - `/src/features/workspace/tabs/VariablesTab.tsx`
+  - `/src/features/workspace/tabs/CloudflareTab.tsx`
+  - `/src/features/workspace/tabs/DomainsTab.tsx`
+  - `/src/features/workspace/tabs/LogsTab.tsx`
+  - `/src/features/workspace/tabs/HistoryTab.tsx`
+- **Scope Lock Boundary:** Scanner wizard and workspace tabs only. Preserve all 14 scanner checkpoints and terminal streaming logs.
+- **Tasks:**
+  1. Remove glow drop-shadows from `ScanConsole` progress bar and step cards.
+  2. Standardize `IntakePipeline` 4-step wizard cards to 0 border radius and 0 shadow.
+  3. Replace raw tables in `HistoryTab` and `VariablesTab` with the unified `Table` component.
+  4. Ensure terminal log viewer (`LogsTab`) maintains high-contrast monospace clarity in both themes.
+- **Verification Gate:** 14-stage deep scan completes smoothly from start to finish with deterministic verification.
+
+---
+
+### Phase 6: End-to-End Verification & Regression Testing
+- **Target Files:** Full repository verification.
+- **Tasks:**
+  1. Run `npm run lint` (`tsc --noEmit`).
+  2. Run `npm run build` (`vite build`).
+  3. Check browser dev server on `http://localhost:3000`.
+  4. Test route transitions across all 8 screens and modal triggers.
+  5. Test theme toggle switching across all views.
+- **Verification Gate:** 100% clean build, zero linter warnings, zero visual regressions.

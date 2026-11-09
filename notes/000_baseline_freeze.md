@@ -25,69 +25,97 @@ This document formally establishes the **Production Baseline Freeze** for the **
 | Path / Module | Purpose | Lines of Code | Baseline Status |
 | :--- | :--- | :--- | :--- |
 | **`/src/App.tsx`** | Global application shell, navigation state, routes, modals, toasts | 2,057 | `FROZEN` |
-| **`/src/index.css`** | Tailwind CSS v4 entry point, `@theme` token definitions, scrollbar styles | 88 | `FROZEN` |
+| **`/src/index.css`** | Tailwind CSS v4 entry point, `@theme` token definitions, scrollbar styles | 119 | `FROZEN` |
 | **`/src/main.tsx`** | Application bootstrap with `StrictMode` and `AppErrorBoundary` | 16 | `FROZEN` |
 | **`/src/layouts/DualSidebarLayout.tsx`** | Dual-sidebar viewport layout shell orchestrator | 90 | `FROZEN` |
 | **`src/components/navigation/PrimarySidebar.tsx`** | Primary global navigation sidebar (collapsed / expanded modes) | 265 | `FROZEN` |
 | **`src/components/navigation/SecondarySidebar.tsx`** | Secondary project-scoped navigation sidebar (Workspace tabs) | 188 | `FROZEN` |
 | **`src/components/brand/YGitLogo.tsx`** | Authentic SVG vector brand logo with precision ambient glow | 110 | `FROZEN` |
 | **`src/components/brand/BetaPill.tsx`** | Micro beta badge component | 22 | `FROZEN` |
-| **`src/components/buttons/PrimaryButton.tsx`** | Standard YGIT Electric Blue Primary Action Button (Archetype 1) | 63 | `FROZEN` (Underutilized) |
-| **`src/components/buttons/SecondaryButton.tsx`** | Standard YGIT Neutral Slate Secondary Action Button (Archetype 2) | 62 | `FROZEN` (Underutilized) |
-| **`src/components/buttons/IconButton.tsx`** | Standard Square Micro Icon Action Button (Archetype 7) | 35 | `FROZEN` (Underutilized) |
+| **`src/components/buttons/PrimaryButton.tsx`** | Standard YGIT Electric Blue Primary Action Button (Archetype 1) | 63 | `FROZEN` |
+| **`src/components/buttons/SecondaryButton.tsx`** | Standard YGIT Neutral Slate Secondary Action Button (Archetype 2) | 62 | `FROZEN` |
+| **`src/components/buttons/IconButton.tsx`** | Standard Square Micro Icon Action Button (Archetype 7) | 35 | `FROZEN` |
+| **`src/components/buttons/Button.tsx`** | Unified Button component with 8 archetypes | 154 | `FROZEN` |
+| **`src/components/cards/Card.tsx`** | Card containers with default, interactive, selected variants | 131 | `FROZEN` |
 | **`src/components/badges/StatusBadge.tsx`** | Semantic status indicator (`live`, `passed`, `building`, `failed`) | 91 | `FROZEN` |
 | **`src/components/badges/MetricPill.tsx`** | Monospace telemetry pill (`blue`, `green`, `amber`, `red`, `purple`) | 59 | `FROZEN` |
 | **`src/components/badges/FrameworkBadge.tsx`** | Monospace framework classification chip | 33 | `FROZEN` |
-| **`src/components/templates/TemplateThumbnailGraphic.tsx`** | macOS window frame browser graphic generator for templates | 215 | `FROZEN` |
-| **`src/components/modals/ModalShell.tsx`** | Standardized accessible dialog window shell with backdrop | 115 | `FROZEN` |
-| **`src/components/modals/TemplateModal.tsx`** | Deep template specifications, live routes, and architecture dialog | 499 | `FROZEN` |
-| **`src/components/modals/DnsConfigModal.tsx`** | Custom domain DNS verification & live probe console modal | 219 | `FROZEN` |
-| **`src/components/modals/EditCustomDomainModal.tsx`** | Custom domain branch routing & SSL settings modal | 106 | `FROZEN` |
-| **`src/components/modals/PurgeCacheModal.tsx`** | Cloudflare Edge cache purge trigger modal | 117 | `FROZEN` |
-| **`src/components/modals/DeleteProjectModal.tsx`** | Destructive safeguard confirmation modal | 76 | `FROZEN` |
-| **`src/components/modals/CloudflareBindingsModals.tsx`** | KV, D1 SQL, R2, and Webhook binding creation modals | 354 | `FROZEN` |
-| **`src/components/errors/AppErrorBoundary.tsx`** | React class-based runtime crash interceptor & recovery screen | 65 | `FROZEN` |
-| **`src/features/dashboard/DashboardView.tsx`** | High-density telemetry strip, 4-step pipeline preview, quick deploy | 276 | `FROZEN` |
-| **`src/features/projects/ProjectsView.tsx`** | Project catalog, search filter, provider selector, status cards | 154 | `FROZEN` |
-| **`src/features/deployments/DeploymentsView.tsx`** | Global chronological deployment stream, multi-filter toolbar, stats | 417 | `FROZEN` |
-| **`src/features/accounts/AccountsView.tsx`** | GitHub & Cloudflare provider health, OAuth sync, scopes ledger | 391 | `FROZEN` |
-| **`src/features/templates/TemplatesView.tsx`** | Marketplace of ready Jamstack starters with category/framework filter | 350 | `FROZEN` |
-| **`src/features/settings/SettingsView.tsx`** | Platform preferences, git defaults, access token manager, webhooks | 855 | `FROZEN` |
-| **`src/features/scanner/IntakePipeline.tsx`** | 4-channel intake pipeline (Git clone, GitHub import, upload, template) | 524 | `FROZEN` |
-| **`src/features/scanner/ScanConsole.tsx`** | 14-stage deep codebase AST analyzer console & checkpoint visualizer | 465 | `FROZEN` |
-| **`src/features/workspace/WorkspaceView.tsx`** | Project workspace parent orchestrator | 17 | `FROZEN` |
-| **`src/features/workspace/tabs/OverviewTab.tsx`** | Codebase analysis summary, commit verification, instant deploy | 321 | `FROZEN` |
-| **`src/features/workspace/tabs/VariablesTab.tsx`** | Environment variables table, encrypted secret toggle, import/export | 445 | `FROZEN` |
-| **`src/features/workspace/tabs/CloudflareTab.tsx`** | Cloudflare Pages config, KV/D1/R2 bindings, webhooks, wrangler.toml | 1,280 | `FROZEN` |
-| **`src/features/workspace/tabs/DomainsTab.tsx`** | Free ygit subdomains claim engine, custom domains, DNS verification | 578 | `FROZEN` |
-| **`src/features/workspace/tabs/LogsTab.tsx`** | Edge terminal build stream, timestamps, line wrapping, find filter | 347 | `FROZEN` |
-| **`src/features/workspace/tabs/HistoryTab.tsx`** | Chronological deployment table with re-deploy triggers | 133 | `FROZEN` |
+| **`src/components/errors/AppErrorBoundary.tsx`** | Class component React error boundary for runtime exceptions | 67 | `FROZEN` |
+| **`src/components/templates/TemplateThumbnailGraphic.tsx`** | Interactive mockup graphics preview for deployment templates | 231 | `FROZEN` |
+| **`src/components/modals/ModalShell.tsx`** | Common modal backdrop and header wrapper | 115 | `FROZEN` |
+| **`src/components/modals/CreateProjectModal.tsx`** | Project creation intake dialog with GitHub / HTTPS / Upload options | 148 | `FROZEN` |
+| **`src/components/modals/AccountsModal.tsx`** | GitHub and Cloudflare OAuth account status dialog | 84 | `FROZEN` |
+| **`src/components/modals/TemplateModal.tsx`** | 3-tab template inspection modal (Overview, Architecture, Files) | 415 | `FROZEN` |
+| **`src/components/modals/PasteEnvModal.tsx`** | Bulk `.env` key-value parser and importer modal | 112 | `FROZEN` |
+| **`src/components/modals/EditEnvModal.tsx`** | Single environment variable edit modal | 118 | `FROZEN` |
+| **`src/components/modals/DnsConfigModal.tsx`** | Cloudflare DNS CNAME verification record modal | 97 | `FROZEN` |
+| **`src/components/modals/EditCustomDomainModal.tsx`** | Custom domain configuration modal | 94 | `FROZEN` |
+| **`src/components/modals/CloudflareBindingsModals.tsx`** | KV, D1, R2, Deploy Hooks and Worker Route bindings modals | 315 | `FROZEN` |
+| **`src/components/modals/PurgeCacheModal.tsx`** | Cloudflare Pages edge cache purge dialog | 72 | `FROZEN` |
+| **`src/components/modals/DeleteProjectModal.tsx`** | Irreversible project deletion confirmation modal | 84 | `FROZEN` |
+| **`src/features/dashboard/DashboardView.tsx`** | Executive telemetry dashboard and 4-step pipeline launcher | 276 | `FROZEN` |
+| **`src/features/projects/ProjectsView.tsx`** | Projects gallery and filter view | 154 | `FROZEN` |
+| **`src/features/deployments/DeploymentsView.tsx`** | Global deployment ledger and execution table | 417 | `FROZEN` |
+| **`src/features/accounts/AccountsView.tsx`** | GitHub, Cloudflare, Fastly connected provider accounts view | 267 | `FROZEN` |
+| **`src/features/templates/TemplatesView.tsx`** | Production ready starter templates catalog | 247 | `FROZEN` |
+| **`src/features/settings/SettingsView.tsx`** | Comprehensive 6-tab platform configuration manager | 812 | `FROZEN` |
+| **`src/features/scanner/IntakePipeline.tsx`** | 4-step repository intake wizard | 525 | `FROZEN` |
+| **`src/features/scanner/ScanConsole.tsx`** | 14-stage deep analysis scanner terminal & verification grid | 465 | `FROZEN` |
+| **`src/features/workspace/WorkspaceView.tsx`** | Project workspace container with secondary sidebar tabs | 185 | `FROZEN` |
+| **`src/features/workspace/tabs/OverviewTab.tsx`** | Project overview, recent deployments, and build settings tab | 276 | `FROZEN` |
+| **`src/features/workspace/tabs/VariablesTab.tsx`** | Environment variables and secrets management table | 445 | `FROZEN` |
+| **`src/features/workspace/tabs/CloudflareTab.tsx`** | Pages bindings management (KV, D1, R2, Hooks, Routes) | 398 | `FROZEN` |
+| **`src/features/workspace/tabs/DomainsTab.tsx`** | Default pages.dev and custom domains manager | 362 | `FROZEN` |
+| **`src/features/workspace/tabs/LogsTab.tsx`** | Real-time edge streaming build terminal logs | 210 | `FROZEN` |
+| **`src/features/workspace/tabs/HistoryTab.tsx`** | Chronological deployment history table | 133 | `FROZEN` |
+| **`src/mocks/*`** | Mock datasets for projects, deployments, templates, checkpoints | 610 | `FROZEN` |
+| **`src/types/*`** | TypeScript type definitions for all platform entities | 380 | `FROZEN` |
 
 ---
 
-## 3. Core Baseline Architectural Invariants
+## 3. Inviolable Functional Invariants (Baseline Guarantees)
 
-### Invariant 01: Multi-Stage Codebase Scanner (14 Inspection Checkpoints)
-Whenever the codebase scanner runs (`src/features/scanner/ScanConsole.tsx`), all 14 checkpoints must execute and pass:
-1. `Commit Evidence` (deterministic SHA digest `sha256:e3b0c44`)
-2. `Root Detection` (`/` vs `apps/web`)
-3. `Framework Detection` (Vite, React, Vue, Astro, Next.js, Static HTML)
-4. `Package Manager & Lockfile` (`pnpm`, `npm`, `yarn`, `bun`)
-5. `Command Resolution` (`pnpm run build`, `npm run build`)
-6. `Output Directory` (`dist`, `build`, `public`, `_site`, `.vercel/output/static`)
-7. `Environment Variables` (`VITE_*`, `CF_*`)
-8. `Runtime Detection` (Static Jamstack execution verification)
-9. `Cloudflare Pages Compatibility` (`wrangler.toml` schema validation)
-10. `Durable Worker Lifecycle` (worker lease, retry engine)
-11. `Project Readiness` (`100% READY`)
-12. `Database Migration` (`0013_repository_analysis_deep_architecture`)
-13. `Analyzer Tooling` (`go-enry`, Tree-sitter, Python analyzer)
-14. `Security Boundaries` (isolated workers, zero secret persistence)
+The following core behaviors must be strictly maintained across all refactoring phases:
 
-### Invariant 02: Dual-Sidebar Viewport Hierarchy
-- **Primary Sidebar (Global)**: 190px (expanded) / 54px (collapsed), Background `#161b22`, Border-Right `#30363d`.
-- **Secondary Sidebar (Project-Scoped)**: 195px (fixed), Background `#12161d`, Border-Right `#30363d`.
-- **Main Viewport Canvas**: Fluid width, Background `#0d1117`.
+1. **Active Route Routing**:
+   The app provides full SPA routing across 8 active screens:
+   `dashboard` | `projects` | `deployments` | `accounts` | `templates` | `settings` | `project-blank` | `project-scan` | `project-workspace`.
+2. **14 Deep Analysis Checkpoints**:
+   During repository scan, all 14 checkpoints must transition through scanning -> passed -> verified:
+   1. Commit Evidence
+   2. Root Detection
+   3. Framework Detection
+   4. Package Manager & Lockfile
+   5. Command Resolution
+   6. Output Directory
+   7. Environment Variables
+   8. Runtime Detection
+   9. Cloudflare Pages Compatibility
+   10. Durable Worker Lifecycle
+   11. Project Readiness
+   12. Database Migration Sync
+   13. Analyzer Tooling
+   14. Security Boundaries
+3. **Dual-Sidebar Workspace Orchestration**:
+   - Primary Sidebar collapsible with brand lockup and global navigation.
+   - Secondary Sidebar for project workspace with tabs: `overview`, `variables`, `cloudflare`, `domains`, `logs`, `history`.
+4. **Interactive Modal Management**:
+   All 12 modals must open, close with ESC or outside click, and manage their local form states seamlessly.
+5. **Toast Notification Engine**:
+   Real-time feedback for all user actions (copy to clipboard, save settings, add env var, trigger deployment).
+6. **Data Immutability & Reactivity**:
+   All state updates (projects, env vars, deployments, settings) persist in React state without crashes.
 
-### Invariant 03: Zero Unrelated Fluff Policy
-All functional sub-descriptions, helper hints, workflow subtitles, status indicators, and logs are preserved. No mock chat bots or artificial assistants may be introduced.
+---
+
+## 4. Compilation & Verification Baseline Check
+
+```bash
+$ tsc --noEmit
+# Exit code: 0 (Zero TypeScript errors)
+
+$ vite build
+# Exit code: 0 (Build succeeded)
+```
+
+Baseline is officially locked. No unauthorized modifications permitted.

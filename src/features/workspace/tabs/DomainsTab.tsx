@@ -10,6 +10,11 @@
  * 2. Active Free Subdomains list with SSL status, Set Primary trigger, and live preview links.
  * 3. Custom Domains management suite with branch targeting, apex/CNAME records,
  *    DNS records modal viewer, resolver probe verification, and SSL status.
+ * 
+ * DESIGN CONSTITUTION:
+ * - Component-only architecture: Card, Input, Select, Table suite, PrimaryButton, SecondaryButton, IconButton, SuccessButton.
+ * - Zero border radius (`rounded-none`) and zero box shadow (`shadow-none`).
+ * - Full Dark/Light dual-theme token coverage via semantic CSS variables.
  * ============================================================================
  */
 
@@ -17,7 +22,6 @@ import React from 'react';
 import {
   Globe,
   Search,
-  RefreshCw,
   CheckCircle2,
   AlertTriangle,
   Plus,
@@ -31,6 +35,17 @@ import {
 } from 'lucide-react';
 import { FreeSubdomainItem, CustomDomainItem } from '../../../types';
 import { PrimaryButton, SecondaryButton, IconButton, SuccessButton } from '../../../components/buttons';
+import {
+  Card,
+  Input,
+  Select,
+  Table,
+  TableHeader,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '../../../components/ui';
 
 export interface DomainsTabProps {
   freeSubdomains: FreeSubdomainItem[];
@@ -97,32 +112,32 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
   onShowToast,
 }) => {
   return (
-    <div className="flex flex-col gap-3 animate-in fade-in duration-150">
+    <div className="flex flex-col gap-3 animate-in fade-in duration-100 font-sans">
       {/* 
         ====================================================================
         SECTION 1: FREE SUBDOMAIN SEARCH & INSTANT CLAIM ENGINE
         ====================================================================
       */}
-      <div className="bg-[#161b22] border border-[#21262d] rounded-lg p-3 sm:p-3.5 flex flex-col gap-2.5 shadow-sm">
+      <Card variant="default" className="p-3 sm:p-3.5 flex flex-col gap-2.5">
         {/* Header Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#21262d]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-border-subtle">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-[#1d6cf6]/10 text-[#58a6ff] border border-[#1d6cf6]/20 flex items-center justify-center shrink-0">
+            <div className="w-6 h-6 rounded-none bg-accent-primary/10 text-accent-primary border border-accent-primary/20 flex items-center justify-center shrink-0 shadow-none">
               <Globe className="w-3.5 h-3.5" />
             </div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-medium text-[#f0f6fc]">
+              <h3 className="text-xs font-medium text-fg-default">
                 Free Subdomains
               </h3>
-              <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30 font-normal">
+              <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded-none bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 font-normal">
                 Auto SSL
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#7d8590]">
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-fg-subtle">
             <span>Active:</span>
-            <span className="text-[#f0f6fc] font-medium bg-[#090d13] px-1.5 py-0.5 rounded border border-[#21262d]">
+            <span className="text-fg-default font-medium bg-canvas-inset px-1.5 py-0.5 rounded-none border border-border-subtle">
               {freeSubdomains.length}
             </span>
           </div>
@@ -130,9 +145,8 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
 
         {/* Search Bar for Free Subdomains */}
         <form onSubmit={onSearchFreeSubdomain} className="flex flex-col sm:flex-row items-stretch gap-2">
-          <div className="relative flex-1 flex items-center">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 text-[#7d8590]" />
-            <input
+          <div className="flex-1">
+            <Input
               type="text"
               placeholder="Search free subdomain (e.g. my-app)"
               value={subdomainSearchInput}
@@ -140,23 +154,25 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                 onSetSubdomainSearchInput(e.target.value);
                 if (subdomainSearchResult) onSetSubdomainSearchResult(null);
               }}
-              className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded-md px-2.5 pl-8 py-1.5 text-xs text-[#f0f6fc] font-mono placeholder:text-[#484f58] transition-colors"
+              prefixIcon={<Search className="w-3.5 h-3.5" />}
+              isMono
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <select
-              value={subdomainSearchZone}
-              onChange={(e) => {
-                onSetSubdomainSearchZone(e.target.value as '.ygit.net' | '.pages.dev' | '.ygit.app');
-                if (subdomainSearchResult) onSetSubdomainSearchResult(null);
-              }}
-              className="bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded-md px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono cursor-pointer transition-colors"
-            >
-              <option value=".ygit.net">.ygit.net (Global Gateway)</option>
-              <option value=".pages.dev">.pages.dev (Cloudflare Edge)</option>
-              <option value=".ygit.app">.ygit.app (Fastly CDN)</option>
-            </select>
+            <div className="w-56">
+              <Select
+                value={subdomainSearchZone}
+                onChange={(e) => {
+                  onSetSubdomainSearchZone(e.target.value as '.ygit.net' | '.pages.dev' | '.ygit.app');
+                  if (subdomainSearchResult) onSetSubdomainSearchResult(null);
+                }}
+              >
+                <option value=".ygit.net">.ygit.net (Global Gateway)</option>
+                <option value=".pages.dev">.pages.dev (Cloudflare Edge)</option>
+                <option value=".ygit.app">.ygit.app (Fastly CDN)</option>
+              </Select>
+            </div>
 
             <PrimaryButton
               type="submit"
@@ -175,28 +191,28 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
         {/* Subdomain Search Result Card */}
         {subdomainSearchResult && (
           <div
-            className={`p-2.5 rounded-md border text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 transition-all ${
+            className={`p-2.5 rounded-none border text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 transition-all shadow-none ${
               subdomainSearchResult.isAvailable
-                ? 'bg-[#238636]/10 border-[#238636]/30 text-[#f0f6fc]'
-                : 'bg-[#da3633]/10 border-[#da3633]/30 text-[#f0f6fc]'
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-fg-default'
+                : 'bg-red-500/10 border-red-500/30 text-fg-default'
             }`}
           >
             <div className="flex items-center gap-2">
               {subdomainSearchResult.isAvailable ? (
-                <CheckCircle2 className="w-4 h-4 text-[#3fb950] shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
               ) : (
-                <AlertTriangle className="w-4 h-4 text-[#f85149] shrink-0" />
+                <AlertTriangle className="w-4 h-4 text-red-500 shrink-0" />
               )}
               <div className="font-mono text-xs flex items-center gap-2 flex-wrap">
-                <span className="text-[#f0f6fc] font-medium">
+                <span className="text-fg-default font-medium">
                   {subdomainSearchResult.query}
                   {subdomainSearchResult.zone}
                 </span>
                 <span
-                  className={`text-[9.5px] px-1.5 py-0.5 rounded font-normal ${
+                  className={`text-[9.5px] px-1.5 py-0.5 rounded-none font-normal ${
                     subdomainSearchResult.isAvailable
-                      ? 'bg-[#238636]/20 text-[#3fb950] border border-[#238636]/40'
-                      : 'bg-[#da3633]/20 text-[#f85149] border border-[#da3633]/40'
+                      ? 'bg-emerald-500/20 text-emerald-500 border border-emerald-500/40'
+                      : 'bg-red-500/20 text-red-400 border border-red-500/40'
                   }`}
                 >
                   {subdomainSearchResult.isAvailable ? 'Available' : 'Taken'}
@@ -214,13 +230,13 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
               </SuccessButton>
             ) : (
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-[10.5px] text-[#8b949e]">Suggestions:</span>
+                <span className="text-[10.5px] text-fg-muted">Suggestions:</span>
                 {subdomainSearchResult.suggestions.map((sug) => (
                   <button
                     key={sug}
                     type="button"
                     onClick={() => onClaimFreeSubdomain(sug, subdomainSearchResult.zone)}
-                    className="bg-[#161b22] hover:bg-[#21262d] border border-[#30363d] text-[#58a6ff] hover:text-[#79c0ff] text-[10px] font-mono px-2 py-0.5 rounded cursor-pointer transition-colors font-normal"
+                    className="bg-canvas-subtle hover:bg-canvas-default border border-border-default text-accent-primary text-[10px] font-mono px-2 py-0.5 rounded-none cursor-pointer transition-colors font-normal shadow-none"
                   >
                     + {sug}
                     {subdomainSearchResult.zone}
@@ -233,7 +249,7 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
 
         {/* Active Free Subdomains List */}
         <div className="flex flex-col gap-1.5 pt-1">
-          <div className="text-[10px] font-mono uppercase text-[#7d8590] tracking-wider">
+          <div className="text-[10px] font-mono uppercase text-fg-subtle tracking-wider">
             Active Subdomains
           </div>
 
@@ -243,21 +259,21 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
               return (
                 <div
                   key={fs.id}
-                  className="bg-[#090d13] border border-[#21262d] hover:border-[#30363d] rounded-md p-2 px-3 flex flex-wrap items-center justify-between gap-2.5 transition-colors text-xs"
+                  className="bg-canvas-inset border border-border-subtle hover:border-border-default rounded-none p-2 px-3 flex flex-wrap items-center justify-between gap-2.5 transition-colors text-xs shadow-none"
                 >
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-[#58a6ff] text-xs font-normal select-all">
+                    <span className="font-mono text-accent-primary text-xs font-normal select-all">
                       {fullDomain}
                     </span>
 
                     {fs.isPrimary && (
-                      <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#1d6cf6]/15 text-[#58a6ff] border border-[#1d6cf6]/30 font-normal">
+                      <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded-none bg-accent-primary/10 text-accent-primary border border-accent-primary/30 font-normal">
                         Primary
                       </span>
                     )}
 
-                    <span className="inline-flex items-center gap-1.5 text-[10px] text-[#3fb950]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#3fb950]"></span>
+                    <span className="inline-flex items-center gap-1.5 text-[10px] text-emerald-500">
+                      <span className="w-1.5 h-1.5 rounded-none bg-emerald-500"></span>
                       Active SSL
                     </span>
                   </div>
@@ -267,7 +283,7 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                       <button
                         type="button"
                         onClick={() => onSetPrimarySubdomain(fs.id)}
-                        className="text-[10px] text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#161b22] px-2 py-0.5 rounded border border-[#21262d] cursor-pointer transition-colors font-normal"
+                        className="text-[10px] text-fg-muted hover:text-fg-default hover:bg-canvas-subtle px-2 py-0.5 rounded-none border border-border-subtle cursor-pointer transition-colors font-normal shadow-none"
                       >
                         Set Primary
                       </button>
@@ -290,7 +306,7 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                       target="_blank"
                       rel="noreferrer"
                       title="Open Live Site"
-                      className="p-1 text-[#8b949e] hover:text-[#58a6ff] hover:bg-[#161b22] rounded cursor-pointer transition-colors"
+                      className="p-1 text-fg-muted hover:text-accent-primary hover:bg-canvas-subtle rounded-none cursor-pointer transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
@@ -302,7 +318,7 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
                         onClick={() => onDeleteFreeSubdomain(fs.id)}
                         aria-label="Unbind Subdomain"
                         title="Unbind Subdomain"
-                        icon={<Trash2 className="w-3.5 h-3.5 text-[#8b949e] hover:text-[#f85149]" />}
+                        icon={<Trash2 className="w-3.5 h-3.5 text-fg-muted hover:text-red-400" />}
                       />
                     )}
                   </div>
@@ -311,76 +327,74 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
             })}
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* 
         ====================================================================
         SECTION 2: CUSTOM DOMAINS MANAGEMENT SUITE
         ====================================================================
       */}
-      <div className="bg-[#161b22] border border-[#21262d] rounded-lg p-3 sm:p-3.5 flex flex-col gap-2.5 shadow-sm">
+      <Card variant="default" className="p-3 sm:p-3.5 flex flex-col gap-2.5">
         {/* Header Row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#21262d]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-border-subtle">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-[#8957e5]/10 text-[#a371f7] border border-[#8957e5]/20 flex items-center justify-center shrink-0">
+            <div className="w-6 h-6 rounded-none bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center shrink-0 shadow-none">
               <Key className="w-3.5 h-3.5" />
             </div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-medium text-[#f0f6fc]">
+              <h3 className="text-xs font-medium text-fg-default">
                 Custom Domains & DNS
               </h3>
-              <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded bg-[#8957e5]/15 text-[#a371f7] border border-[#8957e5]/30 font-normal">
+              <span className="text-[9.5px] font-mono px-1.5 py-0.5 rounded-none bg-purple-500/15 text-purple-400 border border-purple-500/30 font-normal">
                 Production
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#7d8590]">
+          <div className="flex items-center gap-1.5 text-[11px] font-mono text-fg-subtle">
             <span>Configured:</span>
-            <span className="text-[#f0f6fc] font-medium bg-[#090d13] px-1.5 py-0.5 rounded border border-[#21262d]">
+            <span className="text-fg-default font-medium bg-canvas-inset px-1.5 py-0.5 rounded-none border border-border-subtle">
               {customDomainList.length}
             </span>
           </div>
         </div>
 
         {/* Add Custom Domain Form */}
-        <form onSubmit={onAddCustomDomain} className="bg-[#090d13] border border-[#21262d] rounded-md p-2.5 flex flex-col gap-2">
+        <form onSubmit={onAddCustomDomain} className="bg-canvas-inset border border-border-subtle rounded-none p-2.5 flex flex-col gap-2 shadow-none">
           <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
             <div className="flex-1">
-              <input
+              <Input
                 type="text"
                 placeholder="e.g. app.vibtools.dev or mydomain.com"
                 value={newCustomDomainInput}
                 onChange={(e) => onSetNewCustomDomainInput(e.target.value)}
-                className="w-full bg-[#161b22] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded-md px-2.5 py-1.5 text-xs text-[#f0f6fc] font-mono placeholder:text-[#484f58] transition-colors"
+                isMono
               />
             </div>
 
             <div className="w-full md:w-44">
-              <select
+              <Select
                 value={newCustomDomainBranch}
                 onChange={(e) => onSetNewCustomDomainBranch(e.target.value)}
                 aria-label="Target Branch"
-                className="w-full bg-[#161b22] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded-md px-2 py-1.5 text-xs text-[#f0f6fc] font-mono cursor-pointer transition-colors"
               >
                 <option value="main">Production (main)</option>
                 <option value="preview">Preview (staging)</option>
                 <option value="development">Development (dev)</option>
-              </select>
+              </Select>
             </div>
 
             <div className="w-full md:w-48">
-              <select
+              <Select
                 value={newCustomDomainRedirect}
                 onChange={(e) => onSetNewCustomDomainRedirect(e.target.value as any)}
                 aria-label="Redirect mode"
-                className="w-full bg-[#161b22] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded-md px-2 py-1.5 text-xs text-[#f0f6fc] cursor-pointer transition-colors"
               >
                 <option value="https_only">Force HTTPS Only</option>
                 <option value="apex_to_www">Redirect apex to www</option>
                 <option value="www_to_apex">Redirect www to apex</option>
                 <option value="none">No Redirect</option>
-              </select>
+              </Select>
             </div>
 
             <PrimaryButton
@@ -396,180 +410,178 @@ export const DomainsTab: React.FC<DomainsTabProps> = ({
         </form>
 
         {/* Custom Domains Table */}
-        <div className="border border-[#21262d] rounded-md bg-[#090d13] overflow-x-auto text-xs">
-          <table className="w-full text-left min-w-[600px]">
-            <thead>
-              <tr className="border-b border-[#21262d] bg-[#161b22] text-[9.5px] font-mono uppercase text-[#7d8590] tracking-wider">
-                <th className="p-2.5 px-3">Domain & Target</th>
-                <th className="p-2.5">Routing Record</th>
-                <th className="p-2.5">SSL</th>
-                <th className="p-2.5">Status</th>
-                <th className="p-2.5 px-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#21262d]">
-              {customDomainList.map((dom) => {
-                const isVerifying = !!verifyingDomainIdMap[dom.id];
+        <Table>
+          <TableHeader>
+            <TableRow isHeader>
+              <TableHeadCell className="px-3">Domain & Target</TableHeadCell>
+              <TableHeadCell>Routing Record</TableHeadCell>
+              <TableHeadCell>SSL</TableHeadCell>
+              <TableHeadCell>Status</TableHeadCell>
+              <TableHeadCell align="right" className="px-3">Actions</TableHeadCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {customDomainList.map((dom) => {
+              const isVerifying = !!verifyingDomainIdMap[dom.id];
 
-                return (
-                  <tr key={dom.id} className="hover:bg-[#161b22]/50 transition-colors">
-                    {/* Domain Name & Branch */}
-                    <td className="p-2.5 px-3 align-middle">
-                      <div className="flex flex-col gap-0.5">
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="font-mono text-[#f0f6fc] text-xs select-all font-normal">
-                            {dom.domain}
-                          </span>
-                          {dom.isApex ? (
-                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#8957e5]/15 text-[#a371f7] border border-[#8957e5]/30 font-normal">
-                              Apex
-                            </span>
-                          ) : (
-                            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-[#1d6cf6]/15 text-[#58a6ff] border border-[#1d6cf6]/30 font-normal">
-                              CNAME
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-[10px] text-[#7d8590] flex items-center gap-1">
-                          <span>
-                            Branch: <span className="text-[#8b949e] font-mono">{dom.targetBranch}</span>
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    {/* Routing Record */}
-                    <td className="p-2.5 align-middle font-mono text-xs">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[#c9d1d9] text-[10.5px] truncate max-w-[170px]">
-                          {dom.isApex ? `A → ${dom.apexIp}` : `CNAME → ${dom.cnameTarget}`}
+              return (
+                <TableRow key={dom.id}>
+                  {/* Domain Name & Branch */}
+                  <TableCell className="px-3">
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-mono text-fg-default text-xs select-all font-normal">
+                          {dom.domain}
                         </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onCopyToClipboard(dom.isApex ? dom.apexIp : dom.cnameTarget);
-                            onShowToast(`Copied routing target`);
-                          }}
-                          title="Copy target"
-                          className="text-[#8b949e] hover:text-[#f0f6fc] p-0.5 rounded cursor-pointer transition-colors"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </button>
+                        {dom.isApex ? (
+                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-none bg-purple-500/15 text-purple-400 border border-purple-500/30 font-normal">
+                            Apex
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-none bg-accent-primary/15 text-accent-primary border border-accent-primary/30 font-normal">
+                            CNAME
+                          </span>
+                        )}
                       </div>
-                    </td>
-
-                    {/* SSL / TLS Status */}
-                    <td className="p-2.5 align-middle">
-                      <span
-                        className={`inline-flex items-center gap-1 text-[9.5px] font-normal px-1.5 py-0.5 rounded ${
-                          dom.sslStatus === 'active'
-                            ? 'bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30'
-                            : 'bg-[#d29922]/15 text-[#e3b341] border border-[#d29922]/30'
-                        }`}
-                      >
-                        <Lock className="w-2.5 h-2.5" />
-                        <span>{dom.sslStatus === 'active' ? 'Active' : 'Pending'}</span>
-                      </span>
-                    </td>
-
-                    {/* DNS Status Badge */}
-                    <td className="p-2.5 align-middle">
-                      <div className="flex flex-col gap-0.5">
-                        <span
-                          className={`inline-flex items-center gap-1 text-[9.5px] font-normal px-1.5 py-0.5 rounded w-fit ${
-                            dom.dnsStatus === 'verified'
-                              ? 'bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30'
-                              : dom.dnsStatus === 'pending'
-                              ? 'bg-[#d29922]/15 text-[#e3b341] border border-[#d29922]/30'
-                              : 'bg-[#da3633]/15 text-[#f85149] border border-[#da3633]/30'
-                          }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              dom.dnsStatus === 'verified' ? 'bg-[#3fb950]' : 'bg-[#e3b341]'
-                            }`}
-                          ></span>
-                          <span>{dom.dnsStatus === 'verified' ? 'Verified' : 'Pending'}</span>
+                      <div className="text-[10px] text-fg-subtle flex items-center gap-1">
+                        <span>
+                          Branch: <span className="text-fg-muted font-mono">{dom.targetBranch}</span>
                         </span>
-                      </div>
-                    </td>
-
-                    {/* Actions Column */}
-                    <td className="p-2.5 px-3 align-middle text-right">
-                      <div className="flex items-center justify-end gap-1.5 flex-wrap">
-                        {/* DNS BUTTON (OPENS POPUP WITH DNS RECORDS) */}
-                        <SecondaryButton
-                          size="sm"
-                          icon={<FileText className="w-3 h-3 text-[#58a6ff]" />}
-                          onClick={() => onOpenDnsModal(dom)}
-                          title="View DNS Records"
-                        >
-                          DNS
-                        </SecondaryButton>
-
-                        {/* Verify DNS Resolver Action */}
-                        <SecondaryButton
-                          size="sm"
-                          onClick={() => onVerifyCustomDomain(dom.id)}
-                          disabled={isVerifying}
-                          isLoading={isVerifying}
-                          loadingText="Verifying"
-                          title="Verify DNS"
-                        >
-                          <span className="hidden sm:inline">Verify</span>
-                        </SecondaryButton>
-
-                        {/* Edit Domain Action */}
-                        <IconButton
-                          size="sm"
-                          icon={<Edit3 className="w-3.5 h-3.5" />}
-                          title="Edit Domain"
-                          onClick={() => onEditCustomDomain(dom)}
-                          className="hover:text-[#58a6ff]"
-                        />
-
-                        {/* External Link */}
-                        <a
-                          href={`https://${dom.domain}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          title="Open Domain"
-                          className="p-1 text-[#8b949e] hover:text-[#3fb950] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-
-                        {/* Delete Domain */}
-                        <IconButton
-                          size="sm"
-                          icon={<Trash2 className="w-3.5 h-3.5" />}
-                          title="Delete Domain"
-                          onClick={() => onDeleteCustomDomain(dom.id)}
-                          className="hover:text-[#f85149]"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-
-              {customDomainList.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="p-6 text-center text-[#8b949e]">
-                    <div className="flex flex-col items-center gap-1.5">
-                      <Globe className="w-5 h-5 text-[#7d8590]" />
-                      <div className="text-xs font-normal text-[#f0f6fc]">No custom domains configured</div>
-                      <div className="text-[10.5px] text-[#7d8590]">
-                        Add an apex or subdomain above to configure custom DNS routing.
                       </div>
                     </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                  </TableCell>
+
+                  {/* Routing Record */}
+                  <TableCell className="font-mono text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-fg-muted text-[10.5px] truncate max-w-[170px]">
+                        {dom.isApex ? `A → ${dom.apexIp}` : `CNAME → ${dom.cnameTarget}`}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onCopyToClipboard(dom.isApex ? dom.apexIp : dom.cnameTarget);
+                          onShowToast(`Copied routing target`);
+                        }}
+                        title="Copy target"
+                        className="text-fg-subtle hover:text-fg-default p-0.5 rounded-none cursor-pointer transition-colors"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </TableCell>
+
+                  {/* SSL / TLS Status */}
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center gap-1 text-[9.5px] font-normal px-1.5 py-0.5 rounded-none ${
+                        dom.sslStatus === 'active'
+                          ? 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
+                          : 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
+                      }`}
+                    >
+                      <Lock className="w-2.5 h-2.5" />
+                      <span>{dom.sslStatus === 'active' ? 'Active' : 'Pending'}</span>
+                    </span>
+                  </TableCell>
+
+                  {/* DNS Status Badge */}
+                  <TableCell>
+                    <div className="flex flex-col gap-0.5">
+                      <span
+                        className={`inline-flex items-center gap-1 text-[9.5px] font-normal px-1.5 py-0.5 rounded-none w-fit ${
+                          dom.dnsStatus === 'verified'
+                            ? 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
+                            : dom.dnsStatus === 'pending'
+                            ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
+                            : 'bg-red-500/15 text-red-400 border border-red-500/30'
+                        }`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-none ${
+                            dom.dnsStatus === 'verified' ? 'bg-emerald-500' : 'bg-amber-500'
+                          }`}
+                        ></span>
+                        <span>{dom.dnsStatus === 'verified' ? 'Verified' : 'Pending'}</span>
+                      </span>
+                    </div>
+                  </TableCell>
+
+                  {/* Actions Column */}
+                  <TableCell align="right" className="px-3">
+                    <div className="flex items-center justify-end gap-1.5 flex-wrap">
+                      {/* DNS BUTTON (OPENS POPUP WITH DNS RECORDS) */}
+                      <SecondaryButton
+                        size="sm"
+                        icon={<FileText className="w-3 h-3 text-accent-primary" />}
+                        onClick={() => onOpenDnsModal(dom)}
+                        title="View DNS Records"
+                      >
+                        DNS
+                      </SecondaryButton>
+
+                      {/* Verify DNS Resolver Action */}
+                      <SecondaryButton
+                        size="sm"
+                        onClick={() => onVerifyCustomDomain(dom.id)}
+                        disabled={isVerifying}
+                        isLoading={isVerifying}
+                        loadingText="Verifying"
+                        title="Verify DNS"
+                      >
+                        <span className="hidden sm:inline">Verify</span>
+                      </SecondaryButton>
+
+                      {/* Edit Domain Action */}
+                      <IconButton
+                        size="sm"
+                        icon={<Edit3 className="w-3.5 h-3.5" />}
+                        title="Edit Domain"
+                        onClick={() => onEditCustomDomain(dom)}
+                        className="hover:text-accent-primary"
+                      />
+
+                      {/* External Link */}
+                      <a
+                        href={`https://${dom.domain}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Open Domain"
+                        className="p-1 text-fg-muted hover:text-emerald-500 hover:bg-canvas-subtle rounded-none cursor-pointer transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+
+                      {/* Delete Domain */}
+                      <IconButton
+                        size="sm"
+                        icon={<Trash2 className="w-3.5 h-3.5" />}
+                        title="Delete Domain"
+                        onClick={() => onDeleteCustomDomain(dom.id)}
+                        className="hover:text-red-400"
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+
+            {customDomainList.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} align="center" className="p-6 text-fg-muted">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <Globe className="w-5 h-5 text-fg-subtle" />
+                    <div className="text-xs font-normal text-fg-default">No custom domains configured</div>
+                    <div className="text-[10.5px] text-fg-subtle">
+                      Add an apex or subdomain above to configure custom DNS routing.
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </Card>
     </div>
   );
 };

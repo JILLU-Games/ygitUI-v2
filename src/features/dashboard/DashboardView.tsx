@@ -1,45 +1,9 @@
-/**
- * ============================================================================
- * YGIT PLATFORM UI — STANDALONE MAIN VIEW: DASHBOARD
- * FILE: src/features/dashboard/DashboardView.tsx
- * ============================================================================
- * 
- * PURPOSE:
- * Executive telemetry console and rapid intake pipeline launcher.
- * Displays high-density operational telemetry (Projects count, Deployments count,
- * Success rate, Provider connectivity, Platform operational state, and Build queue),
- * coupled with a 4-step pipeline preview and quick repository deploy trigger.
- * 
- * ARCHITECTURE & LIFECYCLE:
- * 1. Telemetry Strip: 6-metric responsive grid with monospace precision.
- * 2. Rapid Pipeline Card:
- *    - 4-step visual progress breakdown (1. Paste 0.2s, 2. Analyze 1.1s, 3. Connect 0.6s, 4. Deploy Active).
- *    - Target resolution summary (Target: Pages, Branch: main, Worker: Ready).
- *    - Direct URL intake input with instant "Deploy" action.
- * 3. Provider Connectivity Micro-Cards:
- *    - GitHub integration status (@vibtools).
- *    - Cloudflare Edge verification status (Edge Verified).
- * 4. Live Edge Telemetry:
- *    - Step timing ledger with real-time deploy timer clock.
- *    - Real-time build milestone checklist (Cloned in 340ms, Bundle optimized, Uploading chunks...).
- *    - Live default deployment link (ygit.pages.dev) with 1-click clipboard copy.
- * 
- * DATA CONTRACT:
- * - projects: Project[] (to display current project count)
- * - isDeploying: boolean (shows queue active/idle state)
- * - deployTimer: number (elapsed seconds on active deployments)
- * - repoInputUrl: string (quick deploy input state)
- * - onRepoInputUrlChange: (url: string) => void
- * - onTriggerDeployment: (repoName: string) => void
- * - onCopyToClipboard: (text: string) => void
- * ============================================================================
- */
-
 import React from 'react';
 import { Copy } from 'lucide-react';
 import { Project } from '../../types';
 import { MetricPill } from '../../components/badges/MetricPill';
 import { PrimaryButton, IconButton } from '../../components/buttons';
+import { Card, Input } from '../../components/ui';
 
 export interface DashboardViewProps {
   projects: Project[];
@@ -69,59 +33,58 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   isCloudflareConnected = true,
 }) => {
   return (
-    <div className="p-3 flex flex-col gap-2 max-w-[1600px] w-full mx-auto animate-in fade-in duration-150">
+    <div className="p-3 flex flex-col gap-2 max-w-[1600px] w-full mx-auto animate-in fade-in duration-150 font-sans">
       {/* 
         ========================================================================
         TELEMETRY METRICS STRIP (6 HIGH-DENSITY NODES)
-        Shows real-time platform statistics with monospace numerical readouts.
         ========================================================================
       */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
         {/* Metric 1: Total Projects */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
-          <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Projects</div>
-          <div className="text-sm font-semibold text-[#f0f6fc] font-mono">
+        <Card variant="default" className="p-2 flex flex-col justify-between">
+          <div className="text-[9.5px] font-medium text-fg-muted uppercase">Projects</div>
+          <div className="text-sm font-medium text-fg-default font-mono">
             {projects.length.toString().padStart(2, '0')}
           </div>
-        </div>
+        </Card>
 
         {/* Metric 2: Total Deployments */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
-          <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Deployments</div>
-          <div className="text-sm font-semibold text-[#f0f6fc] font-mono">
+        <Card variant="default" className="p-2 flex flex-col justify-between">
+          <div className="text-[9.5px] font-medium text-fg-muted uppercase">Deployments</div>
+          <div className="text-sm font-medium text-fg-default font-mono">
             {deploymentsCount.toString().padStart(2, '0')}
           </div>
-        </div>
+        </Card>
 
         {/* Metric 3: Success Rate */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
-          <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Success</div>
-          <div className="text-sm font-semibold text-[#3fb950] font-mono">{successRate}%</div>
-        </div>
+        <Card variant="default" className="p-2 flex flex-col justify-between">
+          <div className="text-[9.5px] font-medium text-fg-muted uppercase">Success</div>
+          <div className="text-sm font-medium text-accent-green-text font-mono">{successRate}%</div>
+        </Card>
 
         {/* Metric 4: Active Providers */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
-          <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Providers</div>
-          <div className="text-sm font-semibold text-[#3fb950] font-mono">
+        <Card variant="default" className="p-2 flex flex-col justify-between">
+          <div className="text-[9.5px] font-medium text-fg-muted uppercase">Providers</div>
+          <div className="text-sm font-medium text-accent-green-text font-mono">
             {((isGithubConnected ? 1 : 0) + (isCloudflareConnected ? 1 : 0))}/2
           </div>
-        </div>
+        </Card>
 
         {/* Metric 5: Platform Operational State */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
-          <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Platform</div>
-          <div className="text-xs font-semibold text-[#3fb950] flex items-center gap-1 mt-0.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3fb950]"></span> Operational
+        <Card variant="default" className="p-2 flex flex-col justify-between">
+          <div className="text-[9.5px] font-medium text-fg-muted uppercase">Platform</div>
+          <div className="text-xs font-medium text-accent-green-text flex items-center gap-1 mt-0.5">
+            <span className="w-1.5 h-1.5 rounded-none bg-accent-green-text"></span> Operational
           </div>
-        </div>
+        </Card>
 
         {/* Metric 6: Queue Engine State */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
-          <div className="text-[9.5px] font-semibold text-[#8b949e] uppercase">Queue</div>
-          <div className="text-xs font-semibold text-[#8b949e] mt-0.5">
+        <Card variant="default" className="p-2 flex flex-col justify-between">
+          <div className="text-[9.5px] font-medium text-fg-muted uppercase">Queue</div>
+          <div className="text-xs font-medium text-fg-muted mt-0.5">
             {isDeploying ? '1 Active' : 'Idle'}
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* 
@@ -133,8 +96,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Left Column: Pipeline Execution & Provider Cards */}
         <div className="flex flex-col gap-2">
           {/* Quick Pipeline Intake Card */}
-          <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 flex flex-col gap-2">
-            <div className="flex items-center justify-between pb-1 border-b border-[#21262d] text-xs font-semibold text-[#f0f6fc]">
+          <Card variant="default" className="p-2.5 flex flex-col gap-2">
+            <div className="flex items-center justify-between pb-1 border-b border-border-default text-xs font-medium text-fg-default">
               <span>Pipeline</span>
               <PrimaryButton
                 size="sm"
@@ -146,39 +109,41 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             {/* 4-Step Visual Progress Breakdown */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-1">
-              <div className="bg-[#238636]/15 border border-[#238636] rounded p-1.5">
-                <div className="text-[9px] font-mono text-[#3fb950]">0.2s</div>
-                <strong className="text-[11px] text-[#f0f6fc]">1. Paste</strong>
+              <div className="bg-accent-green/10 border border-accent-green/30 rounded-none p-1.5">
+                <div className="text-[9px] font-mono text-accent-green-text">0.2s</div>
+                <span className="text-[11px] font-medium text-fg-default">1. Paste</span>
               </div>
-              <div className="bg-[#238636]/15 border border-[#238636] rounded p-1.5">
-                <div className="text-[9px] font-mono text-[#3fb950]">1.1s</div>
-                <strong className="text-[11px] text-[#f0f6fc]">2. Analyze</strong>
+              <div className="bg-accent-green/10 border border-accent-green/30 rounded-none p-1.5">
+                <div className="text-[9px] font-mono text-accent-green-text">1.1s</div>
+                <span className="text-[11px] font-medium text-fg-default">2. Analyze</span>
               </div>
-              <div className="bg-[#238636]/15 border border-[#238636] rounded p-1.5">
-                <div className="text-[9px] font-mono text-[#3fb950]">0.6s</div>
-                <strong className="text-[11px] text-[#f0f6fc]">3. Connect</strong>
+              <div className="bg-accent-green/10 border border-accent-green/30 rounded-none p-1.5">
+                <div className="text-[9px] font-mono text-accent-green-text">0.6s</div>
+                <span className="text-[11px] font-medium text-fg-default">3. Connect</span>
               </div>
-              <div className="bg-[#1d6cf6]/15 border border-[#1d6cf6] rounded p-1.5">
-                <div className="text-[9px] font-mono text-[#1d6cf6]">Active</div>
-                <strong className="text-[11px] text-[#f0f6fc]">4. Deploy</strong>
+              <div className="bg-brand-primary/10 border border-brand-primary/30 rounded-none p-1.5">
+                <div className="text-[9px] font-mono text-brand-primary">Active</div>
+                <span className="text-[11px] font-medium text-fg-default">4. Deploy</span>
               </div>
             </div>
 
             {/* Runtime Target Context */}
-            <div className="flex items-center justify-between bg-[#090d13] border border-[#21262d] rounded px-2 py-1 text-[11px] text-[#8b949e]">
-              <div>Target: <strong className="text-[#f0f6fc]">Pages</strong></div>
-              <div>Branch: <strong className="text-[#f0f6fc]">main</strong></div>
-              <div>Worker: <strong className="text-[#3fb950]">Ready</strong></div>
+            <div className="flex items-center justify-between bg-canvas-inset border border-border-default rounded-none px-2 py-1 text-[11px] text-fg-muted">
+              <div>Target: <span className="font-medium text-fg-default">Pages</span></div>
+              <div>Branch: <span className="font-medium text-fg-default">main</span></div>
+              <div>Worker: <span className="font-medium text-accent-green-text">Ready</span></div>
             </div>
 
             {/* Rapid URL Intake Form */}
-            <div className="flex gap-1">
-              <input
+            <div className="flex gap-1 items-center">
+              <Input
                 type="text"
                 placeholder="https://github.com/..."
                 value={repoInputUrl}
                 onChange={(e) => onRepoInputUrlChange(e.target.value)}
-                className="flex-1 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono placeholder:text-[#484f58] focus:border-[#1d6cf6] focus:outline-none"
+                mono={true}
+                fullWidth={true}
+                className="flex-1"
               />
               <PrimaryButton
                 size="sm"
@@ -187,77 +152,77 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 Deploy
               </PrimaryButton>
             </div>
-          </div>
+          </Card>
 
           {/* Provider Micro-Cards */}
           <div className="grid grid-cols-2 gap-2">
-            <div className="bg-[#161b22] border border-[#30363d] rounded p-2 text-xs">
-              <div className="flex items-center justify-between mb-1">
-                <strong className="text-[#f0f6fc]">GitHub</strong>
+            <Card variant="default" className="p-2 text-xs flex flex-col justify-between gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-fg-default">GitHub</span>
                 <MetricPill variant={isGithubConnected ? 'green' : 'neutral'} size="xs">
                   {isGithubConnected ? 'Connected' : 'Disconnected'}
                 </MetricPill>
               </div>
-              <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">
+              <div className="bg-canvas-inset border border-border-default p-1.5 rounded-none text-[11px] font-mono text-fg-muted">
                 {isGithubConnected ? '@vibtools' : 'No account linked'}
               </div>
-            </div>
+            </Card>
 
-            <div className="bg-[#161b22] border border-[#30363d] rounded p-2 text-xs">
-              <div className="flex items-center justify-between mb-1">
-                <strong className="text-[#f0f6fc]">Cloudflare</strong>
+            <Card variant="default" className="p-2 text-xs flex flex-col justify-between gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="font-medium text-fg-default">Cloudflare</span>
                 <MetricPill variant={isCloudflareConnected ? 'green' : 'neutral'} size="xs">
                   {isCloudflareConnected ? 'Edge Verified' : 'Disconnected'}
                 </MetricPill>
               </div>
-              <div className="bg-[#090d13] p-1.5 rounded text-[11px] font-mono text-[#8b949e]">
+              <div className="bg-canvas-inset border border-border-default p-1.5 rounded-none text-[11px] font-mono text-fg-muted">
                 {isCloudflareConnected ? '310+ Edge POPs' : 'API token required'}
               </div>
-            </div>
+            </Card>
           </div>
         </div>
 
         {/* Right Column: Live Path & Build Status Feed */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 flex flex-col gap-2">
-          <div className="flex items-center justify-between pb-1 border-b border-[#21262d] text-xs font-semibold text-[#f0f6fc]">
+        <Card variant="default" className="p-2.5 flex flex-col gap-2">
+          <div className="flex items-center justify-between pb-1 border-b border-border-default text-xs font-medium text-fg-default">
             <span>Live Path</span>
-            <span className="font-mono text-[10px] text-[#8b949e]">{deployTimer}s</span>
+            <span className="font-mono text-[10px] text-fg-muted">{deployTimer}s</span>
           </div>
 
           {/* Step Timing Ledger */}
           <div className="flex flex-col gap-1.5 text-[11px]">
-            <div className="flex justify-between text-[#f0f6fc]">
+            <div className="flex justify-between text-fg-default">
               <span>Repo connected</span>
-              <span className="text-[#7d8590] font-mono">0.4s</span>
+              <span className="text-fg-subtle font-mono">0.4s</span>
             </div>
-            <div className="flex justify-between text-[#f0f6fc]">
+            <div className="flex justify-between text-fg-default">
               <span>Analysis done</span>
-              <span className="text-[#7d8590] font-mono">1.1s</span>
+              <span className="text-fg-subtle font-mono">1.1s</span>
             </div>
-            <div className="flex justify-between text-[#f0f6fc]">
+            <div className="flex justify-between text-fg-default">
               <span>Accounts ready</span>
-              <span className="text-[#7d8590] font-mono">0.6s</span>
+              <span className="text-fg-subtle font-mono">0.6s</span>
             </div>
-            <div className="flex justify-between text-[#1d6cf6]">
+            <div className="flex justify-between text-brand-primary">
               <span>Deploying to Pages</span>
               <span className="font-mono">12.5s</span>
             </div>
           </div>
 
           {/* Edge Terminal Micro-Feed */}
-          <div className="bg-[#090d13] border border-[#21262d] rounded p-2 font-mono text-[10px] text-[#8b949e] flex flex-col gap-0.5">
-            <div className="text-[#3fb950]">✓ Cloned in 340ms</div>
-            <div className="text-[#3fb950]">✓ Bundle optimized</div>
-            <div className="text-[#1d6cf6]">⚡ Uploading chunks...</div>
+          <div className="bg-canvas-inset border border-border-default rounded-none p-2 font-mono text-[10px] text-fg-muted flex flex-col gap-0.5">
+            <div className="text-accent-green-text">✓ Cloned in 340ms</div>
+            <div className="text-accent-green-text">✓ Bundle optimized</div>
+            <div className="text-brand-primary">⚡ Uploading chunks...</div>
           </div>
 
           {/* Live Edge URL Box */}
-          <div className="bg-[#090d13] border border-[#21262d] rounded px-2 py-1 flex items-center justify-between text-xs">
+          <div className="bg-canvas-inset border border-border-default rounded-none px-2 py-1 flex items-center justify-between text-xs">
             <a
               href="https://ygit.pages.dev"
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[#1d6cf6] hover:underline"
+              className="font-mono text-brand-primary hover:underline truncate"
             >
               ygit.pages.dev
             </a>
@@ -268,8 +233,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               onClick={() => onCopyToClipboard('https://ygit.pages.dev')}
             />
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
 };
+
+export default DashboardView;

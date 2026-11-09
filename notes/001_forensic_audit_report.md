@@ -1,273 +1,227 @@
-# YGIT PLATFORM UI — COMPREHENSIVE FORENSIC AUDIT REPORT
-**Document ID:** `YGIT-DOC-001-FORENSIC-AUDIT`  
+# YGIT PLATFORM UI — FORENSIC DESIGN & ARCHITECTURE AUDIT REPORT
+**Document ID:** `YGIT-DOC-001-AUDIT`  
 **Date:** November 8, 2026  
+**Status:** `AUDITED — PENDING IMPLEMENTATION AUTHORIZATION`  
 **Auditor:** Senior Forensic Software Engineer  
-**Audit Scope:** 100% of all JSX/TSX views, components, layouts, styles, and modals across `src/`  
-**Target Codebase:** `ygit-UI-v2`  
-**Audit Mode:** Read-Only Static and Structural Inspection (Zero unprompted code modifications)
+**Audit Scope:** 100% Comprehensive Codebase Forensic Scan (`src/`, `components/`, `features/`, `layouts/`, `styles/`, `index.html`)  
 
 ---
 
-## 1. Executive Summary & Raw Metric Evidence
+## 1. Executive Forensic Summary & Key Metrics
 
-A line-by-line forensic inspection of every source file across `src/` confirms that while foundational design system documents (`BUTTON.md`, `COLORS.md`, `CARDS.md`, `SIDEBAR.md`, `SPACING.md`) exist, the codebase suffers from severe implementation debt:
+A comprehensive line-by-line static analysis of all source files in `src/` and `index.html` was conducted to identify all violations against the **YGIT UI & Architecture Guidelines** and the user's explicit design constitution:
 
-| Inspection Category | Discovered Count | Root Cause & Assessment |
-| :--- | :--- | :--- |
-| **Arbitrary Background Hexes (`bg-[#...]`)** | **590+ occurrences** | Bypasses `src/index.css` `@theme` definitions |
-| **Arbitrary Border Hexes (`border-[#...]`)** | **518+ occurrences** | Unstandardized (`border-[#21262d]` 326x, `border-[#30363d]` 126x) |
-| **Arbitrary Text Color Hexes (`text-[#...]`)** | **1,098+ occurrences** | Missing theme tokens (`#58a6ff` 100x, `#c9d1d9` 71x not in `@theme`) |
-| **Raw `<button>` Elements Bypassing Components** | **68 raw buttons** | Hand-rolled inline classes bypassing `PrimaryButton`, `SecondaryButton`, `IconButton` |
-| **Missing Core Component Primitive (`Card.tsx`)** | **0 instances** | Documented in `CARDS.md` but missing in `src/components/`, causing radius drift (4px vs 6px vs 8px) |
-| **Modal Shell Architectural Bypasses** | **3 dialogs** | Hand-rolled overlay divs in `SettingsView` (2 modals) and `TemplateModal` (1 modal) |
-
----
-
-## 2. Answers to User's 4 Core Audit Questions
-
-### ❓ Question 1: "Kono pages er moddhe ki ekhono hardcoded design add kora ace?"
-**Answer:** **YES — Systemic hardcoding exists across 100% of the views.**
-- `src/index.css` defines Tailwind v4 `@theme` tokens (`--color-canvas-default: #0d1117`, `--color-canvas-subtle: #161b22`, `--color-border-default: #30363d`, `--color-fg-default: #f0f6fc`).
-- However, **NOT A SINGLE VIEW uses semantic classes** such as `bg-canvas-subtle`, `border-border-default`, or `text-fg-default`.
-- Instead, engineers hardcoded raw bracket notation everywhere:
-  - `bg-[#090d13]` (227 times)
-  - `bg-[#161b22]` (165 times)
-  - `border-[#21262d]` (326 times)
-  - `text-[#f0f6fc]` (336 times)
-  - `text-[#8b949e]` (253 times)
-  - `text-[#7d8590]` (181 times)
-- **Consequence**: Changing a theme color in `index.css` changes 0% of the UI because the values are hardcoded in the markup.
+| Metric Category | Count / State | System Requirement | Audit Finding |
+| :--- | :--- | :--- | :--- |
+| **Hardcoded Hex Colors** | **1,562 instances** across 36 files | Single global token / 1-2 compact colors | ❌ **CRITICAL DEFECT** |
+| **Border-Radius Classes** | **120+ instances** (`rounded`, `rounded-md`, `rounded-lg`, `rounded-full`) | `--radius: 0rem` (Zero border radius) | ❌ **CRITICAL VIOLATION** |
+| **Box Shadows & Glows** | **64+ instances** (`shadow-sm`, `shadow-md`, `shadow-2xl`, `shadow-[...]`) | Zero shadow & no glow highlights | ❌ **CRITICAL VIOLATION** |
+| **Font Family Stack** | `'Plus Jakarta Sans'` + Google Fonts link | `"Segoe UI", "Segoe UI Web", system-ui, -apple-system, "Helvetica Neue", sans-serif` | ❌ **CONFLICT** |
+| **Light/Dark Themes** | **0% Light support** (Hardcoded dark `#0d1117`) | Dark & Light duitai supported | ❌ **MISSING FEATURE** |
+| **Component-Only Architecture** | Raw `<input>`, `<select>`, `<table>`, `<div>` per page | Shared `components/ui/` primitives | ❌ **ARCHITECTURAL DRIFT** |
 
 ---
 
-### ❓ Question 2: "Kono pages er moddhe ki emon design CSS add kora ace, jeta component/Global UI design Css theke load kora uchit?"
-**Answer:** **YES — Particularly Buttons, Cards, and Modals:**
-1. **Buttons**: `PrimaryButton`, `SecondaryButton`, and `IconButton` exist in `src/components/buttons/`, but views contain 68 raw `<button>` elements with hand-copied Tailwind utility strings.
-2. **Cards**: `CARDS.md` specifies 14 Card Archetypes, but no `Card.tsx` component exists. Every page re-invents the container div with inconsistent padding and border radiuses.
-3. **Modals**: `ModalShell.tsx` was built as the single source of truth for dialog windows, yet `TemplateModal.tsx` and `SettingsView.tsx` render raw fixed backdrop divs with inline close buttons.
+## 2. Root Cause Analysis (মূল কারণসমূহ)
+
+1. **Root Cause 01 — Inline Arbitrary Hex Styling:**  
+   `src/index.css` defines theme tokens, but views, modals, and components bypass them completely with inline Tailwind arbitrary values (`bg-[#161b22]`, `border-[#21262d]`, `text-[#f0f6fc]`). Changing a token in `index.css` has zero effect on the 1,562 hardcoded instances.
+2. **Root Cause 02 — Bypassed Component Architecture:**  
+   Reusable UI primitives for `Table`, `Input`, `Select`, `Form`, `SectionHeader`, and `PageContainer` do not exist in the codebase. Every page implements its own ad-hoc JSX elements with fragmented classes.
+3. **Root Cause 03 — Legacy GitHub Primer Clone Leftovers:**  
+   The initial codebase carried over GitHub Primer Dark styles, including `rounded-lg (8px)`, `rounded-md`, `rounded-full`, `shadow-sm`, `shadow-md`, `shadow-2xl`, and ambient glow drop-shadows, directly violating the zero-radius and zero-shadow mandates.
+4. **Root Cause 04 — Font Stack Config Error:**  
+   `index.html` loads `Plus Jakarta Sans` via Google Fonts, and `src/index.css` sets it as the default font, overriding the mandatory `Segoe UI` system stack.
+5. **Root Cause 05 — Hardcoded Dark Canvas:**  
+   `index.html`, `DualSidebarLayout.tsx`, and `App.tsx` hardcode `bg-[#0d1117]` directly, making a light theme impossible without a global CSS variable engine.
 
 ---
 
-### ❓ Question 3: "Ekhono ki UI project er kono pages er moddhe self hardcoded CSS use hocce, ja globally use na korar jnno pore update/fix/newFeature er somoy UI/UX mismatch hote pare?"
-**Answer:** **YES — Severe Visual Mismatches Already Exist:**
-1. **Card Border Radius Drift**:
-   - `DashboardView.tsx`: `rounded` (4px)
-   - `ProjectsView.tsx`: `rounded` (4px)
-   - `SettingsView.tsx`: `rounded-md` (6px)
-   - `DeploymentsView.tsx`: `rounded-lg` (8px)
-   - `AccountsView.tsx`: `rounded-lg` (8px)
-   - `CloudflareTab.tsx`: `rounded` (4px)
-   *Cards that belong to the exact same visual hierarchy have conflicting 4px, 6px, and 8px radiuses depending on which file you open.*
-2. **Card Outer Border Drift**:
-   - `DashboardView` & `ProjectsView`: `border-[#30363d]` (Slate Border Default)
-   - `DeploymentsView`, `AccountsView`, `CloudflareTab`: `border-[#21262d]` (Slate Border Muted)
-3. **Button Sizing Drift**:
-   - In `SettingsView.tsx`, buttons use `h-6` (24px), which does not exist anywhere in `BUTTON.md` (where standard heights are 26px and 28px).
+## 3. Exact Code Block Proofs & Line References
+
+### 🚨 Proof 01: Font Stack & Google Fonts Conflict
+
+#### Location: `/index.html` (Lines 16-17)
+```html
+16: <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+17: <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+```
+
+#### Location: `/src/index.css` (Lines 48 & 97)
+```css
+48:   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+...
+97:   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+```
+> **Violation:** User rule specifies `"Segoe UI", "Segoe UI Web", system-ui, -apple-system, "Helvetica Neue", sans-serif`. The application is currently loading and applying `Plus Jakarta Sans`.
 
 ---
 
-### ❓ Question 4: "UI project er sokol pages er moddhe ki component/global CSS use hocce? naki kono risky ba mismatch ace?"
-**Answer:** **HIGH RISK OF REGRESSION & INCONSISTENCY.**
-- Because the component system lacks **Danger & Destructive** variants and **Warning/Telemetry** variants:
-  - Destructive actions ("Disconnect", "Delete Project", "Unbind Subdomain") are coded differently in every file.
-  - Telemetry warning buttons ("Purge Cache", "Pause Deployments") are coded differently in every file.
-  - Any future feature or re-skin will create more disjointed styling unless centralized.
+### 🚨 Proof 02: Border Radius Violations (`--radius: 0rem` Rule Breached)
 
----
-
-## 3. Exact Code Proofs with File Paths & Line Numbers
-
-### Proof 01: Destructive Button Handcoded (AccountsView)
-- **File**: `src/features/accounts/AccountsView.tsx`
-- **Lines**: 218–224 and 349–355
+#### Location: `/src/components/cards/Card.tsx` (Lines 16, 26, 28, 30, 32, 34)
 ```tsx
-// ❌ RAW BUTTON INSTEAD OF CENTRALIZED DANGER BUTTON COMPONENT
-<button
-  type="button"
-  onClick={onToggleGithub}
-  className="text-[#f85149] hover:bg-[#da3633]/15 px-2.5 py-1 rounded text-xs border border-[#da3633]/30 cursor-pointer transition-colors active:scale-95"
->
-  Disconnect
-</button>
+16:  * - Normalized corner radius: rounded-lg (8px) across all card containers
+...
+26:     default: 'bg-[#161b22] border border-[#21262d] rounded-lg shadow-sm',
+28:       'bg-[#161b22] border border-[#21262d] hover:border-[#1d6cf6]/60 rounded-lg transition-all duration-150 hover:shadow-lg hover:shadow-black/30 cursor-pointer',
+30:       'bg-[#0e1828] border border-[#1d6cf6] rounded-lg shadow-[0_0_0_1px_#1d6cf6]',
+32:       'bg-[#090d13] border border-[#21262d] rounded-md font-mono text-[11px]',
+34:       'bg-[#090d13]/60 border border-[#21262d] rounded-lg',
+```
+
+#### Location: `/src/components/buttons/Button.tsx` (Lines 64-69)
+```tsx
+64:     micro: 'px-2 py-0.5 text-[10.5px] rounded gap-1 active:scale-95',
+65:     compact: 'px-2.5 py-1 text-xs rounded gap-1.5 active:scale-95',
+66:     sm: 'px-2.5 py-1 text-xs rounded gap-1.5 active:scale-95',
+67:     md: 'px-3 py-1.5 text-xs rounded-md gap-1.5 active:scale-95',
+68:     lg: 'px-4 py-2 text-xs font-bold rounded-md gap-2 active:scale-95',
+69:     cta: 'py-2.5 px-4 text-xs font-bold rounded-md gap-2 active:scale-[0.99]',
+```
+
+#### Location: `/src/components/modals/ModalShell.tsx` (Line 79)
+```tsx
+79:   className={`w-full ${widthClasses} bg-[#161b22] border border-[#30363d] rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[92vh] ${className}`}
+```
+
+#### Location: `/src/components/badges/StatusBadge.tsx` (Lines 76 & 80)
+```tsx
+76:   className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10.5px] font-mono border ${config.bg} ${config.text} ${config.border} select-none ${className}`}
+...
+80:   className={`w-1.5 h-1.5 rounded-full ${config.dot} ${
 ```
 
 ---
 
-### Proof 02: Primary and Danger Actions Handcoded (CloudflareTab)
-- **File**: `src/features/workspace/tabs/CloudflareTab.tsx`
-- **Lines**: 1137–1144, 1180–1187, 1265–1272
+### 🚨 Proof 03: Box Shadow & High-Glow Violations
+
+#### Location: `/src/features/scanner/ScanConsole.tsx` (Lines 165 & 199)
 ```tsx
-// ❌ Create Hook Button (Bypasses PrimaryButton)
-<button
-  type="button"
-  onClick={() => setIsAddDeployHookModalOpen(true)}
-  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-normal px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer transition-colors shadow-sm"
->
-  <Plus className="w-3 h-3" />
-  <span>Create Hook</span>
-</button>
+165:  className="h-full bg-[#1d6cf6] transition-all duration-200 ease-out shadow-[0_0_8px_rgba(29,108,246,0.6)]"
+...
+199:  ? 'bg-[#0e1828] border-[#1d6cf6] text-[#f0f6fc] shadow-[0_0_12px_rgba(29,108,246,0.3)]'
+```
 
-// ❌ Trash Action (Bypasses IconButton)
-<button
-  type="button"
-  onClick={() => handleDeleteDeployHook(hook.id)}
-  className="p-1 text-[#8b949e] hover:text-[#f85149] rounded cursor-pointer transition-colors"
->
-  <Trash2 className="w-3.5 h-3.5" />
-</button>
+#### Location: `/src/features/scanner/IntakePipeline.tsx` (Lines 162 & 484)
+```tsx
+162:  ? 'border-[#1d6cf6] bg-[#0e1828] shadow-[0_0_0_1px_#1d6cf6]'
+...
+484:  <div className="bg-[#161b22] border border-[#30363d] rounded-md p-3.5 flex flex-col gap-2.5 shadow-md">
+```
 
-// ❌ Danger Zone Delete (Handcoded raw button)
-<button
-  type="button"
-  onClick={() => setIsDeleteProjectModalOpen(true)}
-  className="bg-[#da3633]/20 hover:bg-[#da3633]/30 text-[#f85149] border border-[#da3633]/40 px-2.5 py-1 rounded text-xs cursor-pointer transition-colors"
->
-  Delete
-</button>
+#### Location: `/src/features/settings/SettingsView.tsx` (Line 176)
+```tsx
+176:  <div className="bg-[#161b22] border border-[#21262d] rounded-md px-3 py-2 flex flex-wrap items-center justify-between gap-2 shadow-xs">
+```
+
+#### Location: `/src/App.tsx` (Line 1423)
+```tsx
+1423: className="absolute right-0 top-full mt-1.5 w-60 bg-[#161b22] border border-[#30363d] rounded-md shadow-2xl py-1 z-50 text-xs animate-in fade-in zoom-in-95 duration-100"
 ```
 
 ---
 
-### Proof 03: Green and Suggestion Actions Handcoded (DomainsTab)
-- **File**: `src/features/workspace/tabs/DomainsTab.tsx`
-- **Lines**: 208–215, 220–229, 268–275
-```tsx
-// ❌ Production Green CTA handcoded
-<button
-  type="button"
-  onClick={() => onClaimFreeSubdomain(subdomainSearchResult.query, subdomainSearchResult.zone)}
-  className="bg-[#238636] hover:bg-[#2ea043] text-white text-xs font-normal px-3 py-1 rounded-md cursor-pointer transition-colors shrink-0 shadow-sm flex items-center gap-1.5"
->
-  <Plus className="w-3.5 h-3.5" />
-  <span>Claim Subdomain</span>
-</button>
+### 🚨 Proof 04: Component Architecture Bypass (Self-Hardcoded Page Elements)
+
+#### A. Raw Input Hardcoding (Bypassing `Input` Component)
+- **`src/features/dashboard/DashboardView.tsx` (Line 181):**
+  ```tsx
+  className="flex-1 bg-[#090d13] border border-[#30363d] rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono placeholder:text-[#484f58] focus:border-[#1d6cf6] focus:outline-none"
+  ```
+- **`src/features/projects/ProjectsView.tsx` (Line 73):**
+  ```tsx
+  className="bg-[#090d13] border border-[#30363d] rounded text-xs text-[#f0f6fc] font-mono placeholder:text-[#484f58] px-2.5 py-1 w-48 focus:border-[#1d6cf6] focus:outline-none transition-colors"
+  ```
+- **`src/features/deployments/DeploymentsView.tsx` (Line 203):**
+  ```tsx
+  className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded-md px-2.5 pl-8 py-1.5 text-xs text-[#f0f6fc] font-mono placeholder:text-[#484f58] transition-colors"
+  ```
+- **`src/features/workspace/tabs/VariablesTab.tsx` (Lines 181, 191, 242):**
+  ```tsx
+  className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono uppercase"
+  ```
+- **`src/App.tsx` (Line 1361):**
+  ```tsx
+  className="bg-[#090d13] border border-[#21262d] rounded text-xs text-[#f0f6fc] pl-8 pr-3 py-1 w-52 focus:outline-none focus:border-[#1d6cf6]"
+  ```
+> **Drift Impact:** `DashboardView` uses border `#30363d` with `px-2.5 py-1`, while `DeploymentsView` uses border `#21262d` with `px-2.5 pl-8 py-1.5` and `rounded-md`. When a theme changes, these inputs remain fragmented.
+
+#### B. Raw Table Hardcoding (Bypassing `Table` Component)
+- **`src/features/deployments/DeploymentsView.tsx` (Lines 268-271):**
+  ```tsx
+  268: <div className="border border-[#21262d] rounded-lg bg-[#090d13] overflow-x-auto text-xs shadow-sm">
+  269:   <table className="w-full text-left min-w-[780px]">
+  270:     <thead>
+  271:       <tr className="border-b border-[#21262d] bg-[#161b22] text-[9.5px] font-mono uppercase text-[#7d8590] tracking-wider">
+  ```
+- **`src/features/workspace/tabs/HistoryTab.tsx` (Lines 63-66):**
+  ```tsx
+  63: <div className="border border-[#21262d] rounded bg-[#090d13] text-xs overflow-hidden shadow-sm">
+  64:   <table className="w-full text-left">
+  65:     <thead>
+  66:       <tr className="border-b border-[#21262d] bg-[#161b22] text-[9.5px] font-mono uppercase text-[#7d8590]">
+  ```
+> **Drift Impact:** One table is wrapped in `rounded-lg` with `shadow-sm`, the other in `rounded`. Neither uses a shared `Table` component.
+
+#### C. Card Component Bypassed
+- **`src/features/projects/ProjectsView.tsx` (Line 104):**
+  ```tsx
+  <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 flex flex-col justify-between gap-2 hover:border-[#1d6cf6] transition-colors">
+  ```
+- **`src/features/dashboard/DashboardView.tsx` (Lines 81, 89, 97, 103, 111, 119, 136):**
+  ```tsx
+  <div className="bg-[#161b22] border border-[#30363d] rounded p-2">
+  ```
+> **Drift Impact:** `Card` component in `src/components/cards/Card.tsx` is completely ignored in the primary views.
+
+---
+
+### 🚨 Proof 05: Dark & Light Theme Architecture Mismatch
+
+#### Location: `/index.html` (Line 19)
+```html
+19: <body class="bg-[#0d1117] text-[#f0f6fc] antialiased">
 ```
 
----
-
-### Proof 04: Terminal Toolbar Bypasses `IconButton` (LogsTab)
-- **File**: `src/features/workspace/tabs/LogsTab.tsx`
-- **Lines**: 116–128, 143–214
+#### Location: `/src/layouts/DualSidebarLayout.tsx` (Line 54)
 ```tsx
-// ❌ 7 individual controls hand-coded with raw classes
-<button
-  type="button"
-  onClick={() => onSetShowLogTimestamps(!showLogTimestamps)}
-  className={`p-1.5 rounded flex items-center justify-center cursor-pointer transition-colors ${
-    showLogTimestamps
-      ? 'bg-[#21262d] text-[#58a6ff] border border-[#30363d]'
-      : 'bg-[#090d13] border border-[#21262d] text-[#8b949e] hover:text-[#f0f6fc]'
-  }`}
-  title="Toggle Timestamps"
->
-  <Clock className="w-3.5 h-3.5" />
-</button>
+54: <div className="flex min-h-screen bg-[#0d1117] text-[#f0f6fc] font-sans antialiased selection:bg-[#1d6cf6] selection:text-white">
 ```
 
----
-
-### Proof 05: Arbitrary Height & Hand-Rolled Modals (SettingsView)
-- **File**: `src/features/settings/SettingsView.tsx`
-- **Lines**: 212–260, 703–780, 790–848
+#### Location: `/src/features/settings/SettingsView.tsx` (Lines 338-344)
 ```tsx
-// ❌ Non-standard arbitrary height 'h-6' (24px)
-<button
-  type="button"
-  onClick={() => setShowJsonInspector(true)}
-  className="h-6 px-2 rounded bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] text-[#c9d1d9] text-[11px] font-medium flex items-center gap-1 transition-colors cursor-pointer"
->
-  <Code2 className="w-3.5 h-3.5 text-[#58a6ff]" />
-  <span>JSON</span>
-</button>
-
-// ❌ Modal bypasses ModalShell.tsx with raw text ✕
-{showAddTokenModal && (
-  <div className="fixed inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center p-3 z-50 animate-in fade-in duration-100">
-    <div className="bg-[#161b22] border border-[#30363d] rounded-md max-w-sm w-full p-3.5 flex flex-col gap-2.5 shadow-xl">
-      <div className="flex items-center justify-between border-b border-[#21262d] pb-1.5">
-        <h3 className="text-xs font-semibold text-[#f0f6fc]">New Access Token</h3>
-        <button type="button" onClick={() => setShowAddTokenModal(false)} className="text-[#8b949e] hover:text-white text-xs cursor-pointer">
-          ✕
-        </button>
-      </div>
+338: <select
+339:   value={formState.preferences.theme}
+340:   onChange={(e) => updatePreferences('theme', e.target.value as any)}
+341: >
+342:   <option value="dark">Dark Charcoal (Default - #0d1117)</option>
+343:   <option value="dim">Dim Slate</option>
+344:   <option value="system">System Default</option>
+345: </select>
 ```
+> **Violation:** No Light theme option exists. The theme selector in Settings has zero impact on the DOM because background `#0d1117` is hardcoded directly into the layout root.
 
 ---
 
-### Proof 06: Modal Footers Bypassing Button Components
-- **File**: `src/components/modals/CloudflareBindingsModals.tsx` (Lines 77–91, 169–183, 261–275, 335–349)
-- **File**: `src/components/modals/DeleteProjectModal.tsx` (Lines 55–69)
-- **File**: `src/components/modals/EditCustomDomainModal.tsx` (Lines 86–100)
-- **File**: `src/components/modals/PurgeCacheModal.tsx` (Lines 86–100)
-```tsx
-<div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end gap-2">
-  <button
-    type="button"
-    onClick={onClose}
-    className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] px-3 py-1 text-xs rounded transition-colors cursor-pointer"
-  >
-    Cancel
-  </button>
-  <button
-    type="button"
-    disabled={!name.trim() || !namespaceId.trim()}
-    onClick={onAdd}
-    className="bg-[#1d6cf6] hover:bg-[#2f7af8] disabled:opacity-50 text-white px-3 py-1 text-xs font-medium rounded cursor-pointer transition-colors shadow-sm"
-  >
-    Add Binding
-  </button>
-</div>
-```
+## 4. Phase Scope Locks (Strict Implementation Boundaries)
 
----
+To guarantee zero regression, every phase is strictly **Scope Locked**:
 
-### Proof 07: Top Header Buttons Bypassing `PrimaryButton`
-- **File**: `src/App.tsx`
-- **Lines**: 1369–1385
-```tsx
-// ❌ Deploy Button
-<button
-  onClick={() => triggerDeployment(currentProject.name)}
-  title="Deploy to Cloudflare Pages"
-  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-3 py-1 rounded flex items-center gap-1.5 cursor-pointer shadow-sm transition-all active:scale-[0.98]"
->
-  <Play className="w-3.5 h-3.5 fill-current" />
-  <span className="hidden sm:inline">Deploy</span>
-</button>
-
-// ❌ New Project Button
-<button
-  onClick={() => setIsModalOpen(true)}
-  className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white text-xs font-medium px-2.5 py-1 rounded flex items-center gap-1 cursor-pointer"
->
-  <Plus className="w-3.5 h-3.5" />
-  <span>New Project</span>
-</button>
-```
-
----
-
-### Proof 08: Unregistered Color Hexes Missing from `src/index.css`
-- **File**: `src/index.css`
-- The following colors are used repeatedly across components but are NOT registered in `@theme`:
-  - `#58a6ff` (Light Accent Blue — 100 occurrences)
-  - `#c9d1d9` (Secondary Text — 71 occurrences)
-  - `#e3b341` (Warning Amber — 23 occurrences)
-  - `#da3633` (Critical Crimson Red — 21 occurrences)
-  - `#282e36` (Slate Hover State — 20 occurrences)
-  - `#05080d` (Deep Backdrop / Table Header — 7 occurrences)
-  - `#484f58` (Placeholder Gray — 8 occurrences)
-
----
-
-## 4. Phase-Specific Scope Locks (Strict Scope Boundary)
-
-To eliminate regression risks, each planned phase is locked to exact files:
-
-| Phase | Scope-Locked Target Files | Forbidden Changes |
-| :--- | :--- | :--- |
-| **Phase 1: Token & Theme Register** | `src/index.css` | No TSX/JSX views or components may be touched |
-| **Phase 2: Universal Button System Expansion** | `src/components/buttons/PrimaryButton.tsx`, `SecondaryButton.tsx`, `IconButton.tsx`, `index.ts` | No pages or layout files may be touched |
-| **Phase 3: Card Primitive Implementation** | `src/components/cards/Card.tsx`, `src/components/cards/index.ts`, `src/components/index.ts` | No existing views may be modified during creation |
-| **Phase 4: Modal Standardization** | `src/components/modals/TemplateModal.tsx`, `CloudflareBindingsModals.tsx`, `DeleteProjectModal.tsx`, `EditCustomDomainModal.tsx`, `PurgeCacheModal.tsx`, `SettingsView.tsx` | No routing, data mocks, or logic may be altered |
-| **Phase 5: Global View Harmonization** | `src/features/dashboard/DashboardView.tsx`, `ProjectsView.tsx`, `DeploymentsView.tsx`, `AccountsView.tsx`, `TemplatesView.tsx`, `SettingsView.tsx`, `IntakePipeline.tsx`, `ScanConsole.tsx`, Workspace Tabs, `src/App.tsx` | Visual layouts, texts, and invariants must remain 100% identical |
+- **Phase 1 Scope Lock:** `index.html` + `src/index.css` ONLY.
+  - Fix font stack to `"Segoe UI", "Segoe UI Web", system-ui, -apple-system, "Helvetica Neue", sans-serif`.
+  - Set `--radius: 0rem` and eliminate all border-radius/shadow defaults.
+  - Define dark and light CSS variable tokens (1 border token, 2 accent tokens).
+- **Phase 2 Scope Lock:** `src/components/ui/` ONLY.
+  - Standardize `Card`, `Button`, `Input`, `Select`, `Table`, `Badge`, `Modal` as single source of truth.
+  - Enforce zero radius and zero box shadow.
+- **Phase 3 Scope Lock:** `src/layouts/DualSidebarLayout.tsx` + `src/components/navigation/*` + `src/App.tsx` Header ONLY.
+  - Replace hardcoded `#0d1117` with theme variables.
+  - Add smooth Dark/Light mode toggle in top navigation header.
+- **Phase 4 Scope Lock:** Primary views (`DashboardView.tsx`, `ProjectsView.tsx`, `DeploymentsView.tsx`, `AccountsView.tsx`, `TemplatesView.tsx`, `SettingsView.tsx`) ONLY.
+  - Replace raw inputs, tables, and divs with shared `components/ui/` primitives.
+- **Phase 5 Scope Lock:** Scanner & Workspace tabs (`IntakePipeline.tsx`, `ScanConsole.tsx`, `WorkspaceView.tsx`, tabs) ONLY.
+  - Replace raw elements with shared `components/ui/` primitives.
+  - Remove glow shadows (`shadow-[0_0_8px...]`).
+- **Phase 6 Scope Lock:** Verification & Regression Testing (`compile_applet`, `lint_applet`).
+  - Verify zero TypeScript errors and full feature parity.

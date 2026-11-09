@@ -13,7 +13,6 @@ export interface AccountsModalProps {
 
 /**
  * Connected Accounts & Providers Modal
- * Reference: CARDS.md & AGENTS.md (Rule 01 Clean & Compact, Rule 02 JSX Documentation)
  * Displays linked GitHub OAuth and Cloudflare Pages Edge credentials status with verified badges
  */
 export const AccountsModal: React.FC<AccountsModalProps> = ({
@@ -27,22 +26,22 @@ export const AccountsModal: React.FC<AccountsModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Connected Accounts & Providers"
-      icon={<Github className="w-3.5 h-3.5 text-[#58a6ff]" />}
+      icon={<Github className="w-3.5 h-3.5 text-accent-primary" />}
       maxWidth="md"
     >
-      <div className="p-3.5 flex flex-col gap-2.5 text-xs">
+      <div className="p-3.5 flex flex-col gap-2.5 text-xs font-sans">
         {/* GitHub Account Card */}
-        <div className="bg-[#090d13] border border-[#21262d] rounded-md p-2.5 flex items-center justify-between">
+        <div className="bg-canvas-inset border border-border-subtle rounded-none p-2.5 flex items-center justify-between shadow-none">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-[#161b22] border border-[#30363d] flex items-center justify-center text-white">
+            <div className="w-8 h-8 rounded-none bg-canvas-subtle border border-border-default flex items-center justify-center text-fg-default shadow-none">
               <Github className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-medium text-[#f0f6fc] flex items-center gap-1.5">
+              <div className="text-xs font-medium text-fg-default flex items-center gap-1.5">
                 <span>GitHub: @vibtools</span>
                 <StatusBadge status="verified" label="Connected" />
               </div>
-              <div className="text-[10.5px] text-[#7d8590]">12 Repositories linked · Webhooks active</div>
+              <div className="text-[10.5px] text-fg-subtle">12 Repositories linked · Webhooks active</div>
             </div>
           </div>
           <SecondaryButton
@@ -54,17 +53,17 @@ export const AccountsModal: React.FC<AccountsModalProps> = ({
         </div>
 
         {/* Cloudflare Account Card */}
-        <div className="bg-[#090d13] border border-[#21262d] rounded-md p-2.5 flex items-center justify-between">
+        <div className="bg-canvas-inset border border-border-subtle rounded-none p-2.5 flex items-center justify-between shadow-none">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-[#161b22] border border-[#30363d] flex items-center justify-center text-[#f38020]">
+            <div className="w-8 h-8 rounded-none bg-canvas-subtle border border-border-default flex items-center justify-center text-amber-500 shadow-none">
               <Cloud className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-medium text-[#f0f6fc] flex items-center gap-1.5">
+              <div className="text-xs font-medium text-fg-default flex items-center gap-1.5">
                 <span>Cloudflare Pages</span>
                 <StatusBadge status="verified" label="Verified" />
               </div>
-              <div className="text-[10.5px] text-[#7d8590]">API Token Active · 310+ Edge POPs</div>
+              <div className="text-[10.5px] text-fg-subtle">API Token Active · 310+ Edge POPs</div>
             </div>
           </div>
           <SecondaryButton
@@ -76,7 +75,7 @@ export const AccountsModal: React.FC<AccountsModalProps> = ({
         </div>
       </div>
 
-      <div className="px-3.5 py-2 border-t border-[#21262d] bg-[#090d13] flex items-center justify-end">
+      <div className="px-3.5 py-2 border-t border-border-subtle bg-canvas-inset flex items-center justify-end">
         <PrimaryButton
           size="sm"
           onClick={onClose}

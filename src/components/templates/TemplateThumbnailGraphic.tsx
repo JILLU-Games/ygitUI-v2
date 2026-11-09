@@ -27,23 +27,23 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
     <div
       className={`w-full ${
         isHero ? 'h-64 sm:h-72' : 'h-44 sm:h-48'
-      } bg-[#090d13] flex flex-col rounded-t-lg border-b border-[#21262d] overflow-hidden select-none relative group/thumb font-sans`}
+      } bg-canvas-default flex flex-col rounded-none border-b border-border-subtle overflow-hidden select-none relative group/thumb font-sans`}
     >
       {/* 1. Browser Chrome Header (Clean Mac Dots & Host Domain) */}
-      <div className="h-6 bg-[#161b22] border-b border-[#21262d] px-2.5 flex items-center justify-between shrink-0 z-20">
+      <div className="h-6 bg-canvas-inset border-b border-border-subtle px-2.5 flex items-center justify-between shrink-0 z-20">
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-[#ff5f56]/80"></div>
-          <div className="w-2 h-2 rounded-full bg-[#ffbd2e]/80"></div>
-          <div className="w-2 h-2 rounded-full bg-[#27c93f]/80"></div>
+          <div className="w-2 h-2 rounded-none bg-[#ff5f56]/80"></div>
+          <div className="w-2 h-2 rounded-none bg-[#ffbd2e]/80"></div>
+          <div className="w-2 h-2 rounded-none bg-[#27c93f]/80"></div>
         </div>
 
         {/* Address Bar */}
-        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#090d13] border border-[#21262d] text-[9px] font-mono text-[#8b949e] max-w-[200px] truncate">
+        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-canvas-default border border-border-subtle text-[9px] font-mono text-fg-muted max-w-[200px] truncate">
           <Lock className="w-2.5 h-2.5 text-[#3fb950] shrink-0" />
           <span className="truncate">https://{template.id.replace('tmpl-', '')}.ygit.net</span>
         </div>
 
-        <span className="text-[8.5px] font-mono text-[#58a6ff] bg-[#1d6cf6]/10 px-1.5 py-0.5 rounded border border-[#1d6cf6]/20">
+        <span className="text-[8.5px] font-mono text-accent-primary bg-accent-primary/10 px-1.5 py-0.5 rounded-none border border-accent-primary/20">
           {template.framework}
         </span>
       </div>
@@ -78,17 +78,17 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
                     <Store className="w-3 h-3 text-[#10b981]" />
                     <span className="text-[10px] text-white">SHOPFLOW STORE</span>
                   </div>
-                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/30">
+                  <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-none bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/30">
                     <ShoppingCart className="w-2.5 h-2.5" />
                     <span className="font-mono text-[8px]">2 · $378</span>
                   </div>
                 </div>
-                <div className="bg-[#10b981]/15 border border-[#10b981]/30 rounded p-1.5 flex items-center justify-between">
+                <div className="bg-[#10b981]/15 border border-[#10b981]/30 rounded-none p-1.5 flex items-center justify-between">
                   <div>
                     <div className="text-[9.5px] font-semibold text-[#6ee7b7] leading-tight">Next-Gen Hardware Store</div>
                     <div className="text-[8px] text-slate-300">Stripe Checkout · Edge D1 Cart</div>
                   </div>
-                  <span className="text-[8px] font-mono bg-[#10b981] text-slate-950 font-bold px-1.5 py-0.5 rounded">20% OFF</span>
+                  <span className="text-[8px] font-mono bg-[#10b981] text-slate-950 font-bold px-1.5 py-0.5 rounded-none">20% OFF</span>
                 </div>
                 <div className="grid grid-cols-3 gap-1">
                   {[
@@ -96,7 +96,7 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
                     { name: 'Titanium Dial', price: '$129', icon: '⌚' },
                     { name: 'Keypad v2', price: '$89', icon: '⌨️' },
                   ].map((prod, i) => (
-                    <div key={i} className="bg-[#090d13]/85 border border-white/10 rounded p-1 flex flex-col justify-between text-center">
+                    <div key={i} className="bg-[#090d13]/85 border border-white/10 rounded-none p-1 flex flex-col justify-between text-center">
                       <div className="text-sm my-0.5">{prod.icon}</div>
                       <div className="text-[8px] font-medium text-white truncate">{prod.name}</div>
                       <div className="text-[7.5px] font-mono text-[#34d399] mt-0.5">{prod.price}</div>
@@ -108,27 +108,27 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
 
             {template.thumbnailType === 'saas' && (
               <div className="flex-1 flex gap-1.5 text-white">
-                <div className="w-6 bg-[#090d13]/90 border border-white/10 rounded p-1 flex flex-col items-center gap-1 shrink-0">
-                  <div className="w-4 h-4 rounded bg-[#1d6cf6] flex items-center justify-center text-[8px] font-bold text-white">N</div>
-                  <div className="w-2.5 h-0.5 rounded bg-[#1d6cf6]"></div>
-                  <div className="w-2.5 h-0.5 rounded bg-white/20"></div>
+                <div className="w-6 bg-[#090d13]/90 border border-white/10 rounded-none p-1 flex flex-col items-center gap-1 shrink-0">
+                  <div className="w-4 h-4 rounded-none bg-[#1d6cf6] flex items-center justify-center text-[8px] font-bold text-white">N</div>
+                  <div className="w-2.5 h-0.5 rounded-none bg-[#1d6cf6]"></div>
+                  <div className="w-2.5 h-0.5 rounded-none bg-white/20"></div>
                 </div>
                 <div className="flex-1 flex flex-col justify-between gap-1">
                   <div className="grid grid-cols-3 gap-1">
-                    <div className="bg-[#090d13]/85 border border-white/10 rounded p-1">
+                    <div className="bg-[#090d13]/85 border border-white/10 rounded-none p-1">
                       <div className="text-[7px] text-slate-400">MRR</div>
                       <div className="text-[9px] font-mono font-bold text-[#58a6ff]">$48.2k</div>
                     </div>
-                    <div className="bg-[#090d13]/85 border border-white/10 rounded p-1">
+                    <div className="bg-[#090d13]/85 border border-white/10 rounded-none p-1">
                       <div className="text-[7px] text-slate-400">Users</div>
                       <div className="text-[9px] font-mono font-bold text-white">12.8k</div>
                     </div>
-                    <div className="bg-[#090d13]/85 border border-white/10 rounded p-1">
+                    <div className="bg-[#090d13]/85 border border-white/10 rounded-none p-1">
                       <div className="text-[7px] text-slate-400">Edge</div>
                       <div className="text-[9px] font-mono font-bold text-[#3fb950]">8ms</div>
                     </div>
                   </div>
-                  <div className="bg-[#090d13]/85 border border-white/10 rounded p-1 flex flex-col justify-between flex-1">
+                  <div className="bg-[#090d13]/85 border border-white/10 rounded-none p-1 flex flex-col justify-between flex-1">
                     <div className="flex items-center justify-between text-[7px] text-slate-300">
                       <span className="font-semibold text-white">Ingestion Metrics</span>
                       <span className="font-mono text-[#58a6ff]">Live Stream</span>
@@ -148,7 +148,7 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
                   <span className="font-bold">{template.name.toUpperCase()}</span>
                   <span>{template.frameworkBadge}</span>
                 </div>
-                <div className="bg-[#090d13]/90 border border-white/10 rounded p-2 flex flex-col justify-between flex-1">
+                <div className="bg-[#090d13]/90 border border-white/10 rounded-none p-2 flex flex-col justify-between flex-1">
                   <div className="text-[10px] font-semibold text-white leading-snug">{template.shortBio}</div>
                   <div className="flex items-center gap-1.5 pt-1 text-[8px] font-mono text-slate-400 border-t border-white/10">
                     <span className="text-[#3fb950]">● Jamstack Ready</span>
@@ -163,24 +163,24 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
 
         {/* Top Badges (Category & Free Theme) */}
         <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
-          <span className="text-[9px] font-mono px-2 py-0.5 rounded bg-[#090d13]/90 text-[#f0f6fc] border border-white/15 backdrop-blur-xs shadow-sm">
+          <span className="text-[9px] font-mono px-2 py-0.5 rounded-none bg-canvas-default/90 text-fg-default border border-border-subtle backdrop-blur-xs shadow-none">
             {template.category}
           </span>
-          <span className="text-[8.5px] font-mono px-1.5 py-0.5 rounded bg-[#238636]/25 text-[#3fb950] border border-[#238636]/40 backdrop-blur-xs font-semibold shadow-sm">
+          <span className="text-[8.5px] font-mono px-1.5 py-0.5 rounded-none bg-[#238636]/25 text-[#3fb950] border border-[#238636]/40 backdrop-blur-xs font-semibold shadow-none">
             Free Theme
           </span>
         </div>
 
         {/* Style Tag Bottom-Right */}
         <div className="absolute bottom-2 right-2 z-10 hidden sm:block">
-          <span className="text-[8.5px] font-mono px-2 py-0.5 rounded bg-[#090d13]/85 text-[#8b949e] border border-white/10 backdrop-blur-xs">
+          <span className="text-[8.5px] font-mono px-2 py-0.5 rounded-none bg-canvas-default/85 text-fg-muted border border-border-subtle backdrop-blur-xs">
             {template.themeStyle}
           </span>
         </div>
 
         {/* Hover Quick Action Overlay (Wix / Shopify Theme Store style) */}
         {!isHero && (
-          <div className="absolute inset-0 bg-[#090d13]/75 backdrop-blur-[2px] opacity-0 group-hover/thumb:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 z-20">
+          <div className="absolute inset-0 bg-canvas-default/75 backdrop-blur-[2px] opacity-0 group-hover/thumb:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 z-20">
             {onInspect && (
               <button
                 type="button"
@@ -188,9 +188,9 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
                   e.stopPropagation();
                   onInspect();
                 }}
-                className="bg-[#21262d] hover:bg-[#282e36] text-[#f0f6fc] border border-[#30363d] px-2.5 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95"
+                className="bg-canvas-default hover:bg-canvas-inset text-fg-default border border-border-subtle px-2.5 py-1.5 rounded-none text-xs font-medium flex items-center gap-1.5 shadow-none cursor-pointer transition-transform active:scale-95"
               >
-                <Eye className="w-3.5 h-3.5 text-[#58a6ff]" />
+                <Eye className="w-3.5 h-3.5 text-accent-primary" />
                 <span>Quick View</span>
               </button>
             )}
@@ -199,7 +199,7 @@ export const TemplateThumbnailGraphic: React.FC<TemplateThumbnailGraphicProps> =
               target="_blank"
               rel="noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#1d6cf6] hover:bg-[#2f7af8] text-white px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 shadow-md cursor-pointer transition-transform active:scale-95"
+              className="bg-accent-primary hover:opacity-90 text-white px-3 py-1.5 rounded-none text-xs font-medium flex items-center gap-1.5 shadow-none cursor-pointer transition-transform active:scale-95"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Live Demo</span>

@@ -73,11 +73,11 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10.5px] font-mono border ${config.bg} ${config.text} ${config.border} select-none ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none shadow-none text-[10.5px] font-mono border ${config.bg} ${config.text} ${config.border} select-none ${className}`}
     >
       {showDot && (
         <span
-          className={`w-1.5 h-1.5 rounded-full ${config.dot} ${
+          className={`w-1.5 h-1.5 rounded-none ${config.dot} ${
             config.pulse ? 'animate-pulse' : ''
           }`}
         />

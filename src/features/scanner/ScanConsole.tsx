@@ -11,18 +11,11 @@
  * Jamstack runtime verification, Cloudflare Pages compatibility, durable worker leasing,
  * project readiness context attachment, database migration sync, and sandboxed security audit.
  * 
- * ARCHITECTURE & LIFECYCLE:
- * 1. State A: Live Scanning Animation (!scanCompleted):
- *    - Real-time progress bar with glowing blue pulse.
- *    - 14 Invariant Checkpoints grid updating live with passing green checks,
- *      active spinning blue badge, and pending state.
- *    - Real-time AST & engine inspection terminal stream.
- * 2. State B: Post-Scan Deep Analysis Report (scanCompleted):
- *    - Tab 1: Deep Report (A-Z Findings Dashboard with Commit AST SHA, Root Guard,
- *      Framework, Package Manager, Build Pipeline, Pages Target, Worker Lease, Migration, Security).
- *    - Tab 2: 14 Invariants Checklist (all 14 passed items with green badges).
- *    - Tab 3: Raw Spec JSON.
- *    - Action controls: "Re-scan" and "Open Workspace →".
+ * DESIGN CONSTITUTION:
+ * - Component-only architecture: Card, PrimaryButton, SecondaryButton.
+ * - Zero border radius (`rounded-none`) and zero box shadow (`shadow-none`).
+ * - Zero glow / drop-shadow discipline (clean flat enterprise aesthetic).
+ * - Full Dark/Light dual-theme token coverage via semantic CSS variables.
  * ============================================================================
  */
 
@@ -36,6 +29,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { PrimaryButton, SecondaryButton } from '../../components/buttons';
+import { Card } from '../../components/ui';
 
 export interface ScanConsoleProps {
   currentProject: { name: string; repo: string };
@@ -65,25 +59,25 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
   onOpenWorkspace,
 }) => {
   return (
-    <div className="p-3 flex flex-col gap-2.5 max-w-[1400px] w-full mx-auto flex-1 animate-in fade-in duration-150">
+    <div className="p-3 flex flex-col gap-2.5 max-w-[1400px] w-full mx-auto flex-1 animate-in fade-in duration-100 font-sans">
       {/* Header Status Bar */}
-      <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 px-3 flex items-center justify-between">
+      <Card variant="default" className="p-2.5 px-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Code2 className="w-4 h-4 text-[#1d6cf6]" />
-          <span className="text-xs font-bold text-[#f0f6fc] font-mono">{currentProject.repo}</span>
-          <span className="text-[10.5px] font-mono text-[#7d8590]">commit: 7f3b891 · {scanTimer}s</span>
+          <Code2 className="w-4 h-4 text-accent-primary" />
+          <span className="text-xs font-bold text-fg-default font-mono">{currentProject.repo}</span>
+          <span className="text-[10.5px] font-mono text-fg-subtle">commit: 7f3b891 · {scanTimer}s</span>
         </div>
 
         <div className="flex items-center gap-2">
           {scanCompleted ? (
             /* Scan Report View Switcher (Only visible after scan finishes) */
             <div className="flex items-center gap-2">
-              <div className="flex bg-[#090d13] border border-[#30363d] rounded p-0.5 text-[10px]">
+              <div className="flex bg-canvas-inset border border-border-default p-0.5 text-[10px] rounded-none shadow-none">
                 <button
                   type="button"
                   onClick={() => onSetScanReportView('report')}
-                  className={`px-2 py-0.5 rounded font-medium cursor-pointer transition-colors ${
-                    scanReportView === 'report' ? 'bg-[#21262d] text-[#f0f6fc] font-semibold' : 'text-[#8b949e] hover:text-[#f0f6fc]'
+                  className={`px-2 py-0.5 rounded-none font-medium cursor-pointer transition-colors ${
+                    scanReportView === 'report' ? 'bg-canvas-subtle text-fg-default font-semibold' : 'text-fg-muted hover:text-fg-default'
                   }`}
                 >
                   Deep Report
@@ -91,8 +85,8 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
                 <button
                   type="button"
                   onClick={() => onSetScanReportView('checkpoints')}
-                  className={`px-2 py-0.5 rounded font-medium cursor-pointer transition-colors ${
-                    scanReportView === 'checkpoints' ? 'bg-[#21262d] text-[#f0f6fc] font-semibold' : 'text-[#8b949e] hover:text-[#f0f6fc]'
+                  className={`px-2 py-0.5 rounded-none font-medium cursor-pointer transition-colors ${
+                    scanReportView === 'checkpoints' ? 'bg-canvas-subtle text-fg-default font-semibold' : 'text-fg-muted hover:text-fg-default'
                   }`}
                 >
                   14 Invariants
@@ -100,32 +94,32 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
                 <button
                   type="button"
                   onClick={() => onSetScanReportView('json')}
-                  className={`px-2 py-0.5 rounded font-medium cursor-pointer transition-colors ${
-                    scanReportView === 'json' ? 'bg-[#21262d] text-[#f0f6fc] font-semibold' : 'text-[#8b949e] hover:text-[#f0f6fc]'
+                  className={`px-2 py-0.5 rounded-none font-medium cursor-pointer transition-colors ${
+                    scanReportView === 'json' ? 'bg-canvas-subtle text-fg-default font-semibold' : 'text-fg-muted hover:text-fg-default'
                   }`}
                 >
                   Raw Spec
                 </button>
               </div>
 
-              <span className="text-[9.5px] font-semibold px-2 py-0.5 rounded bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30 font-mono">
+              <span className="text-[9.5px] font-semibold px-2 py-0.5 rounded-none bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 font-mono shadow-none">
                 ✓ 14/14 Passed (100% READY)
               </span>
             </div>
           ) : (
             /* Active Scan Progress Indicator */
             <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1.5 text-[10.5px] text-[#1d6cf6] font-medium">
+              <span className="flex items-center gap-1.5 text-[10.5px] text-accent-primary font-medium">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 <span>Scanning stage {scanStep}/14</span>
               </span>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#1d6cf6]/15 text-[#1d6cf6] border border-[#1d6cf6]/30">
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-none bg-accent-primary/10 text-accent-primary border border-accent-primary/30 shadow-none">
                 {scanProgress}%
               </span>
             </div>
           )}
         </div>
-      </div>
+      </Card>
 
       {/* ================================================================
           STATE A: LIVE SCANNING ANIMATION (!scanCompleted)
@@ -133,11 +127,11 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
       {!scanCompleted && (
         <div className="flex flex-col gap-2.5">
           {/* Live Progress Card */}
-          <div className="bg-[#161b22] border border-[#30363d] rounded p-3 flex flex-col gap-2 shadow-sm">
+          <Card variant="default" className="p-3 flex flex-col gap-2">
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#1d6cf6] animate-ping inline-block"></span>
-                <strong className="text-[#f0f6fc]">
+                <span className="w-2 h-2 rounded-none bg-accent-primary inline-block"></span>
+                <strong className="text-fg-default">
                   {[
                     '1. Inspecting commit evidence & calculating AST SHA-256...',
                     '2. Analyzing monorepo directory tree & root boundaries...',
@@ -156,17 +150,17 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
                   ][scanStep - 1] || 'Executing deep codebase analysis...'}
                 </strong>
               </div>
-              <span className="font-mono text-xs font-bold text-[#1d6cf6]">{scanProgress}%</span>
+              <span className="font-mono text-xs font-bold text-accent-primary">{scanProgress}%</span>
             </div>
 
-            {/* Progress Bar with glowing pulse */}
-            <div className="w-full h-1.5 rounded bg-[#090d13] overflow-hidden border border-[#21262d]">
+            {/* Progress Bar (zero glow) */}
+            <div className="w-full h-1.5 rounded-none bg-canvas-inset overflow-hidden border border-border-subtle shadow-none">
               <div
-                className="h-full bg-[#1d6cf6] transition-all duration-200 ease-out shadow-[0_0_8px_rgba(29,108,246,0.6)]"
+                className="h-full bg-accent-primary transition-all duration-200 ease-out"
                 style={{ width: `${scanProgress}%` }}
               ></div>
             </div>
-          </div>
+          </Card>
 
           {/* 14 Invariant Checkpoints Grid (Live Animation) */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2">
@@ -192,22 +186,22 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
               return (
                 <div
                   key={item.id}
-                  className={`flex flex-col p-2.5 rounded border text-xs justify-between gap-1 transition-all duration-200 ${
+                  className={`flex flex-col p-2.5 rounded-none border text-xs justify-between gap-1 transition-all duration-150 shadow-none ${
                     isPassed
-                      ? 'bg-[#238636]/10 border-[#238636]/30 text-[#f0f6fc]'
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-fg-default'
                       : isActive
-                      ? 'bg-[#0e1828] border-[#1d6cf6] text-[#f0f6fc] shadow-[0_0_12px_rgba(29,108,246,0.3)]'
-                      : 'bg-[#090d13] border-[#21262d] text-[#7d8590] opacity-60'
+                      ? 'bg-accent-primary/10 border-accent-primary text-fg-default'
+                      : 'bg-canvas-inset border-border-subtle text-fg-subtle opacity-70'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
                       {isPassed ? (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#3fb950]" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                       ) : isActive ? (
-                        <RefreshCw className="w-3.5 h-3.5 text-[#1d6cf6] animate-spin" />
+                        <RefreshCw className="w-3.5 h-3.5 text-accent-primary animate-spin" />
                       ) : (
-                        <span className="w-3.5 h-3.5 rounded-full bg-[#21262d] flex items-center justify-center text-[9px] font-mono text-[#7d8590]">
+                        <span className="w-3.5 h-3.5 rounded-none bg-canvas-subtle border border-border-subtle flex items-center justify-center text-[9px] font-mono text-fg-subtle">
                           {item.id}
                         </span>
                       )}
@@ -215,38 +209,38 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
                     </div>
                     <span
                       className={`font-mono text-[9.5px] font-bold ${
-                        isPassed ? 'text-[#3fb950]' : isActive ? 'text-[#1d6cf6]' : 'text-[#7d8590]'
+                        isPassed ? 'text-emerald-500' : isActive ? 'text-accent-primary' : 'text-fg-subtle'
                       }`}
                     >
                       {isPassed ? item.tag : isActive ? 'ANALYZING...' : 'PENDING'}
                     </span>
                   </div>
-                  <span className="text-[10px] text-[#8b949e]">{item.desc}</span>
+                  <span className="text-[10px] text-fg-muted">{item.desc}</span>
                 </div>
               );
             })}
           </div>
 
           {/* Live Streaming Terminal Logs */}
-          <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 flex flex-col gap-1.5">
-            <div className="flex items-center justify-between pb-1 border-b border-[#21262d] text-xs font-semibold text-[#f0f6fc]">
+          <Card variant="default" className="p-2.5 flex flex-col gap-1.5">
+            <div className="flex items-center justify-between pb-1 border-b border-border-subtle text-xs font-semibold text-fg-default">
               <div className="flex items-center gap-2">
-                <Terminal className="w-3.5 h-3.5 text-[#1d6cf6]" />
+                <Terminal className="w-3.5 h-3.5 text-accent-primary" />
                 <span>Realtime AST & Engine Inspection Stream</span>
               </div>
-              <span className="font-mono text-[10px] text-[#8b949e]">Time: {scanTimer}s</span>
+              <span className="font-mono text-[10px] text-fg-subtle">Time: {scanTimer}s</span>
             </div>
 
-            <div className="bg-[#090d13] border border-[#21262d] rounded p-2.5 font-mono text-[10.5px] h-[190px] overflow-y-auto flex flex-col gap-0.5">
+            <div className="bg-canvas-inset border border-border-subtle rounded-none p-2.5 font-mono text-[10.5px] h-[190px] overflow-y-auto flex flex-col gap-0.5 shadow-none">
               {scanLogs.map((log, i) => (
                 <div
                   key={i}
                   className={
                     log.includes('✓') || log.includes('✨')
-                      ? 'text-[#3fb950]'
+                      ? 'text-emerald-500'
                       : log.includes('⚡')
-                      ? 'text-[#e3b341]'
-                      : 'text-[#8b949e]'
+                      ? 'text-amber-400'
+                      : 'text-fg-muted'
                   }
                 >
                   {log}
@@ -254,7 +248,7 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
               ))}
               <div ref={logsEndRef} />
             </div>
-          </div>
+          </Card>
         </div>
       )}
 
@@ -268,86 +262,86 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
               {/* Left Side: Summary Findings Cards */}
               <div className="flex flex-col gap-2">
-                <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 flex flex-col gap-2">
-                  <div className="flex items-center justify-between pb-1 border-b border-[#21262d] text-xs font-semibold text-[#f0f6fc]">
+                <Card variant="default" className="p-2.5 flex flex-col gap-2">
+                  <div className="flex items-center justify-between pb-1 border-b border-border-subtle text-xs font-semibold text-fg-default">
                     <span className="flex items-center gap-1.5">
-                      <FileCheck className="w-3.5 h-3.5 text-[#3fb950]" />
+                      <FileCheck className="w-3.5 h-3.5 text-emerald-500" />
                       <span>Codebase Deep Analysis Findings</span>
                     </span>
-                    <span className="font-mono text-[10px] text-[#3fb950] font-bold">100% READY</span>
+                    <span className="font-mono text-[10px] text-emerald-500 font-bold">100% READY</span>
                   </div>
 
                   <div className="grid grid-cols-2 gap-1.5 text-xs">
-                    <div className="bg-[#090d13] border border-[#21262d] rounded p-2">
-                      <span className="text-[8.5px] uppercase font-mono text-[#7d8590] block">Commit AST SHA-256</span>
-                      <code className="text-[#3fb950] text-[10.5px] font-mono truncate block">sha256:e3b0c44298fc</code>
-                      <span className="text-[9.5px] text-[#8b949e]">Pinned commit 7f3b891</span>
+                    <div className="bg-canvas-inset border border-border-subtle rounded-none p-2 shadow-none">
+                      <span className="text-[8.5px] uppercase font-mono text-fg-subtle block">Commit AST SHA-256</span>
+                      <code className="text-emerald-500 text-[10.5px] font-mono truncate block select-all">sha256:e3b0c44298fc</code>
+                      <span className="text-[9.5px] text-fg-muted">Pinned commit 7f3b891</span>
                     </div>
 
-                    <div className="bg-[#090d13] border border-[#21262d] rounded p-2">
-                      <span className="text-[8.5px] uppercase font-mono text-[#7d8590] block">Monorepo Root Guard</span>
-                      <code className="text-[#1d6cf6] text-[10.5px] font-mono block">/ (Root Project)</code>
-                      <span className="text-[9.5px] text-[#8b949e]">0 Nested ambiguities</span>
+                    <div className="bg-canvas-inset border border-border-subtle rounded-none p-2 shadow-none">
+                      <span className="text-[8.5px] uppercase font-mono text-fg-subtle block">Monorepo Root Guard</span>
+                      <code className="text-accent-primary text-[10.5px] font-mono block">/ (Root Project)</code>
+                      <span className="text-[9.5px] text-fg-muted">0 Nested ambiguities</span>
                     </div>
 
-                    <div className="bg-[#090d13] border border-[#21262d] rounded p-2">
-                      <span className="text-[8.5px] uppercase font-mono text-[#7d8590] block">Framework Engine</span>
-                      <span className="text-[#f0f6fc] text-[11px] font-bold block">Vite 6.1.1 + React 19</span>
-                      <span className="text-[9.5px] text-[#8b949e]">Static Jamstack CSR</span>
+                    <div className="bg-canvas-inset border border-border-subtle rounded-none p-2 shadow-none">
+                      <span className="text-[8.5px] uppercase font-mono text-fg-subtle block">Framework Engine</span>
+                      <span className="text-fg-default text-[11px] font-bold block">Vite 6.1.1 + React 19</span>
+                      <span className="text-[9.5px] text-fg-muted">Static Jamstack CSR</span>
                     </div>
 
-                    <div className="bg-[#090d13] border border-[#21262d] rounded p-2">
-                      <span className="text-[8.5px] uppercase font-mono text-[#7d8590] block">Package Manager</span>
-                      <code className="text-[#e3b341] text-[10.5px] font-mono block">pnpm v9.1.0 (lockfile v6)</code>
-                      <span className="text-[9.5px] text-[#8b949e]">Zero dependency conflict</span>
+                    <div className="bg-canvas-inset border border-border-subtle rounded-none p-2 shadow-none">
+                      <span className="text-[8.5px] uppercase font-mono text-fg-subtle block">Package Manager</span>
+                      <code className="text-amber-400 text-[10.5px] font-mono block">pnpm v9.1.0 (lockfile v6)</code>
+                      <span className="text-[9.5px] text-fg-muted">Zero dependency conflict</span>
                     </div>
 
-                    <div className="bg-[#090d13] border border-[#21262d] rounded p-2">
-                      <span className="text-[8.5px] uppercase font-mono text-[#7d8590] block">Resolved Build Pipeline</span>
-                      <code className="text-[#f0f6fc] text-[10.5px] font-mono block">pnpm run build</code>
-                      <span className="text-[9.5px] text-[#8b949e]">Output: dist/ (142.92 kB)</span>
+                    <div className="bg-canvas-inset border border-border-subtle rounded-none p-2 shadow-none">
+                      <span className="text-[8.5px] uppercase font-mono text-fg-subtle block">Resolved Build Pipeline</span>
+                      <code className="text-fg-default text-[10.5px] font-mono block">pnpm run build</code>
+                      <span className="text-[9.5px] text-fg-muted">Output: dist/ (142.92 kB)</span>
                     </div>
 
-                    <div className="bg-[#090d13] border border-[#21262d] rounded p-2">
-                      <span className="text-[8.5px] uppercase font-mono text-[#7d8590] block">Cloudflare Pages Target</span>
-                      <span className="text-[#3fb950] text-[11px] font-bold block">Pages Compatible</span>
-                      <span className="text-[9.5px] text-[#8b949e]">Wrangler schema valid</span>
+                    <div className="bg-canvas-inset border border-border-subtle rounded-none p-2 shadow-none">
+                      <span className="text-[8.5px] uppercase font-mono text-fg-subtle block">Cloudflare Pages Target</span>
+                      <span className="text-emerald-500 text-[11px] font-bold block">Pages Compatible</span>
+                      <span className="text-[9.5px] text-fg-muted">Wrangler schema valid</span>
                     </div>
                   </div>
-                </div>
+                </Card>
 
                 {/* Security & Lifecycle Verification */}
-                <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 grid grid-cols-3 gap-1.5 text-xs">
-                  <div className="bg-[#090d13] p-1.5 rounded">
-                    <span className="text-[8.5px] font-mono text-[#7d8590] block">WORKER LEASE</span>
-                    <strong className="text-[#1d6cf6] text-[10.5px] font-mono block">#wk-8924</strong>
-                    <span className="text-[9px] text-[#8b949e]">Latency: 12ms</span>
+                <div className="bg-canvas-subtle border border-border-default rounded-none p-2.5 grid grid-cols-3 gap-1.5 text-xs shadow-none">
+                  <div className="bg-canvas-inset p-1.5 rounded-none border border-border-subtle">
+                    <span className="text-[8.5px] font-mono text-fg-subtle block">WORKER LEASE</span>
+                    <strong className="text-accent-primary text-[10.5px] font-mono block">#wk-8924</strong>
+                    <span className="text-[9px] text-fg-muted">Latency: 12ms</span>
                   </div>
-                  <div className="bg-[#090d13] p-1.5 rounded">
-                    <span className="text-[8.5px] font-mono text-[#7d8590] block">MIGRATION</span>
-                    <strong className="text-[#3fb950] text-[10.5px] font-mono block">0013_SYNCED</strong>
-                    <span className="text-[9px] text-[#8b949e]">Alembic fix merged</span>
+                  <div className="bg-canvas-inset p-1.5 rounded-none border border-border-subtle">
+                    <span className="text-[8.5px] font-mono text-fg-subtle block">MIGRATION</span>
+                    <strong className="text-emerald-500 text-[10.5px] font-mono block">0013_SYNCED</strong>
+                    <span className="text-[9px] text-fg-muted">Alembic fix merged</span>
                   </div>
-                  <div className="bg-[#090d13] p-1.5 rounded">
-                    <span className="text-[8.5px] font-mono text-[#7d8590] block">SECURITY</span>
-                    <strong className="text-[#3fb950] text-[10.5px] font-mono block">SANDBOXED</strong>
-                    <span className="text-[9px] text-[#8b949e]">0 Repo code run</span>
+                  <div className="bg-canvas-inset p-1.5 rounded-none border border-border-subtle">
+                    <span className="text-[8.5px] font-mono text-fg-subtle block">SECURITY</span>
+                    <strong className="text-emerald-500 text-[10.5px] font-mono block">SANDBOXED</strong>
+                    <span className="text-[9px] text-fg-muted">0 Repo code run</span>
                   </div>
                 </div>
               </div>
 
               {/* Right Side: Scan Audit Terminal Logs */}
               <div className="flex flex-col gap-2">
-                <div className="bg-[#090d13] border border-[#21262d] rounded p-2.5 font-mono text-[10.5px] text-[#8b949e] h-[260px] overflow-y-auto flex flex-col gap-0.5">
+                <div className="bg-canvas-inset border border-border-default rounded-none p-2.5 font-mono text-[10.5px] text-fg-muted h-[260px] overflow-y-auto flex flex-col gap-0.5 shadow-none">
                   {scanLogs.map((log, i) => (
                     <div
                       key={i}
                       className={
                         log.includes('✓') || log.includes('✨')
-                          ? 'text-[#3fb950]'
+                          ? 'text-emerald-500'
                           : log.includes('⚡')
-                          ? 'text-[#e3b341]'
-                          : 'text-[#8b949e]'
+                          ? 'text-amber-400'
+                          : 'text-fg-muted'
                       }
                     >
                       {log}
@@ -356,20 +350,20 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
                   <div ref={logsEndRef} />
                 </div>
 
-                <div className="bg-[#161b22] border border-[#30363d] rounded p-2 px-3 flex items-center justify-between text-xs">
+                <Card variant="default" className="p-2 px-3 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-[#3fb950]"></span>
-                    <span className="text-[#f0f6fc] font-semibold">14 Analysis Invariants Verified</span>
+                    <span className="w-2 h-2 rounded-none bg-emerald-500 inline-block"></span>
+                    <span className="text-fg-default font-semibold">14 Analysis Invariants Verified</span>
                   </div>
-                  <span className="font-mono text-[#8b949e] text-[11px]">Duration: {scanTimer}s</span>
-                </div>
+                  <span className="font-mono text-fg-subtle text-[11px]">Duration: {scanTimer}s</span>
+                </Card>
               </div>
             </div>
           )}
 
           {/* SCAN REPORT TAB 2: 14 INVARIANTS CHECKLIST */}
           {scanReportView === 'checkpoints' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-[#161b22] border border-[#30363d] rounded p-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-canvas-subtle border border-border-default rounded-none p-2.5 shadow-none">
               {[
                 { id: 1, name: '1. Commit Evidence', tag: 'sha256:e3b0c44', desc: 'Deterministic AST SHA-256 hash calculated' },
                 { id: 2, name: '2. Root Detection', tag: 'ROOT /', desc: 'Single root validated with fail-closed blocker' },
@@ -388,16 +382,16 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
               ].map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col p-2.5 rounded border text-xs justify-between gap-1 bg-[#238636]/10 border-[#238636]/30 text-[#f0f6fc]"
+                  className="flex flex-col p-2.5 rounded-none border text-xs justify-between gap-1 bg-emerald-500/10 border-emerald-500/30 text-fg-default shadow-none"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#3fb950]" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                       <span className="font-semibold text-[11.5px]">{item.name}</span>
                     </div>
-                    <span className="font-mono text-[9.5px] text-[#3fb950] font-bold">{item.tag}</span>
+                    <span className="font-mono text-[9.5px] text-emerald-500 font-bold">{item.tag}</span>
                   </div>
-                  <span className="text-[10px] text-[#8b949e]">{item.desc}</span>
+                  <span className="text-[10px] text-fg-muted">{item.desc}</span>
                 </div>
               ))}
             </div>
@@ -405,7 +399,7 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
 
           {/* SCAN REPORT TAB 3: RAW JSON SPECIFICATION */}
           {scanReportView === 'json' && (
-            <div className="bg-[#090d13] border border-[#21262d] rounded p-3 font-mono text-[11px] text-[#3fb950] h-[340px] overflow-y-auto">
+            <div className="bg-canvas-inset border border-border-default rounded-none p-3 font-mono text-[11px] text-emerald-500 h-[340px] overflow-y-auto shadow-none">
               <pre>
                 {JSON.stringify(
                   {
@@ -435,9 +429,9 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
           )}
 
           {/* Post-Scan Footer Action Controls */}
-          <div className="bg-[#161b22] border border-[#30363d] rounded p-2.5 px-3 flex items-center justify-between shadow-sm">
-            <div className="text-xs font-semibold text-[#f0f6fc] flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#3fb950] inline-block"></span>
+          <Card variant="default" className="p-2.5 px-3 flex items-center justify-between">
+            <div className="text-xs font-semibold text-fg-default flex items-center gap-2">
+              <span className="w-2 h-2 rounded-none bg-emerald-500 inline-block"></span>
               <span>14/14 Invariants Verified · Ready for Edge Deployment</span>
             </div>
             <div className="flex gap-2">
@@ -456,7 +450,7 @@ export const ScanConsole: React.FC<ScanConsoleProps> = ({
                 Open Workspace
               </PrimaryButton>
             </div>
-          </div>
+          </Card>
         </div>
       )}
     </div>

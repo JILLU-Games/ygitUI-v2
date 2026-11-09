@@ -1,55 +1,59 @@
 @import "tailwindcss";
 
 @theme {
-  --color-canvas-default: #0d1117;
-  --color-canvas-subtle: #161b22;
-  --color-canvas-inset: #090d13;
-  --color-canvas-inset-secondary: #12161d;
-  --color-canvas-deep: #05080d;
-  --color-canvas-selected: #0e1828;
-  --color-canvas-hover: #0f1622;
-  --color-canvas-overlay: rgba(5, 8, 13, 0.75);
+  --color-canvas-default: var(--canvas-default);
+  --color-canvas-subtle: var(--canvas-subtle);
+  --color-canvas-inset: var(--canvas-inset);
+  --color-canvas-inset-secondary: var(--canvas-inset-secondary);
+  --color-canvas-deep: var(--canvas-deep);
+  --color-canvas-selected: var(--canvas-selected);
+  --color-canvas-hover: var(--canvas-hover);
+  --color-canvas-overlay: var(--canvas-overlay);
 
-  --color-surface-hover: #282e36;
+  --color-surface-hover: var(--surface-hover);
 
-  --color-border-default: #30363d;
-  --color-border-muted: #21262d;
-  --color-border-active: #1d6cf6;
+  --color-border-default: var(--border-subtle);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-muted: var(--border-subtle);
+  --color-border-active: var(--accent-primary);
 
-  --color-fg-default: #f0f6fc;
-  --color-fg-secondary: #c9d1d9;
-  --color-fg-muted: #8b949e;
-  --color-fg-subtle: #7d8590;
-  --color-fg-placeholder: #484f58;
+  --color-fg-default: var(--fg-default);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+  --color-fg-placeholder: var(--fg-placeholder);
 
-  --color-brand-primary: #1d6cf6;
-  --color-brand-primary-hover: #2f7af8;
-  --color-brand-primary-border: rgba(47, 122, 248, 0.4);
+  --color-brand-primary: var(--accent-primary);
+  --color-brand-primary-hover: var(--accent-primary-hover);
+  --color-brand-primary-border: var(--accent-primary-border);
 
-  --color-accent-green: #238636;
-  --color-accent-green-hover: #2ea043;
-  --color-accent-green-text: #3fb950;
-  --color-accent-green-subtle: rgba(35, 134, 54, 0.15);
+  --color-accent-green: var(--accent-secondary);
+  --color-accent-green-hover: var(--accent-secondary-hover);
+  --color-accent-green-text: var(--accent-secondary-text);
+  --color-accent-green-subtle: var(--accent-secondary-subtle);
 
-  --color-accent-red-critical: #da3633;
-  --color-accent-red-text: #f85149;
-  --color-accent-red-subtle: rgba(218, 54, 51, 0.15);
+  --color-accent-red-critical: var(--accent-red);
+  --color-accent-red-text: var(--accent-red-text);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-amber: var(--accent-amber);
+  --color-accent-blue-light: var(--accent-blue-light);
 
-  --color-accent-purple: #8957e5;
-  --color-accent-purple-text: #a371f7;
-  --color-accent-purple-subtle: rgba(137, 87, 229, 0.15);
-
-  --color-accent-amber: #d29922;
-  --color-accent-amber-telemetry: #e3b341;
-  --color-accent-amber-subtle: rgba(210, 153, 34, 0.15);
-
-  --color-accent-blue-light: #58a6ff;
-
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Segoe UI", "Segoe UI Web", system-ui, -apple-system, "Helvetica Neue", sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+/* ============================================================================
+   THEME DESIGN TOKENS (DARK & LIGHT)
+   - Mandatory Segoe UI system fallback font stack
+   - --radius: 0rem (zero border radius)
+   - Zero shadow / glow
+   - 1 subtle border token & 2 accent color tokens
+   ============================================================================ */
+
 :root {
+  --radius: 0rem;
+
+  /* Surfaces & Canvas (Dark Default) */
   --canvas-default: #0d1117;
   --canvas-subtle: #161b22;
   --canvas-inset: #090d13;
@@ -58,43 +62,112 @@
   --canvas-selected: #0e1828;
   --canvas-hover: #0f1622;
   --canvas-overlay: rgba(5, 8, 13, 0.75);
+  --surface-hover: #1c2128;
 
-  --surface-hover: #282e36;
+  /* Single Subtle Border Token - Soft, non-glowing, ultra-clean */
+  --border-subtle: rgba(255, 255, 255, 0.1);
 
-  --border-default: #30363d;
-  --border-muted: #21262d;
-  --border-active: #1d6cf6;
-
+  /* Foreground / Text */
   --fg-default: #f0f6fc;
   --fg-secondary: #c9d1d9;
   --fg-muted: #8b949e;
   --fg-subtle: #7d8590;
   --fg-placeholder: #484f58;
 
-  --brand-primary: #1d6cf6;
-  --brand-primary-hover: #2f7af8;
-  --brand-primary-border: rgba(47, 122, 248, 0.4);
+  /* Two Clean Accent Color Tokens */
+  --accent-primary: #1d6cf6;
+  --accent-primary-hover: #2f7af8;
+  --accent-primary-border: rgba(47, 122, 248, 0.35);
 
-  --accent-green: #238636;
-  --accent-green-hover: #2ea043;
-  --accent-green-text: #3fb950;
-  --accent-green-subtle: rgba(35, 134, 54, 0.15);
+  --accent-secondary: #238636;
+  --accent-secondary-hover: #2ea043;
+  --accent-secondary-text: #3fb950;
+  --accent-secondary-subtle: rgba(35, 134, 54, 0.15);
 
-  --accent-red-critical: #da3633;
+  /* Semantic State Tokens */
+  --accent-red: #da3633;
   --accent-red-text: #f85149;
-  --accent-red-subtle: rgba(218, 54, 51, 0.15);
-
   --accent-purple: #8957e5;
-  --accent-purple-text: #a371f7;
-  --accent-purple-subtle: rgba(137, 87, 229, 0.15);
-
   --accent-amber: #d29922;
-  --accent-amber-telemetry: #e3b341;
-  --accent-amber-subtle: rgba(210, 153, 34, 0.15);
-
   --accent-blue-light: #58a6ff;
 
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Segoe UI", "Segoe UI Web", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  color-scheme: dark;
+}
+
+:root.light,
+[data-theme='light'],
+.light {
+  --radius: 0rem;
+
+  /* Surfaces & Canvas (Light) */
+  --canvas-default: #ffffff;
+  --canvas-subtle: #f6f8fa;
+  --canvas-inset: #f0f2f5;
+  --canvas-inset-secondary: #e9ecef;
+  --canvas-deep: #e1e4e8;
+  --canvas-selected: #ddf4ff;
+  --canvas-hover: #f3f4f6;
+  --canvas-overlay: rgba(255, 255, 255, 0.85);
+  --surface-hover: #eaeef2;
+
+  /* Single Subtle Border Token - Soft light border */
+  --border-subtle: rgba(0, 0, 0, 0.1);
+
+  /* Foreground / Text */
+  --fg-default: #1f2328;
+  --fg-secondary: #32383f;
+  --fg-muted: #656d76;
+  --fg-subtle: #6e7781;
+  --fg-placeholder: #8c959f;
+
+  /* Two Clean Accent Color Tokens */
+  --accent-primary: #0969da;
+  --accent-primary-hover: #0860ca;
+  --accent-primary-border: rgba(9, 105, 218, 0.4);
+
+  --accent-secondary: #1a7f37;
+  --accent-secondary-hover: #1f883d;
+  --accent-secondary-text: #1a7f37;
+  --accent-secondary-subtle: rgba(26, 127, 55, 0.12);
+
+  /* Semantic State Tokens */
+  --accent-red: #cf222e;
+  --accent-red-text: #a40e26;
+  --accent-purple: #8250df;
+  --accent-amber: #9a6700;
+  --accent-blue-light: #0969da;
+
+  color-scheme: light;
+}
+
+/* ============================================================================
+   UNIVERSAL ZERO-RADIUS, ZERO-SHADOW & SUBTLE BORDER FALLBACK MANDATE
+   ============================================================================ */
+
+*, *::before, *::after {
+  border-radius: 0 !important;
+  border-color: var(--border-subtle);
+}
+
+/* Zero box shadow & ring shadow override */
+.shadow-sm,
+.shadow-md,
+.shadow-lg,
+.shadow-xl,
+.shadow-2xl,
+.shadow-xs,
+.shadow,
+[class*="shadow-["] {
+  box-shadow: none !important;
+}
+
+body {
+  background-color: var(--canvas-default);
+  color: var(--fg-default);
+  font-family: "Segoe UI", "Segoe UI Web", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 code, kbd, samp, pre, .font-mono {
@@ -107,12 +180,12 @@ code, kbd, samp, pre, .font-mono {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d13;
+  background: var(--canvas-inset);
 }
 ::-webkit-scrollbar-thumb {
-  background: #21262d;
-  border-radius: 3px;
+  background: var(--border-subtle);
+  border-radius: 0 !important;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #30363d;
+  background: var(--fg-muted);
 }

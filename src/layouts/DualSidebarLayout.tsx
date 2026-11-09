@@ -51,7 +51,7 @@ export const DualSidebarLayout: React.FC<DualSidebarLayoutProps> = ({
   children,
 }) => {
   return (
-    <div className="flex min-h-screen bg-[#0d1117] text-[#f0f6fc] font-sans antialiased selection:bg-[#1d6cf6] selection:text-white">
+    <div className="flex min-h-screen bg-canvas-default text-fg-default font-sans antialiased selection:bg-brand-primary selection:text-white">
       {/* 1. PRIMARY SIDEBAR (Platform-Scoped) */}
       <PrimarySidebar
         activeRoute={activeRoute}
@@ -79,7 +79,7 @@ export const DualSidebarLayout: React.FC<DualSidebarLayoutProps> = ({
       )}
 
       {/* 3. MAIN VIEWPORT CANVAS */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#0d1117]">
+      <main className="flex-1 flex flex-col min-w-0 bg-canvas-default">
         {children}
       </main>
     </div>

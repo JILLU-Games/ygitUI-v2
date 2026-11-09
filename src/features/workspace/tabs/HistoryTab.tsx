@@ -11,6 +11,11 @@
  * - Standardized status pills (StatusBadge atomic component)
  * - Duration & elapsed build latency readouts
  * - Interactive Re-deploy trigger action
+ * 
+ * DESIGN CONSTITUTION:
+ * - Component-only architecture: Card, Table suite, StatusBadge, SecondaryButton.
+ * - Zero border radius (`rounded-none`) and zero box shadow (`shadow-none`).
+ * - Full Dark/Light dual-theme token coverage via semantic CSS variables.
  * ============================================================================
  */
 
@@ -20,6 +25,15 @@ import { GlobalDeployment } from '../../../types';
 import { StatusBadge } from '../../../components/badges/StatusBadge';
 import { SecondaryButton } from '../../../components/buttons';
 import { INITIAL_DEPLOYMENTS } from '../../../mocks/mockDeployments';
+import {
+  Card,
+  Table,
+  TableHeader,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '../../../components/ui';
 
 export interface HistoryTabProps {
   currentProject: { name: string; repo: string };
@@ -32,7 +46,6 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
   currentProject,
   deploymentsList = INITIAL_DEPLOYMENTS,
   onRedeploy,
-  onNavigateToLogs,
 }) => {
   // Filter deployments for this project, or fallback to project-relevant deployments
   const projectDeployments = deploymentsList.filter(
@@ -44,89 +57,86 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
   const displayList = projectDeployments.length > 0 ? projectDeployments : deploymentsList.slice(0, 4);
 
   return (
-    <div className="flex flex-col gap-2.5 animate-in fade-in duration-150">
+    <div className="flex flex-col gap-2.5 animate-in fade-in duration-100 font-sans">
       {/* Top Summary Bar */}
-      <div className="bg-[#161b22] border border-[#21262d] rounded p-2.5 px-3 flex items-center justify-between text-xs">
+      <Card variant="default" className="p-2.5 px-3 flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
-          <Clock className="w-3.5 h-3.5 text-[#58a6ff]" />
-          <span className="font-medium text-[#f0f6fc]">Deployment History</span>
-          <span className="text-[10px] font-mono text-[#8b949e]">
+          <Clock className="w-3.5 h-3.5 text-accent-primary" />
+          <span className="font-medium text-fg-default">Deployment History</span>
+          <span className="text-[10px] font-mono text-fg-subtle">
             ({displayList.length} recorded events)
           </span>
         </div>
-        <div className="text-[10.5px] font-mono text-[#7d8590]">
+        <div className="text-[10.5px] font-mono text-fg-subtle">
           Auto-synced with Git webhooks
         </div>
-      </div>
+      </Card>
 
       {/* Deployments History Table */}
-      <div className="border border-[#21262d] rounded bg-[#090d13] text-xs overflow-hidden shadow-sm">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-[#21262d] bg-[#161b22] text-[9.5px] font-mono uppercase text-[#7d8590]">
-              <th className="p-2.5">Commit</th>
-              <th className="p-2.5">Message</th>
-              <th className="p-2.5">Branch</th>
-              <th className="p-2.5">Status</th>
-              <th className="p-2.5">Duration</th>
-              <th className="p-2.5 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#21262d]">
-            {displayList.map((dep) => (
-              <tr key={dep.id} className="hover:bg-[#161b22]/50 transition-colors group">
-                {/* Commit SHA */}
-                <td className="p-2.5 font-mono text-[#58a6ff] align-middle">
-                  <span className="bg-[#1d6cf6]/10 border border-[#1d6cf6]/20 px-1.5 py-0.5 rounded select-all font-medium">
-                    {dep.commitSha}
-                  </span>
-                </td>
+      <Table>
+        <TableHeader>
+          <TableRow isHeader>
+            <TableHeadCell>Commit</TableHeadCell>
+            <TableHeadCell>Message</TableHeadCell>
+            <TableHeadCell>Branch</TableHeadCell>
+            <TableHeadCell>Status</TableHeadCell>
+            <TableHeadCell>Duration</TableHeadCell>
+            <TableHeadCell align="right">Actions</TableHeadCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {displayList.map((dep) => (
+            <TableRow key={dep.id}>
+              {/* Commit SHA */}
+              <TableCell className="font-mono text-accent-primary">
+                <span className="bg-accent-primary/10 border border-accent-primary/20 px-1.5 py-0.5 rounded-none select-all font-medium">
+                  {dep.commitSha}
+                </span>
+              </TableCell>
 
-                {/* Commit Message */}
-                <td className="p-2.5 align-middle max-w-[260px] truncate text-[#c9d1d9]" title={dep.commitMsg}>
-                  {dep.commitMsg}
-                </td>
+              {/* Commit Message */}
+              <TableCell className="max-w-[260px] truncate text-fg-muted" title={dep.commitMsg}>
+                {dep.commitMsg}
+              </TableCell>
 
-                {/* Branch */}
-                <td className="p-2.5 font-mono text-[#8b949e] align-middle">
-                  <span className="flex items-center gap-1">
-                    <GitBranch className="w-3 h-3 text-[#7d8590]" />
-                    <span>{dep.branch}</span>
-                  </span>
-                </td>
+              {/* Branch */}
+              <TableCell className="font-mono text-fg-muted">
+                <span className="flex items-center gap-1">
+                  <GitBranch className="w-3 h-3 text-fg-subtle" />
+                  <span>{dep.branch}</span>
+                </span>
+              </TableCell>
 
-                {/* Status Badge */}
-                <td className="p-2.5 align-middle">
-                  <StatusBadge status={dep.status} />
-                </td>
+              {/* Status Badge */}
+              <TableCell>
+                <StatusBadge status={dep.status} />
+              </TableCell>
 
-                {/* Duration & Timestamp */}
-                <td className="p-2.5 font-mono text-[#7d8590] align-middle text-[11px]">
-                  <div>{dep.duration}</div>
-                  <div className="text-[9.5px] text-[#484f58]">{dep.timestamp}</div>
-                </td>
+              {/* Duration & Timestamp */}
+              <TableCell className="font-mono text-fg-subtle text-[11px]">
+                <div>{dep.duration}</div>
+                <div className="text-[9.5px] text-fg-subtle">{dep.timestamp}</div>
+              </TableCell>
 
-                {/* Actions: Re-deploy */}
-                <td className="p-2.5 align-middle text-right">
-                  <div className="flex items-center justify-end gap-1.5">
-                    {onRedeploy && (
-                      <SecondaryButton
-                        size="compact"
-                        icon={<RotateCcw className="w-2.5 h-2.5" />}
-                        onClick={() => onRedeploy(currentProject)}
-                        title="Re-deploy this commit"
-                      >
-                        Redeploy
-                      </SecondaryButton>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              {/* Actions: Re-deploy */}
+              <TableCell align="right">
+                <div className="flex items-center justify-end gap-1.5">
+                  {onRedeploy && (
+                    <SecondaryButton
+                      size="compact"
+                      icon={<RotateCcw className="w-2.5 h-2.5" />}
+                      onClick={() => onRedeploy(currentProject)}
+                      title="Re-deploy this commit"
+                    >
+                      Redeploy
+                    </SecondaryButton>
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
-

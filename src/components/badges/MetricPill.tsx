@@ -47,7 +47,7 @@ export const MetricPill: React.FC<MetricPillProps> = ({
   return (
     <span
       title={title}
-      className={`inline-flex items-center gap-1 font-mono font-normal rounded border ${variantStyles[variant]} ${sizeStyles} ${className}`}
+      className={`inline-flex items-center gap-1 font-mono font-normal rounded-none shadow-none border ${variantStyles[variant]} ${sizeStyles} ${className}`}
     >
       {icon && <span className="shrink-0">{icon}</span>}
       <span>{children}</span>

@@ -8,6 +8,11 @@
  * Production-grade environment variables & encrypted secrets workspace
  * (Vercel / Cloudflare / Railway style) with AST reference detection,
  * .env file import/export, raw bulk paste, and pending rebuild alerts.
+ * 
+ * DESIGN CONSTITUTION:
+ * - Component-only architecture: Card, Input, Select, Table, PrimaryButton, SecondaryButton, IconButton.
+ * - Zero border radius (`rounded-none`) and zero box shadow (`shadow-none`).
+ * - Full Dark/Light dual-theme token coverage via semantic CSS variables.
  * ============================================================================
  */
 
@@ -29,6 +34,17 @@ import {
 } from 'lucide-react';
 import { EnvVar } from '../../../types';
 import { MetricPill, PrimaryButton, SecondaryButton, IconButton } from '../../../components';
+import {
+  Card,
+  Input,
+  Select,
+  Table,
+  TableHeader,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '../../../components/ui';
 
 export interface VariablesTabProps {
   envVars: EnvVar[];
@@ -92,7 +108,7 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
   onDeleteEnvVar,
 }) => {
   return (
-    <div className="flex flex-col gap-2.5 animate-in fade-in duration-150">
+    <div className="flex flex-col gap-2.5 animate-in fade-in duration-100 font-sans">
       {/* Hidden File Input for .env Import */}
       <input
         type="file"
@@ -103,12 +119,12 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
       />
 
       {/* Header Actions Strip */}
-      <div className="bg-[#161b22] border border-[#21262d] rounded p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <Card variant="default" className="p-2.5 sm:p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-[#1d6cf6]/10 border border-[#1d6cf6]/30 flex items-center justify-center text-[#1d6cf6] shrink-0">
+          <div className="w-6 h-6 rounded-none bg-accent-primary/10 border border-accent-primary/30 flex items-center justify-center text-accent-primary shrink-0 shadow-none">
             <Key className="w-3.5 h-3.5" />
           </div>
-          <h3 className="text-xs font-semibold text-[#f0f6fc]">Environment Variables & Secrets</h3>
+          <h3 className="text-xs font-semibold text-fg-default">Environment Variables & Secrets</h3>
           <MetricPill variant="neutral">{envVars.length} total</MetricPill>
         </div>
 
@@ -116,7 +132,7 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
         <div className="flex flex-wrap items-center gap-1.5 self-end sm:self-auto">
           <SecondaryButton
             size="sm"
-            icon={<Upload className="w-3 h-3 text-[#1d6cf6]" />}
+            icon={<Upload className="w-3 h-3 text-accent-primary" />}
             onClick={() => fileInputRef.current?.click()}
             title="Import variables from a local .env file"
           >
@@ -125,7 +141,7 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
 
           <SecondaryButton
             size="sm"
-            icon={<Download className="w-3 h-3 text-[#3fb950]" />}
+            icon={<Download className="w-3 h-3 text-emerald-500" />}
             onClick={onExportEnvFile}
             title="Export all variables as a .env file"
           >
@@ -134,23 +150,23 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
 
           <SecondaryButton
             size="sm"
-            icon={<Clipboard className="w-3 h-3 text-[#e3b341]" />}
+            icon={<Clipboard className="w-3 h-3 text-amber-400" />}
             onClick={onOpenPasteEnvModal}
             title="Paste multiple KEY=VALUE pairs in bulk"
           >
             Paste .env
           </SecondaryButton>
         </div>
-      </div>
+      </Card>
 
       {/* Pending Rebuild Warning Banner */}
       {envNeedsRebuild && (
-        <div className="bg-[#d29922]/10 border border-[#d29922]/30 rounded p-2 sm:p-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs animate-in fade-in duration-200">
-          <div className="flex items-center gap-2 text-[#e3b341]">
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-none p-2 sm:p-2.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs animate-in fade-in duration-100 shadow-none">
+          <div className="flex items-center gap-2 text-amber-500">
             <AlertTriangle className="w-4 h-4 shrink-0" />
             <div>
-              <span className="font-medium text-[#f0f6fc]">Environment changes pending:</span>{' '}
-              <span className="text-[#c9d1d9] text-[11px]">
+              <span className="font-medium text-fg-default">Environment changes pending:</span>{' '}
+              <span className="text-fg-muted text-[11px]">
                 Variables have been modified. A rebuild / new deployment is required for changes to take effect on edge runtime.
               </span>
             </div>
@@ -167,54 +183,54 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
       )}
 
       {/* Quick Add Variable Form */}
-      <div className="bg-[#161b22] border border-[#21262d] rounded p-2.5 flex flex-col gap-2">
-        <div className="text-[10px] font-mono text-[#7d8590] uppercase tracking-wider">
+      <Card variant="default" className="p-2.5 flex flex-col gap-2">
+        <div className="text-[10px] font-mono text-fg-subtle uppercase tracking-wider">
           + Add New Variable
         </div>
         <form onSubmit={onAddEnvVar} className="flex flex-col md:flex-row items-stretch md:items-center gap-2">
           <div className="flex-1">
-            <input
+            <Input
               type="text"
               placeholder="KEY (e.g. VITE_API_URL)"
               value={newEnvKey}
               onChange={(e) => onSetNewEnvKey(e.target.value)}
-              className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono uppercase"
+              isMono
+              className="uppercase"
             />
           </div>
 
           <div className="flex-1">
-            <input
+            <Input
               type="text"
               placeholder="Value"
               value={newEnvVal}
               onChange={(e) => onSetNewEnvVal(e.target.value)}
-              className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2.5 py-1 text-xs text-[#f0f6fc] font-mono"
+              isMono
             />
           </div>
 
           <div className="w-full md:w-36">
-            <select
+            <Select
               value={newEnvTarget}
               onChange={(e) => onSetNewEnvTarget(e.target.value as any)}
               aria-label="Target environment"
-              className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded px-2 py-1 text-xs text-[#f0f6fc]"
             >
               <option value="All">All Envs</option>
               <option value="Production">Production</option>
               <option value="Preview">Preview</option>
               <option value="Development">Development</option>
-            </select>
+            </Select>
           </div>
 
-          <label className="flex items-center gap-1.5 text-xs text-[#8b949e] select-none cursor-pointer px-1">
+          <label className="flex items-center gap-1.5 text-xs text-fg-muted select-none cursor-pointer px-1">
             <input
               type="checkbox"
               checked={newEnvIsSecret}
               onChange={(e) => onSetNewEnvIsSecret(e.target.checked)}
-              className="rounded bg-[#090d13] border-[#21262d] text-[#1d6cf6] focus:ring-0 cursor-pointer"
+              className="rounded-none bg-canvas-inset border-border-default text-accent-primary focus:ring-0 cursor-pointer"
             />
             <span className="flex items-center gap-1 text-[11px]">
-              <Lock className="w-3 h-3 text-[#8957e5]" />
+              <Lock className="w-3 h-3 text-purple-400" />
               Secret
             </span>
           </label>
@@ -227,25 +243,24 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
             + Add
           </PrimaryButton>
         </form>
-      </div>
+      </Card>
 
       {/* Filter and Search Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-0.5">
         {/* Search input */}
-        <div className="relative flex-1 max-w-xs">
-          <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-[#7d8590]" />
-          <input
+        <div className="flex-1 max-w-xs">
+          <Input
             type="text"
             placeholder="Search keys or values..."
             value={envSearchQuery}
             onChange={(e) => onSetEnvSearchQuery(e.target.value)}
-            className="w-full bg-[#090d13] border border-[#21262d] focus:border-[#1d6cf6] focus:outline-none rounded pl-8 pr-2.5 py-1 text-xs text-[#f0f6fc]"
+            prefixIcon={<Search className="w-3.5 h-3.5" />}
           />
         </div>
 
         {/* Environment Filter Tabs & Reveal Toggle */}
         <div className="flex items-center justify-between sm:justify-end gap-1.5">
-          <div className="flex items-center gap-1 bg-[#161b22] border border-[#21262d] rounded p-0.5 text-[10.5px]">
+          <div className="flex items-center gap-1 bg-canvas-subtle border border-border-default p-0.5 text-[10.5px] rounded-none shadow-none">
             {(['All', 'Production', 'Preview', 'Development'] as const).map((env) => {
               const count =
                 env === 'All'
@@ -256,14 +271,14 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
                   key={env}
                   type="button"
                   onClick={() => onSetEnvFilterEnvironment(env)}
-                  className={`px-2 py-0.5 rounded cursor-pointer font-medium transition-colors ${
+                  className={`px-2 py-0.5 rounded-none cursor-pointer font-medium transition-colors ${
                     envFilterEnvironment === env
-                      ? 'bg-[#21262d] text-[#f0f6fc]'
-                      : 'text-[#8b949e] hover:text-[#f0f6fc]'
+                      ? 'bg-canvas-default text-fg-default'
+                      : 'text-fg-muted hover:text-fg-default'
                   }`}
                 >
                   <span>{env}</span>
-                  <span className="ml-1 text-[9px] font-mono text-[#7d8590]">({count})</span>
+                  <span className="ml-1 text-[9px] font-mono text-fg-subtle">({count})</span>
                 </button>
               );
             })}
@@ -273,7 +288,7 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
             size="sm"
             onClick={onToggleAllSecrets}
             title={showAllSecrets ? 'Mask all secret values' : 'Reveal all secret values'}
-            icon={showAllSecrets ? <EyeOff className="w-3 h-3 text-[#e3b341]" /> : <Eye className="w-3 h-3 text-[#1d6cf6]" />}
+            icon={showAllSecrets ? <EyeOff className="w-3 h-3 text-amber-400" /> : <Eye className="w-3 h-3 text-accent-primary" />}
           >
             <span className="text-[10px] hidden md:inline">{showAllSecrets ? 'Mask All' : 'Reveal All'}</span>
           </SecondaryButton>
@@ -281,140 +296,19 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
       </div>
 
       {/* High-Density Environment Variables Table */}
-      <div className="border border-[#21262d] rounded bg-[#161b22] overflow-hidden text-xs">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-[#21262d] bg-[#090d13] text-[9.5px] font-mono uppercase text-[#7d8590]">
-              <th className="p-2.5">Key & Ast Metadata</th>
-              <th className="p-2.5">Value</th>
-              <th className="p-2.5">Environment</th>
-              <th className="p-2.5 hidden md:table-cell">Updated</th>
-              <th className="p-2.5 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#21262d]">
-            {envVars
-              .filter((v) => {
-                const matchesSearch =
-                  v.key.toLowerCase().includes(envSearchQuery.toLowerCase()) ||
-                  v.value.toLowerCase().includes(envSearchQuery.toLowerCase());
-                const matchesEnv =
-                  envFilterEnvironment === 'All' ||
-                  v.environment === envFilterEnvironment ||
-                  v.environment === 'All';
-                return matchesSearch && matchesEnv;
-              })
-              .map((v) => {
-                const isRevealed = showSecretMap[v.id] || !v.isSecret;
-                const isAstRef = v.key.startsWith('VITE_') || v.key.startsWith('CF_');
-
-                return (
-                  <tr key={v.id} className="hover:bg-[#1c2128] transition-colors group">
-                    {/* Key Column */}
-                    <td className="p-2.5 align-middle">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="font-mono font-medium text-[#f0f6fc] text-xs select-all">
-                          {v.key}
-                        </span>
-                        {v.isSecret && (
-                          <MetricPill
-                            variant="purple"
-                            size="xs"
-                            icon={<Lock className="w-2.5 h-2.5" />}
-                          >
-                            SECRET
-                          </MetricPill>
-                        )}
-                        {isAstRef && (
-                          <MetricPill variant="blue" size="xs">
-                            AST REF
-                          </MetricPill>
-                        )}
-                      </div>
-                    </td>
-
-                    {/* Value Column */}
-                    <td className="p-2.5 align-middle font-mono text-xs">
-                      <div className="flex items-center gap-1.5 max-w-md">
-                        <span
-                          className={`truncate ${
-                            !isRevealed ? 'text-[#8b949e] select-none tracking-widest' : 'text-[#c9d1d9] select-all'
-                          }`}
-                        >
-                          {!isRevealed ? '••••••••••••••••' : v.value}
-                        </span>
-
-                        {v.isSecret && (
-                          <button
-                            type="button"
-                            onClick={() => onToggleSecretVisibility(v.id)}
-                            title={isRevealed ? 'Hide secret value' : 'Show secret value'}
-                            className="text-[#8b949e] hover:text-[#f0f6fc] p-0.5 rounded cursor-pointer transition-colors shrink-0"
-                          >
-                            {isRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                          </button>
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onCopyToClipboard(v.value);
-                            onShowToast(`Copied ${v.key} value`);
-                          }}
-                          title="Copy value"
-                          className="text-[#8b949e] hover:text-[#f0f6fc] p-0.5 rounded cursor-pointer transition-colors shrink-0 opacity-0 group-hover:opacity-100"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </td>
-
-                    {/* Environment Target Badge */}
-                    <td className="p-2.5 align-middle">
-                      <span
-                        className={`text-[10px] font-medium px-2 py-0.5 rounded ${
-                          v.environment === 'Production'
-                            ? 'bg-[#238636]/15 text-[#3fb950] border border-[#238636]/30'
-                            : v.environment === 'Preview'
-                            ? 'bg-[#1f6feb]/15 text-[#58a6ff] border border-[#1f6feb]/30'
-                            : v.environment === 'Development'
-                            ? 'bg-[#d29922]/15 text-[#e3b341] border border-[#d29922]/30'
-                            : 'bg-[#21262d] text-[#c9d1d9] border border-[#21262d]'
-                        }`}
-                      >
-                        {v.environment}
-                      </span>
-                    </td>
-
-                    {/* Updated At */}
-                    <td className="p-2.5 align-middle hidden md:table-cell font-mono text-[10px] text-[#7d8590]">
-                      {v.updatedAt}
-                    </td>
-
-                    {/* Action Buttons (Edit & Delete) */}
-                    <td className="p-2.5 align-middle text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <IconButton
-                          size="sm"
-                          icon={<Edit3 className="w-3.5 h-3.5" />}
-                          title={`Edit ${v.key}`}
-                          onClick={() => onEditEnvVar(v)}
-                          className="hover:text-[#58a6ff]"
-                        />
-                        <IconButton
-                          size="sm"
-                          icon={<Trash2 className="w-3.5 h-3.5" />}
-                          title={`Delete ${v.key}`}
-                          onClick={() => onDeleteEnvVar(v.id)}
-                          className="hover:text-[#f85149]"
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-
-            {envVars.filter((v) => {
+      <Table>
+        <TableHeader>
+          <TableRow isHeader>
+            <TableHeadCell>Key & Ast Metadata</TableHeadCell>
+            <TableHeadCell>Value</TableHeadCell>
+            <TableHeadCell>Environment</TableHeadCell>
+            <TableHeadCell className="hidden md:table-cell">Updated</TableHeadCell>
+            <TableHeadCell align="right">Actions</TableHeadCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {envVars
+            .filter((v) => {
               const matchesSearch =
                 v.key.toLowerCase().includes(envSearchQuery.toLowerCase()) ||
                 v.value.toLowerCase().includes(envSearchQuery.toLowerCase());
@@ -423,22 +317,141 @@ export const VariablesTab: React.FC<VariablesTabProps> = ({
                 v.environment === envFilterEnvironment ||
                 v.environment === 'All';
               return matchesSearch && matchesEnv;
-            }).length === 0 && (
-              <tr>
-                <td colSpan={5} className="p-6 text-center text-[#8b949e]">
-                  <div className="flex flex-col items-center gap-1.5">
-                    <Key className="w-5 h-5 text-[#7d8590]" />
-                    <div className="text-xs font-medium text-[#f0f6fc]">No environment variables found</div>
-                    <div className="text-[11px] text-[#8b949e]">
-                      Try adjusting your search query or environment filter, or paste new variables.
+            })
+            .map((v) => {
+              const isRevealed = showSecretMap[v.id] || !v.isSecret;
+              const isAstRef = v.key.startsWith('VITE_') || v.key.startsWith('CF_');
+
+              return (
+                <TableRow key={v.id}>
+                  {/* Key Column */}
+                  <TableCell>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-mono font-medium text-fg-default text-xs select-all">
+                        {v.key}
+                      </span>
+                      {v.isSecret && (
+                        <MetricPill
+                          variant="purple"
+                          size="xs"
+                          icon={<Lock className="w-2.5 h-2.5" />}
+                        >
+                          SECRET
+                        </MetricPill>
+                      )}
+                      {isAstRef && (
+                        <MetricPill variant="blue" size="xs">
+                          AST REF
+                        </MetricPill>
+                      )}
                     </div>
+                  </TableCell>
+
+                  {/* Value Column */}
+                  <TableCell className="font-mono text-xs">
+                    <div className="flex items-center gap-1.5 max-w-md">
+                      <span
+                        className={`truncate ${
+                          !isRevealed ? 'text-fg-subtle select-none tracking-widest' : 'text-fg-default select-all'
+                        }`}
+                      >
+                        {!isRevealed ? '••••••••••••••••' : v.value}
+                      </span>
+
+                      {v.isSecret && (
+                        <button
+                          type="button"
+                          onClick={() => onToggleSecretVisibility(v.id)}
+                          title={isRevealed ? 'Hide secret value' : 'Show secret value'}
+                          className="text-fg-subtle hover:text-fg-default p-0.5 rounded-none cursor-pointer transition-colors shrink-0"
+                        >
+                          {isRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onCopyToClipboard(v.value);
+                          onShowToast(`Copied ${v.key} value`);
+                        }}
+                        title="Copy value"
+                        className="text-fg-subtle hover:text-fg-default p-0.5 rounded-none cursor-pointer transition-colors shrink-0 opacity-0 group-hover:opacity-100"
+                      >
+                        <Copy className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </TableCell>
+
+                  {/* Environment Target Badge */}
+                  <TableCell>
+                    <span
+                      className={`text-[10px] font-medium px-2 py-0.5 rounded-none ${
+                        v.environment === 'Production'
+                          ? 'bg-emerald-500/15 text-emerald-500 border border-emerald-500/30'
+                          : v.environment === 'Preview'
+                          ? 'bg-accent-primary/15 text-accent-primary border border-accent-primary/30'
+                          : v.environment === 'Development'
+                          ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
+                          : 'bg-canvas-subtle text-fg-muted border border-border-subtle'
+                      }`}
+                    >
+                      {v.environment}
+                    </span>
+                  </TableCell>
+
+                  {/* Updated At */}
+                  <TableCell className="hidden md:table-cell font-mono text-[10px] text-fg-subtle">
+                    {v.updatedAt}
+                  </TableCell>
+
+                  {/* Action Buttons (Edit & Delete) */}
+                  <TableCell align="right">
+                    <div className="flex items-center justify-end gap-1">
+                      <IconButton
+                        size="sm"
+                        icon={<Edit3 className="w-3.5 h-3.5" />}
+                        title={`Edit ${v.key}`}
+                        onClick={() => onEditEnvVar(v)}
+                        className="hover:text-accent-primary"
+                      />
+                      <IconButton
+                        size="sm"
+                        icon={<Trash2 className="w-3.5 h-3.5" />}
+                        title={`Delete ${v.key}`}
+                        onClick={() => onDeleteEnvVar(v.id)}
+                        className="hover:text-red-400"
+                      />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+
+          {envVars.filter((v) => {
+            const matchesSearch =
+              v.key.toLowerCase().includes(envSearchQuery.toLowerCase()) ||
+              v.value.toLowerCase().includes(envSearchQuery.toLowerCase());
+            const matchesEnv =
+              envFilterEnvironment === 'All' ||
+              v.environment === envFilterEnvironment ||
+              v.environment === 'All';
+            return matchesSearch && matchesEnv;
+          }).length === 0 && (
+            <TableRow>
+              <TableCell colSpan={5} align="center" className="p-6 text-fg-muted">
+                <div className="flex flex-col items-center gap-1.5">
+                  <Key className="w-5 h-5 text-fg-subtle" />
+                  <div className="text-xs font-medium text-fg-default">No environment variables found</div>
+                  <div className="text-[11px] text-fg-subtle">
+                    Try adjusting your search query or environment filter, or paste new variables.
                   </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                </div>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 };

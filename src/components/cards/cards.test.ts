@@ -3,30 +3,30 @@ import assert from 'node:assert/strict';
 
 test('card container styles resolution logic', () => {
   const variantStyles = {
-    default: 'bg-[#161b22] border border-[#21262d] rounded-lg shadow-sm',
+    default: 'bg-canvas-default border border-border-subtle rounded-none shadow-none',
     interactive:
-      'bg-[#161b22] border border-[#21262d] hover:border-[#1d6cf6]/60 rounded-lg transition-all duration-150 hover:shadow-lg hover:shadow-black/30 cursor-pointer',
+      'bg-canvas-default border border-border-subtle hover:border-accent-primary/60 rounded-none transition-all duration-150 cursor-pointer shadow-none',
     selected:
-      'bg-[#0e1828] border border-[#1d6cf6] rounded-lg shadow-[0_0_0_1px_#1d6cf6]',
+      'bg-canvas-inset border border-accent-primary rounded-none shadow-none',
     telemetry:
-      'bg-[#090d13] border border-[#21262d] rounded-md font-mono text-[11px]',
+      'bg-canvas-inset border border-border-subtle rounded-none font-mono text-[11px] shadow-none',
     subtle:
-      'bg-[#090d13]/60 border border-[#21262d] rounded-lg',
+      'bg-canvas-inset/60 border border-border-subtle rounded-none shadow-none',
   };
 
-  assert.equal(variantStyles.default.includes('rounded-lg'), true);
-  assert.equal(variantStyles.default.includes('border-[#21262d]'), true);
-  assert.equal(variantStyles.interactive.includes('hover:border-[#1d6cf6]/60'), true);
-  assert.equal(variantStyles.selected.includes('bg-[#0e1828]'), true);
-  assert.equal(variantStyles.telemetry.includes('bg-[#090d13]'), true);
+  assert.equal(variantStyles.default.includes('rounded-none'), true);
+  assert.equal(variantStyles.default.includes('border-border-subtle'), true);
+  assert.equal(variantStyles.interactive.includes('hover:border-accent-primary/60'), true);
+  assert.equal(variantStyles.selected.includes('border-accent-primary'), true);
+  assert.equal(variantStyles.telemetry.includes('bg-canvas-inset'), true);
 });
 
 test('card structural compartment divider invariants', () => {
-  const headerClass = 'border-b border-[#21262d]';
-  const footerClass = 'border-t border-[#21262d] bg-[#090d13]/50';
-  const telemetryEnclaveClass = 'bg-[#090d13] border border-[#21262d] rounded-md';
+  const headerClass = 'border-b border-border-subtle';
+  const footerClass = 'border-t border-border-subtle bg-canvas-inset/50';
+  const telemetryEnclaveClass = 'bg-canvas-inset border border-border-subtle rounded-none';
 
   assert.equal(headerClass.includes('border-b'), true);
   assert.equal(footerClass.includes('border-t'), true);
-  assert.equal(telemetryEnclaveClass.includes('bg-[#090d13]'), true);
+  assert.equal(telemetryEnclaveClass.includes('bg-canvas-inset'), true);
 });

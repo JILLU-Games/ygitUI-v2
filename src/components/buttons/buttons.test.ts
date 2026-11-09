@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 
 test('button size class resolution logic', () => {
   const sizeClasses = {
-    micro: 'px-2 py-0.5 text-[10.5px] rounded gap-1 active:scale-95',
-    compact: 'px-2.5 py-1 text-xs rounded gap-1.5 active:scale-95',
-    sm: 'px-2.5 py-1 text-xs rounded gap-1.5 active:scale-95',
-    md: 'px-3 py-1.5 text-xs rounded-md gap-1.5 active:scale-95',
-    lg: 'px-4 py-2 text-xs font-bold rounded-md gap-2 active:scale-95',
-    cta: 'py-2.5 px-4 text-xs font-bold rounded-md gap-2 active:scale-[0.99]',
+    micro: 'px-2 py-0.5 text-[10.5px] rounded-none gap-1 active:scale-95',
+    compact: 'px-2.5 py-1 text-xs rounded-none gap-1.5 active:scale-95',
+    sm: 'px-2.5 py-1 text-xs rounded-none gap-1.5 active:scale-95',
+    md: 'px-3 py-1.5 text-xs rounded-none gap-1.5 active:scale-95',
+    lg: 'px-4 py-2 text-xs font-bold rounded-none gap-2 active:scale-95',
+    cta: 'py-2.5 px-4 text-xs font-bold rounded-none gap-2 active:scale-[0.99]',
   };
 
   assert.equal(sizeClasses.sm.includes('px-2.5'), true);

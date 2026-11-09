@@ -8,6 +8,11 @@
  * Real-time streaming edge terminal build logs viewer matching Vercel and Cloudflare
  * Dashboard terminal experiences. Features search in logs, timestamp toggle,
  * line wrapping, auto-scroll, fullscreen expansion, and 1-click clipboard copy.
+ * 
+ * DESIGN CONSTITUTION:
+ * - Component-only architecture: Card, IconButton, Input, theme tokens.
+ * - Zero border radius (`rounded-none`) and zero box shadow (`shadow-none`).
+ * - Full Dark/Light dual-theme token coverage via semantic CSS variables.
  * ============================================================================
  */
 
@@ -28,6 +33,7 @@ import {
 } from 'lucide-react';
 import { DeployLogEntry } from '../../../types';
 import { IconButton } from '../../../components/buttons';
+import { Card, Input } from '../../../components/ui';
 
 export interface LogsTabProps {
   activeDeploymentStatus: 'running' | 'finished' | 'idle';
@@ -69,49 +75,49 @@ export const LogsTab: React.FC<LogsTabProps> = ({
   onShowToast,
 }) => {
   return (
-    <div className="flex flex-col gap-2.5 animate-in fade-in duration-150">
+    <div className="flex flex-col gap-2.5 animate-in fade-in duration-100 font-sans">
       {/* 1. TOP DEPLOYMENT EXECUTION ROW */}
-      <div className="bg-[#161b22] border border-[#21262d] rounded p-2.5 px-3 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <Card variant="default" className="p-2.5 px-3 flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-3 flex-wrap">
           {/* Status Pill */}
           <span
-            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10.5px] font-normal border ${
+            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none text-[10.5px] font-normal border ${
               activeDeploymentStatus === 'running'
-                ? 'bg-[#7950f2]/15 text-[#c084fc] border-[#7950f2]/30'
-                : 'bg-[#238636]/15 text-[#3fb950] border-[#238636]/30'
+                ? 'bg-purple-500/15 text-purple-400 border-purple-500/30'
+                : 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30'
             }`}
           >
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                activeDeploymentStatus === 'running' ? 'bg-[#c084fc] animate-ping' : 'bg-[#3fb950]'
+              className={`w-1.5 h-1.5 rounded-none ${
+                activeDeploymentStatus === 'running' ? 'bg-purple-400 animate-ping' : 'bg-emerald-500'
               }`}
             ></span>
             <span>{activeDeploymentStatus === 'running' ? 'Running' : 'Success'}</span>
           </span>
 
           {/* Trigger Type */}
-          <span className="text-[#8b949e] text-[11px] font-normal">Webhook</span>
+          <span className="text-fg-subtle text-[11px] font-normal">Webhook</span>
 
           {/* Commit & Message */}
           <div className="flex items-center gap-1.5 font-mono text-[11px]">
-            <span className="text-[#58a6ff] hover:underline cursor-pointer">7f3b891</span>
-            <span className="text-[#8b949e] truncate max-w-[280px] sm:max-w-[420px]">
+            <span className="text-accent-primary hover:underline cursor-pointer select-all">7f3b891</span>
+            <span className="text-fg-muted truncate max-w-[280px] sm:max-w-[420px]">
               fix(edge): verified pages edge worker bundle
             </span>
           </div>
 
           {/* Time & Duration */}
-          <div className="flex items-center gap-2 text-[10.5px] text-[#7d8590] font-mono">
+          <div className="flex items-center gap-2 text-[10.5px] text-fg-subtle font-mono">
             <span>{activeDeploymentStatus === 'running' ? 'Just now' : '2 mins ago'}</span>
             <span>·</span>
             <span>{activeDeploymentStatus === 'running' ? `${deployTimer}s` : '00m 18s'}</span>
             <span>·</span>
-            <span className="text-[#8b949e]">Cloudflare Edge</span>
+            <span className="text-fg-muted">Cloudflare Edge</span>
           </div>
         </div>
 
         {/* Right Pagination Indicator */}
-        <div className="flex items-center gap-2 text-[10.5px] text-[#7d8590] font-mono">
+        <div className="flex items-center gap-2 text-[10.5px] text-fg-subtle font-mono">
           <span>1-3 of 18</span>
           <div className="flex items-center gap-1">
             <IconButton
@@ -128,16 +134,16 @@ export const LogsTab: React.FC<LogsTabProps> = ({
             />
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* 2. TERMINAL CONSOLE CARD */}
       <div
-        className={`bg-[#090d13] border border-[#21262d] rounded flex flex-col overflow-hidden shadow-sm transition-all ${
-          logFullScreen ? 'fixed inset-4 z-50 bg-[#090d13]' : ''
+        className={`bg-canvas-inset border border-border-default rounded-none flex flex-col overflow-hidden shadow-none transition-all ${
+          logFullScreen ? 'fixed inset-4 z-50 bg-canvas-inset' : ''
         }`}
       >
         {/* Controls Header */}
-        <div className="bg-[#161b22] border-b border-[#21262d] px-3 py-1.5 flex flex-wrap items-center justify-between gap-2">
+        <div className="bg-canvas-subtle border-b border-border-default px-3 py-1.5 flex flex-wrap items-center justify-between gap-2">
           {/* Left Icon Controls Group */}
           <div className="flex items-center gap-1.5 flex-wrap">
             {/* Timestamp Toggle */}
@@ -211,15 +217,15 @@ export const LogsTab: React.FC<LogsTabProps> = ({
 
             {/* Status Finished / Running Pill */}
             <span
-              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10.5px] font-normal font-mono border ${
+              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-none text-[10.5px] font-normal font-mono border ${
                 activeDeploymentStatus === 'running'
-                  ? 'bg-[#7950f2]/15 text-[#c084fc] border-[#7950f2]/30'
-                  : 'bg-[#238636]/15 text-[#3fb950] border-[#238636]/30'
+                  ? 'bg-purple-500/15 text-purple-400 border-purple-500/30'
+                  : 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30'
               }`}
             >
               <span
-                className={`w-1.5 h-1.5 rounded-full ${
-                  activeDeploymentStatus === 'running' ? 'bg-[#c084fc] animate-pulse' : 'bg-[#3fb950]'
+                className={`w-1.5 h-1.5 rounded-none ${
+                  activeDeploymentStatus === 'running' ? 'bg-purple-400 animate-pulse' : 'bg-emerald-500'
                 }`}
               ></span>
               <span>{activeDeploymentStatus === 'running' ? 'Running' : 'Finished'}</span>
@@ -227,30 +233,32 @@ export const LogsTab: React.FC<LogsTabProps> = ({
           </div>
 
           {/* Right Search Input: Find in logs */}
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-[#7d8590] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
+          <div className="w-48 sm:w-64">
+            <Input
               type="text"
               placeholder="Find in logs"
               value={logSearch}
               onChange={(e) => onSetLogSearch(e.target.value)}
-              className="bg-[#090d13] border border-[#21262d] rounded text-xs text-[#f0f6fc] pl-8 pr-3 py-1 w-48 sm:w-64 focus:outline-none focus:border-[#1d6cf6] transition-colors font-mono"
+              prefixIcon={<Search className="w-3.5 h-3.5" />}
+              suffixIcon={
+                logSearch ? (
+                  <button
+                    type="button"
+                    onClick={() => onSetLogSearch('')}
+                    className="text-fg-subtle hover:text-fg-default cursor-pointer"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                ) : undefined
+              }
+              isMono
             />
-            {logSearch && (
-              <button
-                type="button"
-                onClick={() => onSetLogSearch('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[#7d8590] hover:text-[#f0f6fc]"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            )}
           </div>
         </div>
 
         {/* Terminal Log Stream Body */}
         <div
-          className={`p-3 font-mono text-[11px] text-[#8b949e] overflow-y-auto flex flex-col gap-0.5 select-text bg-[#090d13] ${
+          className={`p-3 font-mono text-[11px] text-fg-muted overflow-y-auto flex flex-col gap-0.5 select-text bg-canvas-inset ${
             logFullScreen ? 'flex-1' : 'h-[440px]'
           }`}
         >
@@ -260,13 +268,13 @@ export const LogsTab: React.FC<LogsTabProps> = ({
               return (
                 <div
                   key={entry.id}
-                  className={`flex items-start gap-3 hover:bg-[#161b22]/50 px-1.5 py-0.5 rounded transition-colors ${
+                  className={`flex items-start gap-3 hover:bg-canvas-subtle/50 px-1.5 py-0.5 rounded-none transition-colors ${
                     logWrapLines ? 'flex-wrap' : 'whitespace-nowrap'
                   }`}
                 >
                   {/* Timestamp Column */}
                   {showLogTimestamps && (
-                    <span className="text-[#6e7681] text-[10.5px] select-none shrink-0 font-mono">
+                    <span className="text-fg-subtle text-[10.5px] select-none shrink-0 font-mono">
                       {entry.time}
                     </span>
                   )}
@@ -279,19 +287,19 @@ export const LogsTab: React.FC<LogsTabProps> = ({
                       entry.text.startsWith('#14') ||
                       entry.text.startsWith('#12') ||
                       entry.text.startsWith('#13')
-                        ? 'text-[#e3b341]'
+                        ? 'text-amber-400'
                         : entry.highlight === 'green' ||
                           entry.text.includes('✓') ||
                           entry.text.includes('Healthy') ||
                           entry.text.includes('Started') ||
                           entry.text.includes('DONE') ||
                           entry.text.includes('✨')
-                        ? 'text-[#3fb950]'
+                        ? 'text-emerald-500'
                         : entry.highlight === 'blue' || entry.text.startsWith('Importing')
-                        ? 'text-[#58a6ff]'
+                        ? 'text-accent-primary'
                         : entry.highlight === 'muted' || entry.text.startsWith('---') || entry.text.startsWith('Gracefully')
-                        ? 'text-[#6e7681]'
-                        : 'text-[#f0f6fc]'
+                        ? 'text-fg-subtle'
+                        : 'text-fg-default'
                     }`}
                   >
                     {entry.text}
@@ -302,9 +310,9 @@ export const LogsTab: React.FC<LogsTabProps> = ({
 
           {/* Live Streaming Indicator */}
           {activeDeploymentStatus === 'running' && (
-            <div className="flex items-center gap-2 text-[#58a6ff] mt-2 px-1.5 text-xs font-mono">
-              <span className="inline-block w-2 h-3.5 bg-[#58a6ff] animate-pulse"></span>
-              <span className="text-[#8b949e] text-[10.5px]">Streaming live build chunks... ({deployTimer}s)</span>
+            <div className="flex items-center gap-2 text-accent-primary mt-2 px-1.5 text-xs font-mono">
+              <span className="inline-block w-2 h-3.5 bg-accent-primary animate-pulse"></span>
+              <span className="text-fg-muted text-[10.5px]">Streaming live build chunks... ({deployTimer}s)</span>
             </div>
           )}
 
@@ -312,16 +320,16 @@ export const LogsTab: React.FC<LogsTabProps> = ({
         </div>
 
         {/* Terminal Bottom Telemetry Bar */}
-        <div className="bg-[#161b22] border-t border-[#21262d] px-3.5 py-1.5 flex flex-wrap items-center justify-between text-[10.5px] font-mono text-[#8b949e]">
+        <div className="bg-canvas-subtle border-t border-border-default px-3.5 py-1.5 flex flex-wrap items-center justify-between text-[10.5px] font-mono text-fg-muted">
           <div className="flex items-center gap-3">
             <span>
-              Bundle: <span className="text-[#f0f6fc] font-mono">142.92 kB</span>
+              Bundle: <span className="text-fg-default font-mono">142.92 kB</span>
             </span>
             <span>
-              Memory: <span className="text-[#f0f6fc] font-mono">48.2 MB / 512 MB</span>
+              Memory: <span className="text-fg-default font-mono">48.2 MB / 512 MB</span>
             </span>
             <span>
-              Worker: <span className="text-[#3fb950] font-mono">#wk-8924</span>
+              Worker: <span className="text-emerald-500 font-mono">#wk-8924</span>
             </span>
           </div>
           <div className="flex items-center gap-2">
@@ -329,7 +337,7 @@ export const LogsTab: React.FC<LogsTabProps> = ({
               href={`https://${currentProject.name}.pages.dev`}
               target="_blank"
               rel="noreferrer"
-              className="text-[#58a6ff] hover:underline flex items-center gap-1"
+              className="text-accent-primary hover:underline flex items-center gap-1"
             >
               <span>{currentProject.name}.pages.dev</span>
               <ExternalLink className="w-3 h-3" />

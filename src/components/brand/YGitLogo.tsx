@@ -49,19 +49,19 @@ export const YGitLogo: React.FC<YGitLogoProps> = ({
             onClick={onNavigateHome}
             className="flex items-center gap-2.5 hover:opacity-95 transition-opacity cursor-pointer group"
           >
-            {/* 21px Logo Box with 1px precision glow */}
-            <div className="relative w-[21px] h-[21px] rounded-md bg-[#090d13] border border-[#1d6cf6]/35 p-0.5 shadow-[0_0_2px_rgba(29,108,246,0.4)] flex items-center justify-center shrink-0">
+            {/* 21px Logo Box */}
+            <div className="relative w-[21px] h-[21px] rounded-none bg-canvas-inset border border-border-default p-0.5 shadow-none flex items-center justify-center shrink-0">
               <img
                 src={imgSrc}
                 alt="YGIT"
-                className="w-full h-full object-contain rounded-xs drop-shadow-[0_0_1px_rgba(88,166,255,0.7)]"
+                className="w-full h-full object-contain rounded-none"
                 onError={handleImageError}
               />
             </div>
 
             {/* Wordmark + Beta Tag */}
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-[13.5px] tracking-tight text-[#f0f6fc] font-sans group-hover:text-white transition-colors">
+              <span className="font-semibold text-[13.5px] tracking-tight text-fg-default font-sans group-hover:text-brand-primary transition-colors">
                 YGIT
               </span>
               {showBetaBadge && <BetaPill />}
@@ -74,7 +74,7 @@ export const YGitLogo: React.FC<YGitLogoProps> = ({
               type="button"
               onClick={onToggleCollapse}
               title="Collapse sidebar"
-              className="p-1 text-[#8b949e] hover:text-[#f0f6fc] hover:bg-[#21262d] rounded cursor-pointer transition-colors"
+              className="p-1 text-fg-muted hover:text-fg-default hover:bg-surface-hover rounded-none cursor-pointer transition-colors"
             >
               <PanelLeftClose className="w-3.5 h-3.5" />
             </button>
@@ -86,18 +86,18 @@ export const YGitLogo: React.FC<YGitLogoProps> = ({
           type="button"
           onClick={onToggleCollapse}
           title="Click to expand sidebar (YGIT beta)"
-          className="group relative w-7 h-7 bg-[#161b22] hover:bg-[#21262d] border border-[#30363d] hover:border-[#1d6cf6]/40 rounded-md flex items-center justify-center cursor-pointer transition-colors shadow-[0_0_2px_rgba(29,108,246,0.3)] p-1"
+          className="group relative w-7 h-7 bg-canvas-subtle hover:bg-surface-hover border border-border-default hover:border-brand-primary rounded-none flex items-center justify-center cursor-pointer transition-colors shadow-none p-1"
         >
           {/* Logo at Rest */}
           <img
             src={imgSrc}
             alt="YGIT"
-            className="w-4 h-4 object-contain transition-opacity duration-150 group-hover:opacity-0 drop-shadow-[0_0_1px_rgba(88,166,255,0.7)]"
+            className="w-4 h-4 object-contain transition-opacity duration-150 group-hover:opacity-0"
             onError={handleImageError}
           />
 
           {/* Hover Expand Icon */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-[#58a6ff]">
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-150 text-brand-primary">
             <PanelLeftOpen className="w-3.5 h-3.5" />
           </div>
         </button>
